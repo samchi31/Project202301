@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<!-- mybatis config를 전부 spring으로 -->
+	<util:properties id="dbInfo" location="classpath:kr/or/ddit/db/dbInfo.Properties" />
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" 
+		p:driverClassName="#{dbInfo.driverClassName}"
+		p:url="#{dbInfo.url}"
+		p:username="#{dbInfo.user}"
+		p:password="#{dbInfo.password}"
+		
+		p:initialSize="#{dbInfo.initialSize}"
+		p:maxTotal="#{dbInfo.maxTotal}"
+		p:maxIdle="#{dbInfo.maxIdle}"
+		p:maxWaitMillis="#{dbInfo.maxWait}"
+	/>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSource" 
+	/>
+	
+	<bean id="configuration" class="org.apache.ibatis.session.Configuration" 
+		p:mapUnderscoreToCamelCase="true"
+	/>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" 
+		p:dataSource-ref="dataSource"
+		p:mapperLocations="classpath:kr/or/ddit/mybatis/mappers/*.xml"
+		p:typeAliasesPackage="kr.or.ddit.vo, kr.or.ddit.*.vo"
+		p:configuration-ref="configuration"
+	/>
+	
+	<!-- dao 구현체 대신 scan해서 proxy 생성 -->
+	<mybatis-spring:scan base-package="kr.or.ddit.*.dao"
+		annotation="org.apache.ibatis.annotations.Mapper" 
+		factory-ref="sqlSessionFactory"
+	/>
+</beans>

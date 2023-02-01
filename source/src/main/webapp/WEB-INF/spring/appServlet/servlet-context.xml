@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- HandlerMapping, HandlerAdapter, ViewResolver, Validator 등의 MVC 프로그래밍 모델이서 사용될 전략 객체들을 자동 등록 -->
+	<mvc:annotation-driven validator="validator">
+		<mvc:argument-resolvers>
+			<bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver" />
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+	
+	<!-- 이름을 반드시 messageSource, H.A 가 injection 받는다  -->
+	<!-- 로케일에 따른 언어별 메시지 처리를 위한 전략 객체 -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"
+		p:basenames="kr.or.ddit.msgs.errorMessage,kr.or.ddit.msgs.message"
+	/>
+
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" 
+		p:validationMessageSource-ref="messageSource"
+	/>
+	
+	<!-- v.r는 제어권을 다음으로 넘겨주지면 IRVR은 아님(404d에러 응답) -> 항상 젤 끝 resolver 여야 한다(order 생략) -->
+	<bean id="IRVR" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/WEB-INF/jsp/"
+		p:suffix=".jsp"
+	/>
+	
+	<bean id="BNVR" class="org.springframework.web.servlet.view.BeanNameViewResolver" 
+		p:order="1"
+	/>
+	
+	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+	
+	<!-- Tiles Context 형성 -->
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer" 
+		p:definitions="/WEB-INF/tiles/*-definitions.xml"
+		p:preparerFactoryClass="org.springframework.web.servlet.view.tiles3.SpringBeanPreparerFactory"
+	/>
+	<bean id="TVR" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver" 
+		p:order="2"
+	/>
+	
+	<!-- Controller layer를 bean으로 등록하기 위한 필터링 설정 -->
+	<context:component-scan base-package="kr.or.ddit" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+	
+	<!-- 이름을 반드시 localeResolver, LocaleChangeInterceptor 가 injection 받는다  -->
+	<!-- LocaleChangeInterceptor 가 변경한 로케일 정보를 저장하기 위해 사용하는 전략객체 -->
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" 
+		p:cookieName="localeCookie"
+		p:cookiePath="/"
+		p:cookieMaxAge="#{60*60*24*5}"
+	/>
+	
+	<!-- HandlerInterceptor : 스프링 컨테이너 밖에 존재하는 웹 필터의 역할을 대신하는 객체 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<!-- language 이름의 요청 파라미터를 기준으로 현재 로케일을 변경하기 위한 인터셉터 -->
+			<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
+				p:paramName="language"
+			/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<!-- mapping 형태로 들어오는 요청을 location으로 -->
+	<!-- 정적 자원이 일괄 관리 되는 경우 활용 -->
+	<mvc:resources location="/resources/" mapping="/resources/**" cache-period="0" />
+	<!-- 따로 있는경우 default servlet 설정 사용 -->
+	
+	<!-- Custom view preparer -->
+	<bean id="mainMenuPrepare" class="kr.or.ddit.commons.view.prepare.MainMenuPrepare" />
+	<bean id="doctorMenuPrepare" class="kr.or.ddit.doctor.view.prepare.DoctorMenuPrepare"/>
+	
+<!-- 	<bean id="paginationManager" class="kr.or.ddit.ui.DefaultPaginationManager"> -->
+<!-- 		<constructor-arg name="rendererMap"> -->
+<!-- 			<map> -->
+<!-- 				<entry key="default"> -->
+<!-- 					<bean class="kr.or.ddit.ui.DefaultPaginationRenderer"/> -->
+<!-- 				</entry> -->
+<!-- 				<entry key="bootstrap"> -->
+<!-- 					<bean class="kr.or.ddit.ui.BootstrapPaginationRenderer" /> -->
+<!-- 				</entry> -->
+<!-- 			</map> -->
+<!-- 		</constructor-arg> -->
+<!-- 	</bean> -->
+	
+	<!-- 단순한 model2 구조일때 사용 requestMapping, logical view name -->
+<!-- 	<mvc:view-controller path="/login/loginForm" view-name="login/loginForm"/> -->
+</beans>

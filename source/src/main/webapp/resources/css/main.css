@@ -1,0 +1,66 @@
+@charset "UTF-8";
+
+/* ***********************header 시작******************************* */
+*{
+	margin:0px;
+	padding:0px;
+}
+.menu{
+    display: flex;
+    background: #4F80FF;
+    font-family: 'NanumSquareRound';
+}
+.menu-item{
+    flex-grow: 1;
+    background: #4F80FF;
+    transition: 0.5s;
+}
+.menu-item:hover {
+    flex-grow: 1.5;
+/*     background: #F7AA00; 마우스 올렸을 때 색*/
+}
+.menu-link{
+    display : block;
+    padding: 1em;
+    font-size : 1.2rem;
+    font-weight: bold;
+    color : white;
+    text-decoration: none;
+    text-align: center;
+}
+.menu-link:hover{
+    color:black; 
+}
+ul{
+    list-style:none;
+    padding: 0;
+}
+#main_logo{
+    text-align: center;
+    padding-top : 10px;
+    padding-left: 10px;
+}
+.menu-link-user{
+    display : block;
+    padding: 1.5em;
+    font-size : 0.9rem;
+    color : white;
+    text-decoration: none;
+    text-align: center;
+}
+
+.user-photo-link{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: gold;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin: 0px;
+    margin-top: 10px;
+}
+.user_info {
+	font-family: 'normal';
+}
+/* **************************header 끝****************************** */
