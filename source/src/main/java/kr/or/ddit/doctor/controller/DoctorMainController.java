@@ -6,11 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/doctor")
-public class ICDListController {
+public class DoctorMainController {
 	
-	@GetMapping("/ICD")
-	public String listData() {
-		
-		return "doctor/medicineList";
+	@GetMapping("/main")
+	public String enterMainView() {
+		return "doctor/doctorMain";
 	}
 }

@@ -63,4 +63,16 @@ ul{
 .user_info {
 	font-family: 'normal';
 }
+dl, ol, ul {
+    margin-bottom: 0; 
+}
 /* **************************header 끝****************************** */
+
+/* **************************card 시작****************************** */
+.card{
+	background-color: #ddd;
+    border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+    box-shadow: 1px 1px 5px grey;
+}
+/* **************************card 끝****************************** */

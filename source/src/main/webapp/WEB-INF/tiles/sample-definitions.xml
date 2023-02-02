@@ -23,4 +23,7 @@
 	<definition name="radiology/*" extends="parent" >
 		<put-attribute name="content" value="/WEB-INF/jsp/radiology/{1}.jsp"/>
 	</definition>
+	<definition name="pt/*" extends="parent" >
+		<put-attribute name="content" value="/WEB-INF/jsp/pt/{1}.jsp"/>
+	</definition>
 </tiles-definitions>

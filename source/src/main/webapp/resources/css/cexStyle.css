@@ -1,0 +1,178 @@
+@charset "UTF-8";
+
+html, body {
+	height: 100%;
+	overflow: hidden;
+}
+
+thead {
+	height: 4.375rem;
+}
+
+tbody {
+	height: 4.375rem;
+}
+
+th, td {
+	background-color: white;
+	border-radius: 5px;
+	text-align: center;
+}
+
+h4 {
+	font-size: 30px;
+}
+
+.left {
+	float: left;
+	width: 41.563rem;
+}
+
+.right {
+	float: left;
+	width: 77.813rem;
+}
+
+.wait-list {
+	width: 41.438rem;
+    height: 30.375rem;
+}
+
+.cex-history {
+	width: 41.438rem;
+	height: 21.875rem;
+}
+
+.patient-info {
+	width: 77.813rem;
+	height: 17.7rem;
+}
+
+.cex-detail {
+	width: 77.813rem;
+	height: 17.7rem;
+}
+
+.cex-barcode {
+	width: 77.813rem;
+	height: 17.7rem;
+}
+
+.wait-list-in {
+	width: 37.5rem;
+    height: 27rem;
+    margin: 0.625rem;
+    padding: 1.25rem;
+    background-color: #F2F1F1;
+    border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+    box-shadow: 1px 1px 5px grey;
+}
+
+.patient-info-in {
+	width: 73.938rem;
+    height: 14rem;
+	margin: 0.625rem;
+	background-color: #F2F1F1;
+	padding: 1.25rem;
+	border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+	box-shadow: 1px 1px 5px grey;
+}
+
+.cex-history-in {
+	width: 37.5rem;
+    height: 18.875rem;
+    margin: 0.625rem;
+    padding: 1.25rem;
+    background-color: #F2F1F1;
+    border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+    box-shadow: 1px 1px 5px grey;
+}
+
+.cex-detail-in{
+	width: 73.938rem;
+    height: 14rem;
+	margin: 0.625rem; 
+	padding : 1.25rem;
+	background-color: #F2F1F1;
+	border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+	box-shadow: 1px 1px 5px grey;
+}
+
+.cex-barcode-in{
+	width: 73.938rem;
+    height: 14rem;
+	margin: 0.625rem; 
+	padding : 1.25rem;
+	background-color: #F2F1F1;
+	border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+    box-shadow: 1px 1px 5px grey;
+	display: flex;
+    flex-direction: column;
+}
+
+.patient-info-in-top {
+	width: 73.938rem;
+	height: 2.813rem;
+}
+.patient-detail-in-top {
+	width: 73.938rem;
+	height: 2.813rem;
+}
+
+#cex-title {
+	float: left;
+}
+
+#cex-search-form {
+	float: right;
+}
+
+.cex-select {
+	width: 12.5rem;
+	height: 2.5rem;
+}
+
+.cex-input {
+	width: 18.75rem;
+	height: 2.25rem;
+}
+
+.btn-submit {
+	width: 6.25rem;
+	height: 2.5rem;
+	background-color : #16308D;
+	color: white;
+	border: none;
+	margin: 0.188rem;
+    box-shadow: 1px 1px 2px grey;
+}
+
+.cex-table {
+	width: 73.938rem;
+	height: 11.5rem;
+	padding-top: 0.5rem;
+}
+
+.cex-wait-table {
+	width: 37.5rem;
+	height: 23.875rem;
+	padding-top: 1.5rem;
+}
+
+.cex-history-table{
+	width: 37.5rem;
+    height: 15rem;
+    padding-top: 0.5rem;
+}
+
+#barcode-print{
+	width: 73.938rem;
+    height: 17.813rem;
+    background-color: white;
+    margin-top: 1.25rem;
+}
