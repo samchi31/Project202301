@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.dao.PatientDAO">
+	<sql id="searchFrag">
+		<where>
+			<if test="simpleCondition neq null and @org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'no'">
+						INSTR(PA_NO, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'name'">
+						INSTR(PA_NANE, #{simpleCondition.searchWord}) > 0
+					</when>
+					<otherwise>
+						INSTR(PA_NO, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(PA_NANE, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		 </where>
+	</sql>
+	
+	<select id="selectTotalRecord" resultType="int" parameterType="pagingVO">
+		SELECT COUNT(*)
+		FROM PATIENT
+		<include refid="searchFrag"/>
+	</select>
+	
+	<select id="selectPatientList" resultType="PatientVO" parameterType="PagingVO">
+		SELECT B.*
+		FROM (
+			SELECT A.*, ROWNUM RNUM
+			FROM (
+				 SELECT PA_NO, PA_NAME, PA_REG1
+				 	, PA_REG2, PA_HP,PA_INYN
+				 	, PA_PRN, PA_ZIP, PA_ADD1
+				 	, PA_ADD2, PA_PIYN              
+				 FROM PATIENT   
+				 <include refid="searchFrag" />
+				 ORDER BY ROWID DESC   
+			 ) A    
+		 ) B      
+		 <![CDATA[
+		 	WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
+		 ]]>            
+	</select>
+	
+	<resultMap type="PatientVO" id="patientMap" autoMapping="true">
+		<id property="paNo" column="PA_NO"/>
+	</resultMap>
+	
+	<select id="selectPatient" parameterType="int" resultMap="patientMap">
+		SELECT
+    		PA_NO, PA_NAME, PA_REG1
+    	  , PA_REG2, PA_HP,PA_INYN
+    	  , PA_PRN, PA_ZIP, PA_ADD1
+    	  , PA_ADD2, PA_PIYN
+		  FROM PATIENT
+		 WHERE PA_NO = #{paNo}
+	</select>
+	
+	<insert id="insertPatient" parameterType="PatientVO">
+		INSERT INTO patient (
+		    PA_NO
+		    , PA_NAME
+		    , PA_REG1
+		    , PA_REG2
+		    , PA_HP
+		    , PA_INYN
+		    , PA_PRN
+		    , PA_ZIP
+		    , PA_ADD1
+		    , PA_ADD2
+		    , PA_PIYN
+		) VALUES (
+		    #{paNo,jdbcType=NUMERIC}
+			, #{paName,jdbcType=VARCHAR}
+			, #{paReg1,jdbcType=NUMERIC}
+			, #{paReg2,jdbcType=NUMERIC}
+			, #{paHp,jdbcType=VARCHAR}
+			, #{paInyn,jdbcType=CHAR}
+			, #{paPrn,jdbcType=CHAR}
+			, #{paZip,jdbcType=NUMERIC}
+			, #{paAdd1,jdbcType=VARCHAR}
+			, #{paAdd2,jdbcType=VARCHAR}
+			, #{paPiyn,jdbcType=CHAR}
+		)
+	</insert>
+	
+	<update id="updatePatient" parameterType="kr.or.ddit.commons.vo.PatientVO">
+		UPDATE patient
+    	   SET
+   	   		PA_NO = #{paNo,jdbcType=NUMERIC}
+			, PA_NAME = #{paName,jdbcType=VARCHAR}
+			, PA_REG1 = #{paReg1,jdbcType=NUMERIC}
+			, PA_REG2 = #{paReg2,jdbcType=NUMERIC}
+			, PA_HP = #{paHp,jdbcType=VARCHAR}
+			, PA_INYN = #{paInyn,jdbcType=CHAR}
+			, PA_PRN = #{paPrn,jdbcType=CHAR}
+			, PA_ZIP = #{paZip,jdbcType=NUMERIC}
+			, PA_ADD1 = #{paAdd1,jdbcType=VARCHAR}
+			, PA_ADD2 = #{paAdd2,jdbcType=VARCHAR}
+			, PA_PIYN = #{paPiyn,jdbcType=CHAR}
+    	 WHERE PA_NO = #{paNo}
+	</update>
+	
+	<delete id="deletePatient" parameterType="string">
+		UPDATE PATIENT
+		SET
+			PA_DELETE = '1'
+		WHERE PA_NO = #{noname}
+	</delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

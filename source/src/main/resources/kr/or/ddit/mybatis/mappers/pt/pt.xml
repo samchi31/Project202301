@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.pt.dao.PtAssinmentDAO">
+	<select id="selectPtAssinmentList"
+		resultType="kr.or.ddit.commons.vo.PtAssinmentVO">
+		SELECT A.PA_NO, A.PA_NAME, A.PA_REG1
+		FROM PATIENT A, RECEPTION B, WAITING_HISTORY C
+		WHERE A.PA_NO = B.PA_NO
+		AND B.RCP_NO = c.RCP_NO
+		AND c.DIV_CD = 'DV008'
+		AND c.WAITST_CD = 'WS001'
+	</select>
+</mapper>

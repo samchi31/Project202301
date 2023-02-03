@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+<script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+
 <style type="text/css">
   	
     /*tab css*/
@@ -13,18 +16,46 @@
 	.tabnav li a.active{border-bottom:1px solid #fff;}
 	.tabnav li a{ position:relative; display:block; background: #f8f8f8; color: #000; padding:0 15px; line-height:46px; text-decoration:none; font-size:16px;}
 	.tabnav li a:hover, .tabnav li a.active{background:#fff; color:#7ea21e; }
-	.tabcontent{ width:700px; border-top:none; background:#fff;}
+	.tabcontent{ width:800px; border-top:none; background:#fff;}
 	.tabcontentWrap{padding: 20px;  height:265px; overflow-y:auto; overflow-x:auto;  border-top:none; background:#fff;}
 	
-	ul{margin-bottom:0;}
+		
+	td { white-space: nowrap; text-overflow: ellipsis;overflow: hidden;}
+/* 	.table-fixed { */
+/* 	    background-color: #fbfbfb; */
+/* 	    width: 100%; */
+/* 	} */
+/* 	.table-fixed tbody { */
+/* 	    height: 200px; */
+/* 	    overflow-y: auto; */
+/* 	    width: 100%; */
+/* 	} */
+/* 	.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th { */
+/* 	    display: block; */
+/* 	} */
+/* 	.table-fixed tbody td { */
+/* 	    float: left; */
+/* 	} */
+/* 	.table-fixed thead tr th { */
+/* 	    background-color:#159bd0; */
+/* 	    border-color:#0881b1; */
+/* 	    float: left; */
+/* 		  color:#fff; */
+/* 	} */
 </style>
 
 <div class="wrapper">
+기초자료, 증상코드 기입, 처방 코드 기입, 수술 여부 기입, 환자 대기 리스트, 캘린더, 물리치료 여부 작성, 환자 상세 정보, 환자 진료차트 내역
+
 	<div class="grid-stack">
 		<!-- ui-draggable-disabled ui-resizable-disable 가 있으나 없으나 차이가 없다 -->
 		<div class="grid-stack-item "
 			gs-x="0" gs-y="0" gs-w="5" gs-h="1" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >진단</div>
+			<div class="grid-stack-item-content card" >진단
+				<div>
+					
+				</div>
+			</div>
 		</div>
 		<div class="grid-stack-item" 
 			gs-x="0" gs-y="2" gs-w="5" gs-h="2" gs-no-resize="true" gs-no-move="true">
@@ -60,7 +91,27 @@
 				    </ul>
 				    <div class="tabcontentWrap">
 					    <div class="tabcontent">
-					      <div id="dise"></div>
+					      <div id="dise">
+					      	
+					      	<table class="table table-bordered table-hover table-head-fixed table-fixed">
+					      		<thead>
+					      			<tr>
+					      				<th>상병코드</th>
+					      				<th>영문</th>
+					      				<th>한글</th>
+					      			</tr>
+					      		</thead>
+					      		<tbody>
+					      			<c:forEach items="${disList }" var="disease">
+					      				<tr>
+					      					<td>${disease["diseaseCd"] }</td>
+					      					<td>${disease["enNm"] }</td>
+					      					<td>${disease["korNm"] }</td>
+					      				</tr>
+					      			</c:forEach>
+					      		</tbody>
+					      	</table>
+					      </div>
 					      <div id="medi">
 					      	<table class="table table-bordered table-hover table-head-fixed">
 					      		<thead>
@@ -72,7 +123,7 @@
 										<th>급여구분</th>
 									</tr>
 					      		</thead>
-					      		<tbody>
+					      		<tbody id="tbody_medi">
 					      		</tbody>
 					      	</table>
 					      </div>
@@ -135,7 +186,7 @@
   
   
   /* make table */
-  let $tbody =$("tbody");
+  let $tbody_medi =$("#tbody_medi");
   let f_makeTable = function(v_sel, v_data){
 	  let trTags = [];
 	  for(let i=0;i<v_data.length;i++){
@@ -148,7 +199,7 @@
 		  )
 		  trTags.push($tr);
 	  }
-	  $tbody.append(trTags);
+	  $tbody_medi.append(trTags);
   }
   
   /* tab 메뉴 */

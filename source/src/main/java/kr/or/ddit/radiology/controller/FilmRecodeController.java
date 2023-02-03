@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/radiology")
-public class radiologyController {
+public class FilmRecodeController {
    
-	@GetMapping("/radiologyView")
-	public String radiologyView() {
+	@GetMapping("/filmRecodeView")
+	public String filmRecodeView() {
 		String viewName = null;
-		viewName = "radiology/radiologyView";
+		viewName = "radiology/filmRecodeView";
       
 		return viewName;
 	}

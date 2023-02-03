@@ -26,4 +26,7 @@
 	<definition name="pt/*" extends="parent" >
 		<put-attribute name="content" value="/WEB-INF/jsp/pt/{1}.jsp"/>
 	</definition>
+	<definition name="receiption/*" extends="parent" >
+		<put-attribute name="content" value="/WEB-INF/jsp/receiption/{1}.jsp"/>
+	</definition>
 </tiles-definitions>

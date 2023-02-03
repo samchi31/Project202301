@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.radiology.dao.RadiologyDAO">
+	<sql id="searchFrag">
+		<where>
+			<if test="simpleCondition neq null and @org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'no'">
+						INSTR(FILM_NM, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'name'">
+						INSTR(PA_NAME, #{simpleCondition.searchWord}) > 0
+					</when>
+					<otherwise>
+						INSTR(FILM_NM, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(PA_NAME, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		 </where>
+	</sql>
+	
+	<select id="selectTotalRecord" resultType="int" parameterType="pagingVO">
+		SELECT COUNT(*)
+		FROM FILMCATE A, TRM_CHART B, FILM_ORDER C, RECEPTION D, PATIENT E
+		WHERE a.FILM_CD = c.FILM_CD
+		AND c.TRM_CD = B.TRM_CD
+		AND B.RCP_NO = d.RCP_NO
+		AND d.PA_NO = e.PA_NO
+		<include refid="searchFrag"/>
+	</select>
+	
+	<select id="selectFilmList" resultType="FilmCateVO" parameterType="PagingVO">
+		SELECT B.* 
+		   FROM (
+		       SELECT A.*, ROWNUM RNUM
+		       FROM (
+		            SELECT FILM_NM, TRM_DT, PA_NAME
+		            FROM V_FILM
+		            ORDER BY ROWID DESC   
+		        ) A    
+		    ) B 
+		<![CDATA[
+ 		WHERE RNUM >= #{startRow} AND RNUM <= #{endRow};
+ 		]]> 
+	</select>
+</mapper>
+

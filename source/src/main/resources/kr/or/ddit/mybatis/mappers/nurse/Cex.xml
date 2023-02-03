@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.nurse.dao.CexDAO">
+
+	<select id="selectPatientList" resultType="PatientVO" parameterType="hashMap">
+		
+		SELECT PA_NO, PA_NAME, PA_REG1
+		 	, PA_REG2, PA_HP,PA_INYN
+		 	, PA_PRN, PA_ZIP, PA_ADD1
+		 	, PA_ADD2, PA_PIYN              
+		  FROM PATIENT   
+		<where>
+			<if test="searchOption!=null">
+				<choose>
+					<when test="searchOption=='no'">
+						AND PA_NO = #{searchWord}
+					</when>
+					<when test="searchOption=='name'">
+						AND PA_NAME LIKE '%' || #{searchWord} || '%'
+					</when>
+				</choose>
+			</if>
+		</where>      
+	</select>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
