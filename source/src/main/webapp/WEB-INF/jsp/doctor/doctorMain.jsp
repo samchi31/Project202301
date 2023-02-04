@@ -6,9 +6,11 @@
 <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
 
 <style type="text/css">
+  	/* table */
+  	table {table-layout: fixed;}
   	
     /*tab css*/
-	.tab{ margin:10px; overflow:hidden;}
+	.tab { overflow:hidden;}
 	.tabnav{font-size:0;}
 	.tabnav li{display: inline-block; text-align:center; border-right:1px solid #ddd;}
 	.tabnav li a:before{content:""; position:absolute; left:0; top:0px; width:100%; height:3px; }
@@ -16,32 +18,9 @@
 	.tabnav li a.active{border-bottom:1px solid #fff;}
 	.tabnav li a{ position:relative; display:block; background: #f8f8f8; color: #000; padding:0 15px; line-height:46px; text-decoration:none; font-size:16px;}
 	.tabnav li a:hover, .tabnav li a.active{background:#fff; color:#7ea21e; }
-	.tabcontent{ width:800px; border-top:none; background:#fff;}
-	.tabcontentWrap{padding: 20px;  height:265px; overflow-y:auto; overflow-x:auto;  border-top:none; background:#fff;}
-	
-		
-	td { white-space: nowrap; text-overflow: ellipsis;overflow: hidden;}
-/* 	.table-fixed { */
-/* 	    background-color: #fbfbfb; */
-/* 	    width: 100%; */
-/* 	} */
-/* 	.table-fixed tbody { */
-/* 	    height: 200px; */
-/* 	    overflow-y: auto; */
-/* 	    width: 100%; */
-/* 	} */
-/* 	.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th { */
-/* 	    display: block; */
-/* 	} */
-/* 	.table-fixed tbody td { */
-/* 	    float: left; */
-/* 	} */
-/* 	.table-fixed thead tr th { */
-/* 	    background-color:#159bd0; */
-/* 	    border-color:#0881b1; */
-/* 	    float: left; */
-/* 		  color:#fff; */
-/* 	} */
+	.tabcontent{ border-top:none; background:#fff;}
+	.tabcontentWrap{ height:265px; overflow-y:auto; overflow-x:auto;  border-top:none; background:#fff;}
+
 </style>
 
 <div class="wrapper">
@@ -50,52 +29,157 @@
 	<div class="grid-stack">
 		<!-- ui-draggable-disabled ui-resizable-disable 가 있으나 없으나 차이가 없다 -->
 		<div class="grid-stack-item "
-			gs-x="0" gs-y="0" gs-w="5" gs-h="1" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >진단
-				<div>
-					
-				</div>
+			gs-x="0" gs-y="0" gs-w="5" gs-h="2" gs-no-resize="true" gs-no-move="true">
+			<div class="grid-stack-item-content card" >
+				<div class="tab">
+				    <ul class="tabnav">
+				      <li><a href="#sym">증상</a></li>
+				      <li><a href="#diag">진단</a></li>		      
+				    </ul>
+			    	<div class="tabcontentWrap">
+					    <div class="tabcontent">
+					    	<div id="sym">
+					    		<table>
+									<colgroup>
+							      		<col style="width: 15%;" />
+							      		<col style="width: 25%;" />
+							      		<col style="width: 50%;" />
+							      	</colgroup>
+									<thead>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+					    	</div>
+					    	<div id="diag">
+					    	</div>
+					    </div>
+					</div>
+			  	</div>
 			</div>
 		</div>
 		<div class="grid-stack-item" 
 			gs-x="0" gs-y="2" gs-w="5" gs-h="2" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >처방</div>	
+			<div class="grid-stack-item-content card" >
+				<h4>처방</h4>
+				<div>
+					<table>
+						<colgroup>
+				      		<col style="width: 15%;" />
+				      		<col style="width: 25%;" />
+				      		<col style="width: 50%;" />
+				      	</colgroup>
+						<thead>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>	
 		</div>
 		<div class="grid-stack-item" 
-			gs-x="0" gs-y="4" gs-w="5" gs-h="2" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >기록</div>	
+			gs-x="0" gs-y="6" gs-w="5" gs-h="1" gs-no-resize="true" gs-no-move="true">
+			<div class="grid-stack-item-content card" >
+				<h4>기록</h4>
+				<div>
+					<input type="text"/>
+					<button class="btn">저장</button>
+				</div>
+			</div>	
 		</div>
+		<div class="grid-stack-item" 
+			gs-x="10" gs-y="0" gs-w="2" gs-h="2" gs-no-resize="true" gs-no-move="true">
+			<div class="grid-stack-item-content card" >
+				<h4>일정</h4>
+			</div>	
+		</div>	
 		<div class="grid-stack-item" 
 			gs-x="5" gs-y="0" gs-w="2" gs-h="2" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >캘린더</div>	
+			<div class="grid-stack-item-content card" >
+				<h4>오더</h4>
+				<div>
+					<div class="tab">
+					    <ul class="tabnav">
+					      <li><a href="#film">영상</a></li>
+					      <li><a href="#phy">물리</a></li>		      
+					    </ul>
+				    	<div class="tabcontentWrap">
+						    <div class="tabcontent">
+						    	<div id="film">
+						    		<table>
+										<colgroup>
+								      		<col style="width: 50%;" />
+								      		<col style="width: 50%;" />
+								      	</colgroup>
+										<thead>
+											<tr>
+												<th>촬영구분</th>
+												<th>촬영명</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+						    	</div>
+						    	<div id="phy">
+						    	</div>
+						    </div>
+						</div>
+				  	</div>
+				</div>
+			</div>	
 		</div>	
+		<div class="grid-stack-item" 
+			gs-x="7" gs-y="0" gs-w="3" gs-h="2" gs-no-resize="true" gs-no-move="true">
+			<div class="grid-stack-item-content card" >
+				<h4>환자대기</h4>
+				<div>
+					<table class="table table-bordered">
+						<colgroup>
+				      		<col style="width: 30%;" />
+				      		<col style="width: 30%;" />
+				      		<col style="width: 30%;" />
+				      	</colgroup>
+						<thead>
+							<tr>
+								<td>환자코드</td>
+								<td>환자명</td>
+								<td>대기상태</td>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>	
+		</div>
 		<div class="grid-stack-item" 
 			gs-x="5" gs-y="2" gs-w="2" gs-h="3" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card" >환자정보</div>	
 		</div>	
 		<div class="grid-stack-item" 
-			gs-x="7" gs-y="0" gs-w="5" gs-h="2" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >환자대기</div>	
-		</div>	
-		<div class="grid-stack-item" 
 			gs-x="7" gs-y="2" gs-w="5" gs-h="3" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card" >
+				<h4>기초자료</h4>
 				 <div class="tab">
 				    <ul class="tabnav">
 				      <li><a href="#dise">상병</a></li>
 				      <li><a href="#medi">처방</a></li>
 				      <li><a href="#sym">증상</a></li>
-				      <li><a href="#exam">검사</a></li>
 				      <li><a href="#radi">방사선</a></li>				      
 				      <li><a href="#group">그룹오더</a></li>				      
 				    </ul>
 				    <div class="tabcontentWrap">
 					    <div class="tabcontent">
 					      <div id="dise">
-					      	
-					      	<table class="table table-bordered table-hover table-head-fixed table-fixed">
+					      	<table class="table table-bordered table-hover">
+					      	<colgroup>
+					      		<col style="width: 15%;" />
+					      		<col style="width: 25%;" />
+					      		<col style="width: 50%;" />
+					      	</colgroup>
 					      		<thead>
-					      			<tr>
+					      			<tr class="fixedHeader table-light">
 					      				<th>상병코드</th>
 					      				<th>영문</th>
 					      				<th>한글</th>
@@ -113,9 +197,16 @@
 					      	</table>
 					      </div>
 					      <div id="medi">
-					      	<table class="table table-bordered table-hover table-head-fixed">
+					      	<table class="table table-bordered table-hover">
 					      		<thead>
-					      			<tr>
+					      			<colgroup>
+							      		<col style="width: 15%;" />
+							      		<col style="width: 40%;" />
+							      		<col style="width: 10%;" />
+							      		<col style="width: 15%;" />
+							      		<col style="width: 20%;" />
+							      	</colgroup>
+					      			<tr class="fixedHeader table-dark">
 					      				<th>약품코드</th>
 										<th>약품명</th>
 										<th>투여</th>
@@ -127,10 +218,32 @@
 					      		</tbody>
 					      	</table>
 					      </div>
-					      <div id="sym"></div>
-					      <div id="exam"></div>
-					      <div id="radi"></div>
-					      <div id="group"></div>
+					      <div id="sym">
+					      	<table class="table table-bordered table-hover">
+					      		<thead>
+					      			<colgroup>
+							      		<col style="width: 15%;" />
+							      		<col style="width: 40%;" />
+							      	</colgroup>
+					      			<tr class="fixedHeader table-dark">
+					      				<th>증상코드</th>
+										<th>증상</th>
+									</tr>
+					      		</thead>
+					      		<tbody >
+					      			<c:forEach items="${symList }" var="symptom">
+					      				<tr>
+					      					<td>${symptom["symCd"] }</td>
+					      					<td>${symptom["symDetail"] }</td>
+					      				</tr>
+					      			</c:forEach>
+					      		</tbody>
+					      	</table>
+					      </div>
+					      <div id="radi">
+					      </div>
+					      <div id="group">
+					      </div>
 					    </div>
 					</div>
 				  </div>		
