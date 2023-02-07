@@ -67,6 +67,7 @@ h4 {
     border-radius: 5px;
 	border-top: 5px solid #4F80FF;
     box-shadow: 1px 1px 5px grey;
+    overflow:auto;
 }
 
 .patient-info-in {
@@ -89,6 +90,7 @@ h4 {
     border-radius: 5px;
 	border-top: 5px solid #4F80FF;
     box-shadow: 1px 1px 5px grey;
+    overflow:auto;
 }
 
 .cex-detail-in{
@@ -173,6 +175,6 @@ h4 {
 #barcode-print{
 	width: 73.938rem;
     height: 17.813rem;
-    background-color: white;
-    margin-top: 1.25rem;
+/*     background-color: white; */
+/*     margin-top: 1.25rem; */
 }

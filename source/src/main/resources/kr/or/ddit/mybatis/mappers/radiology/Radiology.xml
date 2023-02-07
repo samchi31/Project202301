@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.or.ddit.radiology.dao.RadiologyDAO">
+<mapper namespace="kr.or.ddit.radiology.dao.FilmRecodeDAO">
 	<sql id="searchFrag">
 		<where>
 			<if test="simpleCondition neq null and @org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
 				<choose>
 					<when test="simpleCondition.searchType eq 'no'">
-						INSTR(FILM_NM, #{simpleCondition.searchWord}) > 0
+						INSTR(PA_NO, #{simpleCondition.searchWord}) > 0
 					</when>
 					<when test="simpleCondition.searchType eq 'name'">
 						INSTR(PA_NAME, #{simpleCondition.searchWord}) > 0
 					</when>
 					<otherwise>
-						INSTR(FILM_NM, #{simpleCondition.searchWord}) > 0
+						INSTR(PA_NO, #{simpleCondition.searchWord}) > 0
 						OR
 						INSTR(PA_NAME, #{simpleCondition.searchWord}) > 0
 					</otherwise>
@@ -32,18 +32,21 @@
 	</select>
 	
 	<select id="selectFilmList" resultType="FilmCateVO" parameterType="PagingVO">
-		SELECT B.* 
-		   FROM (
-		       SELECT A.*, ROWNUM RNUM
-		       FROM (
-		            SELECT FILM_NM, TRM_DT, PA_NAME
-		            FROM V_FILM
-		            ORDER BY ROWID DESC   
-		        ) A    
-		    ) B 
-		<![CDATA[
- 		WHERE RNUM >= #{startRow} AND RNUM <= #{endRow};
- 		]]> 
+		SELECT A.FILM_NM, TO_CHAR(B.TRM_DT, 'YYYY-MM-DD') AS TRM_DT, FN_GET_PA_NAME(B.RCP_NO) AS PA_NAME
+		FROM   FILMCATE A, TRM_CHART B, FILM_ORDER C
+		WHERE A.FILM_CD = C.FILM_CD
+		AND   C.TRM_CD = B.TRM_CD
+		<if test="searchOption!=null">
+			<choose>
+				<when test="searchOption=='filmName'">
+					AND A.FILM_NM LIKE '%' || #{searchWord} || '%'
+				</when>
+				<when test="searchOption=='name'">
+					AND FN_GET_PA_NAME(B.RCP_NO) LIKE '%' || #{searchWord} || '%'
+				</when>
+			</choose>
+		</if>
 	</select>
+	
 </mapper>
 

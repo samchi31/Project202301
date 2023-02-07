@@ -16,4 +16,8 @@ public class WaitHistoryVO {
 	private Integer waitNum;
 	private String waitstCd;
 	private String divCd;
+	
+	private String paName;
+	private String divNm;
+	private String waitstNm;
 }

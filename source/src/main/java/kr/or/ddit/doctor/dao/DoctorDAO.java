@@ -4,10 +4,13 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.or.ddit.commons.vo.DiagHistoryVO;
 import kr.or.ddit.commons.vo.DiseaseVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
+import kr.or.ddit.commons.vo.FilmOrderVO;
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.PrescriptionVO;
+import kr.or.ddit.commons.vo.ReceptionVO;
 import kr.or.ddit.commons.vo.SymptomVO;
 import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
@@ -43,7 +46,7 @@ public interface DoctorDAO {
 	public List<SymptomVO> selectSymList();
 	
 //	/**
-//	 * 검사 목록 전체 kkk
+//	 * 검사 목록 전체  
 //	 * @RETURN 검사 목록
 //	 */
 //	public List<> selectExamList(); 
@@ -80,7 +83,7 @@ public interface DoctorDAO {
 	 * @param docNo 사번
 	 * @return 대기 환자 리스트
 	 */
-	public List<WaitHistoryVO> selectWaitHistory(int docNo);
+	public List<ReceptionVO> selectWaitHistory(String officeCd);
 	
 	/**
 	 * 환자 상세 정보
@@ -101,28 +104,28 @@ public interface DoctorDAO {
 	 * @param symptomVOList
 	 * @return
 	 */
-	public int insertSymList(List<SymptomVO> symptomVOList);
+	public int insertSymList(TrmChartVO trmChartVO);
 	
 	/**
-	 * 진료 차트 작성 시 상병 내역 입력
+	 * 진료 차트 작성 시 진단 내역 입력
 	 * @param diseaseVOList
 	 * @return
 	 */
-	public int insertDisList(List<DiseaseVO> diseaseVOList);
+	public int insertDiagList(TrmChartVO trmChartVO);
 	
 	/**
 	 * 진료 차트 작성 시 처방 내역 입력
 	 * @param prescriptionVOList
 	 * @return
 	 */
-	public int insertPreList(List<PrescriptionVO> prescriptionVOList);
+	public int insertPreList(TrmChartVO trmChartVO);
 	
 	/**
 	 * 진료 차트 작성 시 영상 촬영 오더 내역 입력
 	 * @param filmCateVOList
 	 * @return
 	 */
-	public int insertRadiList(List<FilmCateVO> filmCateVOList);
+	public int insertRadiList(TrmChartVO trmChartVO);
 	
 	/**
 	 * 진료 후 환자의 대기 상태 변경

@@ -2,9 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.doctor.dao.DoctorDAO">
 
-	<select id="selectDisList" resultType="kr.or.ddit.commons.vo.DiseaseVO">
-		SELECT  DISEASE_CD, EN_NM, KOR_NM
-		FROM    CLASSIFICATION_DISEASE
+	<select id="selectDisList" resultType="DiseaseVO">
+		SELECT	disease_cd,
+		    	en_nm,
+		    	kor_nm
+		FROM 	classification_disease
 	</select>
 	
 	<select id="selectSymList" resultType="SymptomVO">
@@ -27,12 +29,15 @@
 	</select>
 	
 	<select id="selectTrmChartList" parameterType="int" resultType="TrmChartVO">
+		SELECT  TRM_CD, MEDI_RECORD, TRM_DT, EMP_NO, RCP_NO
+		FROM    V_TRM_CHART
+		WHERE   PA_NO = #{paNo}
+		ORDER   BY 3 DESC
+	</select>
+	
+<!-- 	<select id="selectWaitHistory" parameterType="String" resultType="ReceptionVO"> -->
 		
-	</select>
-	
-	<select id="selectWaitHistory" parameterType="int" resultType="WaitHistoryVO">
-	
-	</select>
+<!-- 	</select> -->
 	
 	<select id="selectPaInfo" parameterType="int" resultType="PatientVO">
 		SELECT  PA_NO
@@ -51,6 +56,9 @@
 	</select>
 	
 	<insert id="insertTrmChart" parameterType="TrmChartVO">
+		<selectKey order="BEFORE" keyProperty="trmCd" resultType="String">
+			SELECT 'TC'||LPAD(SEQ_TRM_CHART.NEXTVAL, 4, '0') FROM DUAL
+		</selectKey>
 		INSERT INTO trm_chart (
 		    trm_cd,
 		    medi_record,
@@ -58,11 +66,107 @@
 		    emp_no,
 		    rcp_no
 		) VALUES (
-		    seq,
-		    :v1,
-		    :v2,
-		    :v3,
-		    :v4
+		    #{trmCd}
+		    , #{mediRecord,jdbcType=VARCHAR}
+			, SYSDATE
+			, #{empNo,jdbcType=NUMERIC}
+			, #{rcpNo,jdbcType=NUMERIC}
 		)
 	</insert>
+	
+	<insert id="insertSymList" parameterType="TrmChartVO">
+		INSERT ALL
+		<foreach collection="symptomVOList" item="symptom" >
+			INTO symptom_history (
+			    trm_cd,
+			    sym_cd
+			) VALUES (
+			    #{trmCd,jdbcType=VARCHAR}
+				, #{symptom.symCd,jdbcType=VARCHAR}				    
+			)
+		</foreach>
+		SELECT	* FROM DUAL
+	</insert>
+	
+	<insert id="insertDiagList" parameterType="TrmChartVO">
+		INSERT ALL
+		<foreach collection="diagHistoryVOList" item="diag" >
+			INTO diagnosis_history (
+			    disease_cd,
+			    icd_name,
+			    trm_cd,
+			    oper_tf,
+			    physiotherapy_tf
+			) VALUES (
+			    #{diag.diseaseCd,jdbcType=VARCHAR}
+				, #{diag.icdName,jdbcType=VARCHAR}
+				, #{trmCd,jdbcType=VARCHAR}
+				, #{diag.operTf,jdbcType=CHAR}
+				, #{diag.physiotherapyTf,jdbcType=CHAR}
+			)
+		</foreach>
+		SELECT	* FROM DUAL
+	</insert>
+	
+	<insert id="insertPreList" parameterType="TrmChartVO">
+		INSERT ALL
+		<foreach collection="prescriptionVOList" item="prescription" >
+			INTO prescription_history (
+			    trm_cd,
+			    pre_cd,
+			    pre_detail,
+			    pre_nt,
+			    pre_total,
+			    price,
+			    injc_pth_nm,
+			    unit,
+			    pay_tp_nm
+			) VALUES (
+			    #{trmCd,jdbcType=VARCHAR}
+				, #{prescription.preCd,jdbcType=VARCHAR}
+				, #{prescription.preDetail,jdbcType=VARCHAR}
+				, #{prescription.preNt,jdbcType=NUMERIC}
+				, #{prescription.preTotal,jdbcType=NUMERIC}
+				, #{prescription.price,jdbcType=NUMERIC}
+				, #{prescription.injcPthNm,jdbcType=VARCHAR}
+				, #{prescription.unit,jdbcType=VARCHAR}
+				, #{prescription.payTpNm,jdbcType=VARCHAR}
+		)
+		</foreach>
+		SELECT	* FROM DUAL
+	</insert>
+	
+	<insert id="insertRadiList" parameterType="FilmOrderVO">
+		INSERT ALL
+		<foreach collection="filmOrderVOList" item="filmOrder" >
+			INTO film_order (
+			    trm_cd,
+			    film_cd
+			) VALUES (
+				#{trmCd,jdbcType=VARCHAR}
+			    , #{filmOrder.filmCd,jdbcType=DATE}
+			)
+		</foreach>
+		SELECT	* FROM DUAL
+	</insert>
+	
+<!-- 	<insert id="insertWaitHistory" parameterType="WaitHistoryVO"> -->
+<!-- 		INSERT INTO waiting_history ( -->
+<!-- 		    wait_no, -->
+<!-- 		    rcp_no, -->
+<!-- 		    wait_dt, -->
+<!-- 		    wait_num, -->
+<!-- 		    waitst_cd, -->
+<!-- 		    div_cd -->
+<!-- 		) VALUES ( -->
+<!-- 		    SEQ_WAITING_HISTORY.Nextval, -->
+<!-- 		    , #{rcpNo,jdbcType=NUMERIC} -->
+<!-- 		    , SYSDATE -->
+<!-- 		    , (select nvl(max(wait_num), 0) + 1 -->
+<!-- 		        from waiting_history -->
+<!-- 		        where rcp_no = #{}) -->
+<!-- 		    , #{waitstCd,jdbcType=VARCHAR} -->
+<!-- 			, #{divCd,jdbcType=VARCHAR}	 -->
+<!-- 		) -->
+<!-- 	</insert> -->
 </mapper>

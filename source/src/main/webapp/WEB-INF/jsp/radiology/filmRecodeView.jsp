@@ -2,159 +2,185 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<link href="${pageContext.request.contextPath }/resources/css/filmRecode.css" rel="stylesheet"/>
 <%-- <%@ taglib uri="http://www.ddit.or.kr/class305" prefix="ui" %> --%>
 <!DOCTYPE html>
 <html>
 <head>
 <title>촬영기록</title>
 <style>
-th, td {
-	background-color: white;
-	border-radius: 5px;
+.table1 {
+	margin: 0 0 40px 0;
+	width: 100%;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	display: table;
 	text-align: center;
 }
-
-h4 {
-	font-size: 30px;
-}
-.left {
-	float: left;
-	width: 665px;
-	height: 982px;
-}
-.patient-info {
-	width: 77.813rem;
-	height: 53rem;
-}
-.patient-info-in {
-	width: 31.938rem;
-    height: 49.438rem;
-	margin: 0.625rem;
-	background-color: #F2F1F1;
-	padding: 1.25rem;
-	border-radius: 5px;
-	border-top: 5px solid #4F80FF;
-	box-shadow: 1px 1px 5px grey;
-}
-#radi-search-form {
-	float: right;
-}
-.radi-select {
-	width: 8.5rem;
-	height: 2.5rem;
-}
-.btn-submit {
-	width: 6.25rem;
-	height: 2.5rem;
-	background-color : #16308D;
-	color: white;
-	border: none;
-	margin: 0.188rem;
-    box-shadow: 1px 1px 2px grey;
-}
-.radi-input{
-	width: 14.25rem;
-	height: 2.5rem;
-}
-
-/* gggggggggggggggggggggg */
-
-#content {
-	width:100%;
-	background-color:blue;
-}
-
-body{
-	overflow:hidden; 
-}
-
-#left { 
-	font-size:25px;
-	width:30%; 
-	height:100%;
-	display:block;
-	float:left;
-/* 	background-color:pink */
-}
-
-#right {
-	width:70%; 
-	display:block;
-	float:left;
-/* 	background-color:green */
-}
-.grid-title {
-	display:block;
-	width:100%;
-	height:0px; 
-/* 	background-color:red; */
-}
-
-#grid-container {
-	width: 99%;
-	height:100%;
-	display: grid;
-/* 	background-color: pink; */
-	padding: 10px;
-	grid-template-columns: 1fr 1fr 1fr 1fr;
-	grid-template-rows: 1fr 1fr 1fr;
-	grid-column: 1;
-/* 	border:1px solid red; */
-}
-[class*=grid-item] {
-	background-color: #F2F1F1;
-/* 	border: 3px solid lightpink; */
-    box-shadow: 1px 1px 5px grey;
-	padding: 20px;
-	font-size: 30px;
-	text-align: center;
-	height: 200px;
-	width: 270px;
-	margin : 20px;
-	border-radius: 10px
-}
-
-.p_list_con{
-	font-size: 15px;
+.raditable{
+	height : 100px;
+	background-color : white;
 }
 </style>
+<script>
+function f_block(){
+	if(event.keyCode==13){
+		event.preventDefault();
+	}
+}
+
+//엔터키 누르면 검색실행되게 하는 코드
+$(document).ready(function(){
+    $("input[name=searchBtn]").keydown(function () {
+		//event.stopPropagation();
+        if(event.keyCode == 13){//키가 13이면 실행 (엔터는 13)
+        	console.log("체크");
+            searchList();
+        }
+    });
+    $("#Search").on("click", function(){
+    	searchList();
+    });
+    
+    searchList = function (){
+        //검색 찾는 로직 구현
+        let searchOption = $("#searchOption option:selected").val();
+		let searchWord = $("#searchWord").val();
+		
+		console.log(searchOption);
+		console.log(searchWord);
+		
+		if(searchWord == ''){
+			swal('검색 실패!', "검색어를 입력해주세요", 'error');
+			return false;
+		}
+		
+		let data = {
+			searchOption:searchOption,
+			searchWord:searchWord
+		}
+		
+		$.ajax({
+			url : "filmSearch",
+			method : "post",
+			data : JSON.stringify(data),
+			contentType : "application/json;charset=utf-8",
+			dataType : "json",
+			success : function(result) { 
+				console.log(result);
+				console.log(result.length);
+				
+				if(result == null || result.length == 0){
+					// 기록이 없을 때
+					swal('검색실패', "촬영 기록이 없습니다.", "error");
+				}else if(result.length == 1){
+					// 기록이 하나일 때
+					let str = "";
+					$.each(result, function(i, v){
+// 						console.log(v);
+						str += `<tr>
+							<td><a>\${v.filmNm}</a></td>
+							<td><a>\${v.paName}</a></td>
+							<td><a>\${v.trmDt}</a></td>
+						</tr>`;
+					});
+					$("#radiTBody").html(str);
+				}else{
+					// 기록이 여러개일 때
+					let str = "";
+					$.each(result, function(i, v){
+// 						console.log(v);
+						str += `<tr>
+							<td style=\"padding-right:1px;\"><a>\${v.filmNm}</a></td>
+							<td style=\"padding-right:1px;\"><a>\${v.paName}</a></td>
+							<td style=\"padding-right:1px;\"><a>\${v.trmDt}</a></td>
+						</tr>`;
+					});
+					$("#radiTBody").html(str);
+					
+				}
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+			
+		});
+		
+		$("#searchWord").val("");
+    };
+});
+
+$(function(){
+	$.ajax({
+		url : "filmList",
+		method : "get",
+		contentType : "application/json;charset=utf-8",
+		dataType : "json",
+		success : function(result) { 
+			console.log(result);
+			console.log(result.length);
+			if(result == null || result.length == 0){
+				// 기록이 없을 때
+				swal('검색실패', "촬영 기록이 없습니다.", "error");
+			}else if(result.length == 1){
+				// 기록이 하나일 때
+			}else{
+				// 기록이 여러개일 때
+				let str = "";
+				$.each(result, function(i, v){
+					console.log(v);
+					str += `<tr>
+						<td><a>\${v.filmNm}</a></td>
+						<td><a>\${v.paName}</a></td>
+						<td><a>\${v.trmDt}</a></td>
+						</tr>`;
+				});
+				$("#radiTBody").html(str);
+				
+			}
+		},
+		error : function(jqXHR, status, error) {
+			console.log(jqXHR);
+			console.log(status);
+			console.log(error);
+		}
+		
+	});
+});
+
+let $wait = $(event.target).parent("")
+</script>
 </head>
 <body>
 <div id="wrapper">
 	<!-- 전체-->
-	<div id="content"><!-- content -->
-		<div id="left">
+	<div id="content"><!--         -->
+		<div id="left" class="raditable">
 			<div class="patient-info">
 				<div class="patient-info-in">
 					<div class="patient-info-in-top">
 						<h4 id="radi-title">촬영기록</h4>
-						<form id="radi-search-form">
-							<select class="radi-select">
-								<option>환자번호</option>
-								<option>이름</option>
+						<form id="radi-search-form" name="searchForm" onkeydown="f_block()">
+							<select id="searchOption" class="radi-select">
+								<option value>검색하기</option>
+								<option value="filmName">촬영실</option>
+								<option value="name">이름</option>
 							</select> 
-							<input class="radi-input" type="text" value="">
-							<input class="btn-submit" type="submit" value="검색">
+							<input name="searchBtn" class="radi-input" id="searchWord" type="text" value="">
+							<input class="btn-submit" id="Search" type="button" value="검색">
 						</form>
 					</div>
-					<table class="radi-table">
+					<table class="radi-table w-100" >
 						<thead>
 							<tr>
-								<th>환자번호</th>
-								<th>이름</th>
-								<th>생년월일</th>
-								<th>성별</th>
-								<th>비고</th>
+								<th style="padding-right:1px;"><a>촬영실구분</a></th>
+								<th style="padding-right:1px;"><a>환자명</a></th>
+								<th style="padding-right:1px;"><a>진료일자</a></th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td>1234</td>
-								<td>김환자</td>
-								<td>2023/02/02</td>
-								<td>남</td>
-								<td>수술예정</td>
-							</tr>
+						<tbody id="radiTBody">
+						
 						</tbody>
 					</table>
 				</div>
@@ -164,23 +190,23 @@ body{
 			<div class="grid-title">
 			</div>
 			<div id="grid-container">
-				<div class="grid-item">
+				<div class="grid-item" id="1">
 					<img alt="HTML"
 					src="${pageContext.request.contextPath}/resources/images/mainlog.png"
 					width="220" height="140">
 					<p class="p_list_con"><span class="p_name" style="padding-right:20px">이름</span>ddddddd어쩌구 저쩌구</p>
 				</div>
-				<div class="grid-item">2</div>
-				<div class="grid-item">3</div>
-				<div class="grid-item">4</div>
-				<div class="grid-item">5</div>
-				<div class="grid-item">6</div>
-				<div class="grid-item">7</div>
-				<div class="grid-item">8</div>
-				<div class="grid-item">9</div>
-				<div class="grid-item">10</div>
-				<div class="grid-item">11</div>
-				<div class="grid-item">12</div>
+				<div class="grid-item" id="item2">2</div>
+				<div class="grid-item" id="item3">3</div>
+				<div class="grid-item" id="item4">4</div>
+				<div class="grid-item" id="item5">5</div>
+				<div class="grid-item" id="item6">6</div>
+				<div class="grid-item" id="item7">7</div>
+				<div class="grid-item" id="item8">8</div>
+				<div class="grid-item" id="item9">9</div>
+				<div class="grid-item" id="item10">10</div>
+				<div class="grid-item" id="item11">11</div>
+				<div class="grid-item" id="item12">12</div>
 				<!-- <div id="pagingArea"> -->
 				<!-- 스크립트단으로 감 -->
 				<%-- 	<ui:pagination pagingVO="${pagingVO }" type="bootstrap"/> --%>
@@ -218,6 +244,9 @@ body{
 			searchForm.submit();
 			return false;
 		});
+		
+		
+		
 	</script>
 </body>
 </html>

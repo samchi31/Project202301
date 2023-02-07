@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.nurse.dao.WardDAO">
+	<select id="selectWardPatientList" resultType="kr.or.ddit.nurse.vo.WardVO">
+		SELECT 
+		    A.HSPT_NO, A.WR_RNO, A.BED_NO, A.PA_NAME, A.HSPT_YN, A.TRM_CD
+		    , B.DISEASE_CD, B.ICD_NAME
+		 FROM V_HOSP A
+	     LEFT OUTER JOIN DIAGNOSIS_HISTORY B
+		   ON A.TRM_CD = B.TRM_CD
+		  AND A.DISEASE_CD = B.DISEASE_CD
+		WHERE HSPT_YN='Y'
+	</select>
+</mapper>

@@ -13,4 +13,7 @@ public class FilmCateVO {
 	private String filmCd;
 	private String filmNm;
 	private Integer empNo;
+	
+	private String paName;
+	private String trmDt;
 }

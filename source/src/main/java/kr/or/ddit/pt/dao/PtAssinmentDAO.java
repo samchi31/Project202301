@@ -16,4 +16,17 @@ public interface PtAssinmentDAO {
 	 * @return
 	 */
 	public List<PtAssinmentVO> selectPtAssinmentList(PtAssinmentVO ptAssinmentVO);
+	
+	/**
+	 * 물리치료실 bed 상태
+	 * @param ptAssinmentVO
+	 * @return
+	 */
+	public List<PtAssinmentVO> ptBedList();
+	
+	/**
+	 * 물리치료실 update
+	 * @return
+	 */
+	public List<PtAssinmentVO> updateBedList();
 }

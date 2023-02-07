@@ -7,11 +7,12 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.ddit.commons.vo.PagingVO;
 import kr.or.ddit.commons.vo.PatientVO;
+import kr.or.ddit.nurse.vo.CexVO;
 
 /**
  * 
  * <pre>
- * 임상검사실 화면을 위한 Business Logic Layer
+ * 임상검사실 화면을 위한 Persistence Layer
  * </pre>
  * @author 작성자명
  * @since 2023. 2. 3.
@@ -28,12 +29,15 @@ import kr.or.ddit.commons.vo.PatientVO;
 public interface CexDAO {
 	public int selectTotalRecord(PagingVO<PatientVO> pagingVO);
 	
-	/**
-	 * 환자 목록 조회
-	 * @param map
-	 * @return
-	 */
 	public List<PatientVO> selectPatientList(Map<String, String> map);
+	
+	public List<CexVO> selectCexHistory(int paNo);
+	
+	public CexVO selectCexDetail(String cexNo);
+	
+	public List<CexVO> selectCexWaitList();
+	
+	public int insertCex(CexVO cex);
 }
 
 

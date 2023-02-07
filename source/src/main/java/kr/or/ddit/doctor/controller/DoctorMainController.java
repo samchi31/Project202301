@@ -22,6 +22,8 @@ public class DoctorMainController {
 		
 		model.addAttribute("disList", service.retrieveDisList());
 		model.addAttribute("symList", service.retrieveSymList());
+		model.addAttribute("filmList", service.retrieveRadiList());
+		model.addAttribute("goList", service.retrieveGOList());
 		
 		return "doctor/doctorMain";
 	}

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.nurse.dao.CexDAO;
+import kr.or.ddit.nurse.vo.CexVO;
 
 @Service
 public class CexServiceImpl implements CexService {
@@ -19,6 +20,26 @@ public class CexServiceImpl implements CexService {
 	@Override
 	public List<PatientVO> retrievePatientList(Map<String, String> map) {
 		return cexDAO.selectPatientList(map);
+	}
+
+	@Override
+	public List<CexVO> retrieveCexHistoryList(int paNo) {
+		return cexDAO.selectCexHistory(paNo);
+	}
+
+	@Override
+	public CexVO retrieveCexDetail(String cexNo) {
+		return cexDAO.selectCexDetail(cexNo);
+	}
+
+	@Override
+	public List<CexVO> retrieveCexWaitList() {
+		return cexDAO.selectCexWaitList();
+	}
+
+	@Override
+	public int createCex(CexVO cex) {
+		return cexDAO.insertCex(cex);
 	}
 
 }

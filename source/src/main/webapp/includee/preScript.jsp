@@ -12,3 +12,6 @@
 <!-- grid stack -->
 <link href="<c:url value='/resources/node_modules/gridstack/dist/gridstack.min.css'/>" rel="stylesheet"/>
 <script src="<c:url value='/resources/node_modules/gridstack/dist/gridstack-all.js'/>"></script>
+
+<!-- SweetAlert -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>

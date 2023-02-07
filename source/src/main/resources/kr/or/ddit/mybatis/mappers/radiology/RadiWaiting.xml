@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.radiology.dao.RadiologyWaitingListDAO">
+
+	<select id="selectXrayList" resultType="WaitHistoryVO" parameterType="hashMap">
+		SELECT
+		    WAIT_NO,
+		    FN_GET_PA_NAME(RCP_NO) AS PA_NAME,
+		    DIV_NM,
+		    WAITST_NM
+		FROM
+		    V_A
+		WHERE DIV_CD = 'DV004'
+		AND WAITST_CD = 'WS005'
+		ORDER BY 1
+	</select>
+
+	<select id="selectMRIList" resultType="WaitHistoryVO" parameterType="hashMap">
+		SELECT
+			DIV_CD,
+		    WAIT_NO,
+		    FN_GET_PA_NAME(RCP_NO) AS PA_NAME,
+		    DIV_NM,
+		    WAITST_NM
+		FROM
+		    V_A
+		WHERE DIV_CD = 'DV007'
+		AND WAITST_CD = 'WS005'
+		ORDER BY 1
+	</select>
+	
+	<select id="selectCTList" resultType="WaitHistoryVO" parameterType="hashMap">
+		SELECT
+			DIV_CD,
+		    WAIT_NO,
+		    FN_GET_PA_NAME(RCP_NO) AS PA_NAME,
+		    DIV_NM,
+		    WAITST_NM
+		FROM
+		    V_A
+		WHERE DIV_CD = 'DV006'
+		AND WAITST_CD = 'WS005'
+		ORDER BY 1
+	</select>
+	
+	<select id="selectUltraList" resultType="WaitHistoryVO" parameterType="hashMap">
+		SELECT
+			DIV_CD,
+		    WAIT_NO,
+		    FN_GET_PA_NAME(RCP_NO) AS PA_NAME,
+		    DIV_NM,
+		    WAITST_NM
+		FROM
+		    V_A
+		WHERE DIV_CD = 'DV005'
+		AND WAITST_CD = 'WS005'
+		ORDER BY 1
+	</select>
+	
+	<select id="selectRadiAllList" resultType="WaitHistoryVO" parameterType="hashMap">
+		SELECT
+			DIV_CD,
+		    WAIT_NO,
+		    FN_GET_PA_NAME(RCP_NO) AS PA_NAME,
+		    DIV_NM,
+		    WAITST_NM
+		FROM
+		    V_A
+		WHERE WAITST_CD = 'WS001'
+		AND DIV_CD BETWEEN 'DV004' AND 'DV007'
+		ORDER BY 1
+	</select>
+</mapper>

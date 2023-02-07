@@ -2,10 +2,12 @@ package kr.or.ddit.doctor.service;
 
 import java.util.List;
 
+import kr.or.ddit.commons.vo.DiagHistoryVO;
 import kr.or.ddit.commons.vo.DiseaseVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.PrescriptionVO;
+import kr.or.ddit.commons.vo.ReceptionVO;
 import kr.or.ddit.commons.vo.SymptomVO;
 import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
@@ -72,17 +74,17 @@ public interface DoctorService {
 	
 	/**
 	 * 내 진료실에 해당하는 대기실 환자 리스트
-	 * @param docNo 사번
+	 * @param 진료실코드
 	 * @return 대기 환자 리스트 (환자번호, 환자이름, 대기상태)
 	 */
-	public List<WaitHistoryVO> retrieveWaitHistory(int docNo);
+	public List<ReceptionVO> retrieveWaitHistory(String officeCd);
 	
 	/**
 	 * 환자 상세 정보
 	 * @param paNo 환자 번호
 	 * @return
 	 */
-	public List<PatientVO> retrievePaInfo(int paNo);
+	public PatientVO retrievePaInfo(int paNo);
 	
 	/**
 	 * 진료 차트 작성
@@ -96,14 +98,14 @@ public interface DoctorService {
 	 * @param symptomVOList
 	 * @return
 	 */
-	public int createSymList(List<SymptomVO> symptomVOList);
+	public int createSymList(TrmChartVO trmChartVO);
 	
 	/**
-	 * 진료 차트 작성 시 상병 내역 입력
+	 * 진료 차트 작성 시 진단 내역 입력
 	 * @param diseaseVOList
 	 * @return
 	 */
-	public int createDisList(List<DiseaseVO> diseaseVOList);
+	public int createDisList(List<DiagHistoryVO> diagHistoryVOList);
 	
 	/**
 	 * 진료 차트 작성 시 처방 내역 입력

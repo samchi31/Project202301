@@ -1,6 +1,7 @@
 package kr.or.ddit.radiology.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -24,16 +25,15 @@ import kr.or.ddit.commons.vo.PagingVO;
  * </pre>
  */ 
 @Mapper
-public interface RadiologyDAO {
-	
+public interface FilmRecodeDAO {
 	public int selectTotalRecord(PagingVO<FilmCateVO> pagingVO);
 	
 	/**
 	 * 전체 영상 기록 조회
-	 * @param pagingVO
-	 * @returnsize == 0인 경우, 조건에 맞는 레코드 없음.
+	 * @param map
+	 * @returnsize 
 	 */
-	public List<FilmCateVO> selectFilmList(PagingVO<FilmCateVO> pagingVO);
+	public List<FilmCateVO> selectFilmList(Map<String, String> map);
 	
 	/**
 	 * 영상 기록 선택 출력
@@ -41,4 +41,5 @@ public interface RadiologyDAO {
 	 * @return 조건에 맞는 레코드 없는 경우, null 반환
 	 */
 	public FilmCateVO selectPatient(@Param("filmCd") String filmCd);
+
 }

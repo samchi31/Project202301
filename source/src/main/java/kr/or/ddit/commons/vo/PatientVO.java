@@ -8,14 +8,13 @@ import lombok.EqualsAndHashCode;
 public class PatientVO {
 	private Integer paNo;
 	private String paName;
-	private Integer paReg1;
-	private Integer paReg2;
+	private Integer paReg;
 	private String paHp;
-	private String paInyn;
 	private String paPrn;
 	private Integer paZip;
 	private String paAdd1;
 	private String paAdd2;
 	private String paPiyn;
 	private String paDelete;
+	private String paSex;
 }

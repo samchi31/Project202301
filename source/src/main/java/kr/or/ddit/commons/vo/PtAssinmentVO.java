@@ -18,8 +18,9 @@ public class PtAssinmentVO implements Serializable {
 	private String ptasEnd;
 	private Integer empNo;
 	
+	private String ptBedState;
 	
 	private Integer paNo;
 	private String paName;
-	private Integer paReg1;
+	private Integer paReg;
 }

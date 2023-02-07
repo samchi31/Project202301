@@ -16,12 +16,23 @@ public class ptAssinmentServiceImpl implements ptAssinmentService {
 	
 	@Inject
 	PtAssinmentDAO dao;
+	
 
 	@Override
 	public List<PtAssinmentVO> ptAssinmentVOList(PtAssinmentVO ptAssinmentList) {
 		List<PtAssinmentVO> ptList = dao.selectPtAssinmentList(ptAssinmentList);
 		log.info("ptList : {}",ptList);
 		return ptList;
+	}
+
+	@Override
+	public List<PtAssinmentVO> ptBedList() {
+		return dao.ptBedList();
+	}
+
+	@Override
+	public List<PtAssinmentVO> updateBedList() {
+		return dao.ptBedList();
 	}
 
 }

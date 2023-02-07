@@ -21,7 +21,7 @@
 		 </where>
 	</sql>
 	
-	<select id="selectTotalRecord" resultType="int" parameterType="pagingVO">
+	<select id="selectTotalRecord" resultType="int" parameterType="kr.or.ddit.commons.vo.PagingVO">
 		SELECT COUNT(*)
 		FROM PATIENT
 		<include refid="searchFrag"/>

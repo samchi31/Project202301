@@ -7,12 +7,12 @@
 }
 .menu{
     display: flex;
-    background: #4F80FF;
+    background: #4E73DF;
     font-family: 'NanumSquareRound';
 }
 .menu-item{
     flex-grow: 1;
-    background: #4F80FF;
+    background: #4E73DF;
     transition: 0.5s;
 }
 .menu-item:hover {
@@ -83,3 +83,8 @@ dl, ol, ul {
 }
 table td { white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
 /* **************************card 끝****************************** */
+
+/* ************************* a태그를 버튼처럼 꾸며줌 시작***************************** */
+.a_btn{ background-color: #00334E; color: white; padding: 12px 25px; text-align: center; text-decoration: none; display: inline-block; border: none;}
+.a_btn:hover { background-color: #F7AA00;}
+/* ************************* a태그를 버튼처럼 꾸며줌 끝***************************** */

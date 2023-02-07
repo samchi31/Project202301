@@ -12,4 +12,17 @@ public interface ptAssinmentService {
 	 * @return
 	 */
 	public List<PtAssinmentVO> ptAssinmentVOList(PtAssinmentVO ptAssinmentVO);
+	
+	/**
+	 * 물리치료실 Bed 상태
+	 * @param ptAssinmentVO
+	 * @return
+	 */
+	public List<PtAssinmentVO> ptBedList();
+	
+	/**
+	 * 물리치료실 Bed List update
+	 * @return
+	 */
+	public List<PtAssinmentVO> updateBedList();
 }

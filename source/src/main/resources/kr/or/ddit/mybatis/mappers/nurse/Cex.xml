@@ -4,10 +4,10 @@
 
 	<select id="selectPatientList" resultType="PatientVO" parameterType="hashMap">
 		
-		SELECT PA_NO, PA_NAME, PA_REG1
-		 	, PA_REG2, PA_HP,PA_INYN
-		 	, PA_PRN, PA_ZIP, PA_ADD1
-		 	, PA_ADD2, PA_PIYN              
+		SELECT PA_NO, PA_NAME, PA_REG
+		    , PA_HP, PA_PRN , PA_ZIP
+		    , PA_ADD1, PA_ADD2, PA_PIYN
+		    , PA_SEX              
 		  FROM PATIENT   
 		<where>
 			<if test="searchOption!=null">
@@ -23,7 +23,99 @@
 		</where>      
 	</select>
 	
+	<select id="selectCexHistory" resultType="kr.or.ddit.nurse.vo.CexVO" parameterType="int">
+		SELECT A.CEX_NO, A.TRM_CD, A.DISEASE_CD, TO_CHAR(A.cex_date, 'YYYY-MM-DD') AS cex_date, A.CEX_STATUS
+		     , C.PA_NO, C.PA_NAME
+		  FROM V_CEX A
+		 INNER JOIN RECEPTION B
+		    ON A.RCP_NO = B.RCP_NO
+		 INNER JOIN PATIENT C
+		    ON B.PA_NO = C.PA_NO
+		 WHERE C.PA_NO = #{paNo}
+		   AND A.CEX_STATUS = 'T'
+	</select>
+	
+	<select id="selectCexDetail" resultType="kr.or.ddit.nurse.vo.CexVO" parameterType="String">
+		SELECT
+		     A.cex_no, A.cex_cbc, A.cex_ecg
+		    , A.cex_ua, A.cex_pfts, TO_CHAR(A.cex_date, 'YYYY-MM-DD') AS cex_date
+		    , A.cex_ne, A.emp_no, A.cex_status, A.trm_cd
+		    , B.medi_record, B.trm_dt, B.rcp_no
+		    , C.PA_NO
+		    , D.PA_NAME
+		FROM clinical_examination A
+		INNER JOIN TRM_CHART B
+			ON A.trm_cd = B.TRM_CD
+		INNER JOIN RECEPTION C
+			ON B.RCP_NO = C.RCP_NO
+		INNER JOIN PATIENT D
+			ON C.PA_NO = D.PA_NO
+		WHERE CEX_NO = #{noname}
+	</select>
+	
+	<select id="selectCexWaitList" resultType="kr.or.ddit.nurse.vo.CexVO">
+		SELECT 
+		    A.ICD_NAME, A.TRM_CD, A.DISEASE_CD, A.CEX_STATUS
+		    , C.PA_NO, C.PA_NAME
+		FROM V_CEX A
+		INNER JOIN RECEPTION B
+		    ON A.RCP_NO = B. RCP_NO
+		INNER JOIN PATIENT C
+		    ON B.PA_NO = C.PA_NO
+		WHERE A.CEX_STATUS IS NULL
+	</select>
+	
+	<insert id="insertCex" parameterType="CexVO">
+		INSERT INTO CLINICAL_EXAMINATION (
+		    CEX_NO
+		    , CEX_CBC
+		    , CEX_ECG
+		    , CEX_UA
+		    , CEX_PFTS
+		    , CEX_DATE
+		    , CEX_NE
+		    , EMP_NO
+		    , CEX_STATUS
+		    , TRM_CD
+		    , DISEASE_CD
+		) VALUES (
+		    ('C'||LPAD(SEQ_CEX.NEXTVAL, 4, '0'))
+			, #{cexCbc}
+			, #{cexEcg}
+			, #{cexUa}
+			, #{cexPfts}
+			, TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+			, #{cexNe}
+			, 6
+			, 'T'
+			, #{trmCd}
+			, #{diseaseCd}
+		)
+	</insert>
+	
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

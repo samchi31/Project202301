@@ -13,4 +13,10 @@ public class PrescriptionVO {
 	private String trmCd;
 	private String preCd;
 	private String preDetail;
+	private Integer preNt;
+	private Integer preTotal;
+	private Integer price;
+	private String injcPthNm;
+	private String unit;
+	private String payTpNm;
 }
