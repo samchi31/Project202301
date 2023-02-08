@@ -80,10 +80,10 @@ public interface DoctorDAO {
 	
 	/**
 	 * 내 진료실에 대기실 환자 리스트
-	 * @param docNo 사번
+	 * @param empNo	의사 사번
 	 * @return 대기 환자 리스트
 	 */
-	public List<ReceptionVO> selectWaitHistory(String officeCd);
+	public List<WaitHistoryVO> selectWaitHistory(int empNo);
 	
 	/**
 	 * 환자 상세 정보

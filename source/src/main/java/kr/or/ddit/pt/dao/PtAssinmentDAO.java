@@ -1,11 +1,13 @@
 package kr.or.ddit.pt.dao;
 
 import java.util.List;
-
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.PtAssinmentVO;
+import kr.or.ddit.enumpkg.ServiceResult;
 
 @Mapper
 public interface PtAssinmentDAO {
@@ -25,8 +27,16 @@ public interface PtAssinmentDAO {
 	public List<PtAssinmentVO> ptBedList();
 	
 	/**
-	 * 물리치료실 update
+	 * 물리치료실 bed 수정
+	 * @param 
 	 * @return
 	 */
-	public List<PtAssinmentVO> updateBedList();
+	public int ptBedFull(PtAssinmentVO ptAssinmentVO);
+	
+	/**
+	 * 환자조회
+	 * @param map
+	 * @return
+	 */
+	public List<PatientVO> selectPatientList(Map<String, String> map);
 }

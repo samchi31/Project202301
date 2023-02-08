@@ -74,10 +74,10 @@ public interface DoctorService {
 	
 	/**
 	 * 내 진료실에 해당하는 대기실 환자 리스트
-	 * @param 진료실코드
-	 * @return 대기 환자 리스트 (환자번호, 환자이름, 대기상태)
+	 * @param empNo	의사 사번
+	 * @return 대기 환자 리스트 (환자번호, 환자이름, 병과구분, 대기상태)
 	 */
-	public List<ReceptionVO> retrieveWaitHistory(String officeCd);
+	public List<WaitHistoryVO> retrieveWaitHistory(int empNo);
 	
 	/**
 	 * 환자 상세 정보

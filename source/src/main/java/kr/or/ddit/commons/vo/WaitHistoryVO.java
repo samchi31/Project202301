@@ -17,7 +17,10 @@ public class WaitHistoryVO {
 	private String waitstCd;
 	private String divCd;
 	
+	private String paNo;
 	private String paName;
 	private String divNm;
 	private String waitstNm;
+	
+	
 }

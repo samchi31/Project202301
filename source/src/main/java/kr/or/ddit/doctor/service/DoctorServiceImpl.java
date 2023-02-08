@@ -69,21 +69,14 @@ public class DoctorServiceImpl implements DoctorService{
 	}
 
 	@Override
-	public List<ReceptionVO> retrieveWaitHistory(String officeCd) {
+	public List<WaitHistoryVO> retrieveWaitHistory(int empNo) {
 		/*
-		 * 현재 로그인한 의사 사번 코드 조회
-		 * 사번코드에 해당하는 진료실 코드 조회
-		 * 진료실 코드를 가진 접수 테이블 조회
-		 * 접수 번호로 진료 차트 코드 조회
-		 * 수납 테이블에 진료 차트 코드로 된 data있는지 확인
-		 * 없는 접수 테이블만 조회
+		 * 현재 waiting_history에서
+		 * 의사번호에 해당하는 진료실로 된 
+		 * 접수 번호 별로 순번이 가장 큰
 		 */
 		
-		// 현재 로그인한 회원 있다 치고 kkk 
-//		EmployeeVO employeeVO = new EmployeeVO();
-		String empNo = "1";			
-		
-		return null;
+		return dao.selectWaitHistory(empNo);
 	}
 
 	@Override

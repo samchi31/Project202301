@@ -15,7 +15,7 @@ public class PrescriptionVO {
 	private String preDetail;
 	private Integer preNt;
 	private Integer preTotal;
-	private Integer price;
+	private Integer price=8000;
 	private String injcPthNm;
 	private String unit;
 	private String payTpNm;

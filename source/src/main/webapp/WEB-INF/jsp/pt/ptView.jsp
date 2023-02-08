@@ -4,6 +4,8 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 
 <link href="<%=request.getContextPath()%>/resources/css/gridstack.min.css" rel="stylesheet" />
 <style type="text/css">
@@ -62,44 +64,36 @@ thead tr {
 <div class="grid-stack">
 	<div class="grid-stack-item" gs-w="4" gs-h="5">
 		<div class="grid-stack-item-content">
-			<h3>환자관리</h3>
-			<select name='카테고리'>
-				<option value='환자이름'>환자 이름</option>
-				<option value='환자 코드'>환자 코드</option>
-				<option value='환자'>환자</option>
-			</select>
-			<div style="text-align: right;">
-				<button type="button" id="serarchButton">검색할거에유?</button>
+			<div>
+				<h3>환자 조회</h3>
+				<form id="pt-search-from" style="text-align: right;">
+					<select id = "searchOption" class = "pt-select">
+						<option value='no'>환자 번호</option>
+						<option value='name'>환자 이름</option>
+					</select>
+						<input style="display:none;" type="hidden" id="paNoHidden" value=""/>
+						<input class="pt-input" id="searchWord" type="text" onkeyup="if(window.event.keyCode==13){patientSearch()}" value=""/>
+						<input id="serarchButton" class="btn-submit" type="button" value="검색">
+				</form>
 			</div>
-			<%-- 			<jsp:include page="top.jsp" flush="false"/> --%>
-
+			
 			<table class="table1">
 				<thead>
 					<tr>
-						<td>No</td>
-						<td>환자코드</td>
-						<td>연락처</td>
+						<td>환자번호</td>
+						<td>이름</td>
 						<td>생년월일</td>
-						<td>내원일자</td>
-						<td>내원일자</td>
+						<td>성별</td>
+						<td>비고</td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td>여기는</td>
-						<td>여기는 콘</td>
-						<td>여기는 콘</td>
-						<td>여기는 콘</td>
-						<td>여기는 콘</td>
-						<td>여기는 콘</td>
-					</tr>
-					<tr>
-						<td>여기는 콘</td>
-						<td>여기는 콘2</td>
-						<td>여기는 콘2</td>
-						<td>여기는 콘텐츠2</td>
-						<td>여기는 콘텐츠2</td>
-						<td>여기는 콘텐츠2</td>
+						<td id='p_No'></td>
+						<td id='p_Nm'></td>
+						<td id='p_reg1'></td>
+						<td id='p_sex'></td>
+						<td id='p_record'></td>
 					</tr>
 				</tbody>
 			</table>
@@ -108,8 +102,6 @@ thead tr {
 	<div class="grid-stack-item" gs-w="4" gs-h="5">
 		<div class="grid-stack-item-content">
 			<h3>물리치료실 현황</h3>
-			<%-- 	<P>ptBedList : ${ptBedList }</P> --%>
-			<%-- 	<P>ptAssinmentList : ${ptAssinmentList }</P> --%>
 			<table class="table2">
 				<c:set var="cnt" value="0" />
 				<c:forEach begin="0" end="2">
@@ -132,17 +124,17 @@ thead tr {
 						</c:forEach>
 					</tr>
 				
-<%-- 					<td>/${ptBedList[0].paNo}${ptBedList[0].paName}${ptBedList[0].paReg}</td> --%>
 				</c:forEach>
 			</table>
 
 			<h3>물리치료실 대기 현황</h3>
 			<table class="table1">
 				<thead>
-					<tr><td>환자 번호</td>
+					<tr>
+					<td>환자 번호</td>
 					<td>환자 이름</td>
 					<td>생년월일</td>
-					<td>생년월일</td>
+					<td>배정</td>
 					</tr>
 				</thead>
 				<c:set var="cnt" value="0"/>
@@ -151,14 +143,17 @@ thead tr {
 						<td>${ptAssinment.paNo}</td>
 						<td>${ptAssinment.paName}</td>
 						<td>${ptAssinment.paReg}</td>
-						<td><button class="assignmentbutton" data-no="${ptAssinment.paNo}"
-							data-name="${ptAssinment.paName}" data-reg="${ptAssinment.paReg}" 
-						 >배정</button><td>
+						<td>
+							<button class="assignmentbutton" data-pa-no="${ptAssinment.paNo}" data-rcp-no= "${ptAssinment.rcpNo }"
+									data-name="${ptAssinment.paName}" data-reg="${ptAssinment.paReg}" >배정</button>
+						<td>
 					</tr>
 					<c:set var="cnt" value="${cnt+1}"></c:set>
 				</c:forEach>
 			</table>
 		</div>
+		
+	
 	</div>
 	<div class="grid-stack-item" gs-w="4">
 		<div class="grid-stack-item-content">
@@ -181,49 +176,12 @@ thead tr {
 	</div>
 </div>
 
+<form action="<c:url value='/pt/ptBedFull'/>" id="bedfullform" method = "post" >
+			<input  type="text" name="ptBedCd" value="">
+<!-- 			<input style="display:none;" type="hidden" name="ptBedState" value=""> -->
+			<input type="text" name="rcpNo" value="">
+</form>
 <script type="text/javascript">
-$(function(){
-	const ccc=[];
-	
-	$(".assignmentbutton").on("click",function(){
-		let no = $(this).data("no");
-		let name = $(this).data("name");
-		let reg = $(this).data("reg");
-		
-		console.log("no : " + no + ", name : " + name + ", reg : " + reg);
-		
-		ccc.push(no);
-		ccc.push(name);
-		ccc.push(reg);
-		
-		console.log("ccc : " + ccc);
-		
-		let data = {"paNo":no,"paName":name,"paReg":reg}
-		
-	 	
-	});
-	
-//	 $( document ).ready( function(){
-//		$('button#assignmentbutton').click(function(){
-//			let bbb= $('#aaa${cnt}').children();
-//				ccc.push(bbb);
-//		});
-//	});
-});
-// 	$.ajax({
-// 		url : "ptBedFull",
-// 		method : "post",
-// 		data : JSON.stringfy(data),
-// 		dataType : "json",
-// 		success : function(result) {
-// 			console.log(result);
-// 			console.log(result.length);
-// 			if(result > 0) {
-// 				alert("뀨?")
-// 			} 
-// 		}
-// 	});
-	
 // 	1. 배정 버튼을 누르고, 물리치료실안에 있는 bed를 클릭
 // 	2. alert 창 나옴 ) 배정 할꺼니? yes/no
 // 	3. yes를 누르면 클릭했던 bed에 환자번호 이름 생년월일이 뜸
@@ -233,42 +191,63 @@ $(function(){
 // 	=사용되고있는 침대에 이미지 변경되어야함
 // 	=RCP_NO가 비어있지 않으면의 조건이 필요함 단순) empty not empty 차이
 // 	=클릭을 변경이 되어야 하기때문에 클릭이벤트 핸들러가 필요
+
+$(function(){
 	
+let bedfullform = $("#bedfullform").on("submit",function(event){
+	event.preventDefault();
+	let url = this.action;
+	let method = this.method;
+	let data = $(this).serialize();
+	//url : http://127.0.0.1/HurryUp/pt/ptBedFull, method : post, data : ptBedCd=BED09&rcpNo=202302021
+	console.log("url : " + url + ", method : " + method + ", data : " + data);
+	 
 	
+	$.ajax({
+			url : url,
+			method : method,
+			data : data,
+			dataType : "text",
+			success : function(result) {
+				console.log("result : " , result);
+				
+				if(result == "1") {
+					Swal.fire('배정이 완료 되었습니다.', '  ', 'success');
+				} else {
+					Swal.fire('배정에 실패했습니다.', '  ', 'error');
+				}
 
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	return false;
+	
+	})
+	
+	$(".assignmentbutton").on("click",function(){
+// 		let ptBedState = $("#ptBedState").val;
+		let rcpNo1 = $(this).data("rcpNo")
+		$("[name=rcpNo]").val(rcpNo1);
+		console.log(rcpNo1);
 
-//1. 배정 버튼을 누르면 알러트 창이 뜬다
-//2. 배정을 원하는 정보를 담아서
-//3. bed에 뿌린다
-	const ccc=[];
-// 		 $( document ).ready( function(){
-// 			$('button#assignmentbutton').click(function(){
-// 				let bbb= $('#aaa${cnt}').children();
-// 					ccc.push(bbb);
-// 			});
-// 		});
-		 console.log(ccc);
-
-// 	let selTrId;
-// 	const f_sel = (pthis)=> {
-// 		console.log(pthis);
-// 		selTrId = pthis.id;
-// // 		console.log(selTrId);
-// // 		let no = $("aaa0").children('tr').innerHTML();	
-// // 		let no = document.getElementById("#aaa0");
-// // 		let noValue = no.innerHTML
-// // 		console.log(noValue);
-// 	};
-
-	const f_clk=(pthis)=>{
-// 		let getContent  = document.querySelector("#"+selTrId);
-// 		console.log(getContent); // 이전 선택한 TR
+		bedfullform.submit();
 		
-// 		alert( "배정하시겠습니까?")
-// 		let disps = document.querySelectorAll("#disp");
-// 		disps[3].innerHTML = getContent.children[1].innerHTML +getContent.children[2].innerHTML; 
+	});
+});
+
+
+//배정하는 것
+	const f_clk=(pthis)=>{
 		$(pthis).find(".pic").attr("src","../resources/images/ptbedfull.png");
 		let rcpNo = $(pthis).data("rcpNo");
+		let v_bedNo = $(pthis).attr("id");
+		$("[name=ptBedCd]").val(v_bedNo);
+		
+
 		if(rcpNo) {
 			$(pthis).find(".pthis").attr("src", "<c:url value='/resources/images/ptbedemty.png'/>");
 		} else {
@@ -277,7 +256,72 @@ $(function(){
 		}
 
 	};
+// 		let getContent  = document.querySelector("#"+selTrId);
+// 		console.log(getContent); // 이전 선택한 TR
+		
+// 		alert( "배정하시겠습니까?")
+// 		let disps = document.querySelectorAll("#disp");
+// 		disps[3].innerHTML = getContent.children[1].innerHTML +getContent.children[2].innerHTML; 
+// 		let selTrId;
 
+// 	const f_sel = (pthis)=> {
+// 		console.log(pthis);
+// 		selTrId = pthis.id;
+// 		console.log(selTrId);
+// 		let no = $("aaa0").children('tr').innerHTML();	
+// // 		let no = document.getElementById("#aaa0");
+// 		let noValue = no.innerHTML
+// 		console.log(noValue);
+// 	};
+
+
+//환자 검색
+	$("#serarchButton").on("click", function patientSearch(){
+		let searchOption = $("#searchOption option:selected").val();
+		let searchWord = $("#searchWord").val();
+
+		if(searchWord == ''){
+			swal('검색 실패!', "검색어를 입력해주세요", 'warning');
+			return false;
+		}
+		
+		let data = {
+				searchOption:searchOption,
+				searchWord:searchWord
+		}
+
+		$.ajax({
+			url : "ptPatientSearch",
+			method : "post",
+			data : JSON.stringify(data),
+			contentType: "application/json;charset=utf-8",
+			dataType:"json",
+			success : function(result) {
+				let paNo = ''
+				if(result == null || result.length == 0){
+					//환자가 없을 때 
+					swal('검색 실패!',"검색하신 환자 정보가 없습니다.",'error');
+				}else if(result.length == 1){
+					//환자가 한명일 때 
+					$.each(result, function(i, v){
+						paNo = `<a href='javascript:void(0);' onclick='patientpaHistory(\${v.paNo})';>\${v.paNo}</a>`
+						$("#p_No").html(paNo);
+						$("#p_Nm").html(v.paName);
+						$("#p_reg1").html(v.paReg);
+						$("#p_sex").html(v.paSex);	
+					});
+				}else{
+//  					환자가 여러명일 때 해결해야 함
+
+				}
+			}
+		});
+		
+		$("#searchWord").val("");
+		
+	});
+	
+//그리드 스택 시작	
 	GridStack.init();
 	
 </script>

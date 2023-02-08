@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
 <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
@@ -157,7 +158,7 @@
 									<th>날짜</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id="chartListTable">
 							</tbody>
 						</table>
 			    	</div>					    	
@@ -171,7 +172,7 @@
 				<div class="tabcontentWrap tab-bigger">
 					<div class="tabcontent">
 						<input type="text" />
-						<input type="button" value="등록"/>
+						<input type="button" value="등록" />
 					</div>
 				</div>
 			</div>	
@@ -182,20 +183,30 @@
 				<h4>환자대기</h4>
 				<div class="tabcontentWrap tab-mid">
 			    	<div class="tabcontent">
-						<table class="table table-bordered">
+						<table class="table table-bordered table-hover">
 							<colgroup>
-					      		<col style="width: 30%;" />
-					      		<col style="width: 30%;" />
-					      		<col style="width: 30%;" />
+					      		<col style="width: 24%;" />
+					      		<col style="width: 25%;" />
+					      		<col style="width: 26%;" />
+					      		<col style="width: 25%;" />
 					      	</colgroup>
 							<thead>
 								<tr class="fixedHeader table-light">
 									<th>환자코드</th>
 									<th>환자명</th>
+									<th>병과구분</th>
 									<th>대기상태</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id="waitTable">
+								<c:forEach items="${waitList }" var="patient">
+				      				<tr data-bs-toggle="modal" data-bs-target="#patientInfo">
+				      					<td data-bs-toggle="modal" data-bs-target="#patientInfo">${patient["paNo"] }</td>
+				      					<td>${patient["paName"] }</td>
+				      					<td>${patient["divNm"] }</td>
+				      					<td>${patient["waitstNm"] }</td>
+				      				</tr>
+				      			</c:forEach>
 							</tbody>
 						</table>
 					</div>
@@ -343,14 +354,34 @@
 				</div>		
 			</div>	
 		</div>	
-		
 	</div>
 </div>
 
+<form:form id="insertChartForm" modelAttribute="trmChart" method="post">
+</form:form>
+
+<!-- Modal -->
+<div class="modal fade" id="patientInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalLabel">환자상세</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+			</div>	
+		</div>
+	</div>
+</div>
 
 <!--  xml을 json으로 바꿔주는 라이브러리 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js"></script>
 <script type="text/javascript">
+	GridStack.init();
 		
 	let $medi = $("#medi");
 	let f_medicineList = function(){
@@ -374,26 +405,24 @@
 	
 	f_medicineList();
 	
-  GridStack.init();
-  
-  
-  /* make table */
-  let $tbody_medi =$("#tbody_medi");
-  let f_makeTable = function(v_sel, v_data){
-	  let trTags = [];
-	  for(let i=0;i<v_data.length;i++){
-		  let $tr = $("<tr>").append(
+    
+	/* make table */
+	let $tbody_medi =$("#tbody_medi");
+	let f_makeTable = function(v_sel, v_data){
+		let trTags = [];
+		for(let i=0;i<v_data.length;i++){
+			 let $tr = $("<tr>").append(
 			$("<td>").html(v_data[i]["mdsCd"])	  
 			,$("<td>").html(v_data[i]["itmNm"])
 			,$("<td>").html(v_data[i]["injcPthNm"])
 			,$("<td>").html(v_data[i]["unit"])
 			,$("<td>").html(v_data[i]["payTpNm"])
-		  );
-		  $tr.data("object",v_data[i]);
-		  trTags.push($tr);
-	  }
-	  $tbody_medi.append(trTags);
-  }
+			);
+			$tr.data("object",v_data[i]);
+			trTags.push($tr);
+		}
+		$tbody_medi.append(trTags);
+	}
   
   /* tab 메뉴 */
 //   $(function(){
@@ -438,6 +467,25 @@
 	});
 	$preNavs.eq(0).click();
 	
+	let tbody_diag = $diagContents.filter("#diag").find("tbody").on('dblclick',function(){
+// 		console.log(event.target);
+		let $tr = $(event.target).parent("tr");
+		$tr.remove();
+	});
+	let tbody_sym = $diagContents.filter("#sym").find("tbody").on('dblclick',function(){
+		let $tr = $(event.target).parent("tr");
+		$tr.remove();
+	});
+	let tbody_pre = $preContents.filter("#pre").find("tbody").on('dblclick',function(){
+		let $tr = $(event.target).parent("tr");
+		$tr.remove();
+	});
+	let tbody_film = $preContents.filter("#film").find("tbody").on('dblclick',function(){
+		let $tr = $(event.target).parent("tr");
+		$tr.remove();
+	});
+	
+	// input result
 	$('.doc-basic tbody').on('click',function(event){
 // 		console.log($td.parent("tr"));
 // 		console.log($(this).parent().parent().attr('id'));
@@ -448,28 +496,165 @@
 			newTr.children().eq(1).remove();
 			newTr.append($("<td>").html("<input type='checkbox' name='operTf' />"));
 			newTr.append($("<td>").html("<input type='checkbox' name='physiotherapyTf' />"));
-			$diagContents.filter("#diag").find("tbody").append(newTr);
+			tbody_diag.append(newTr);
 		} else if (v_id == "medi"){
 // 			console.log($tr.data("object"));
 			let v_data = $tr.data("object");
 			let newTr = $("<tr>").append(
 				$("<td>").html(v_data["mdsCd"])	  
 				, $("<td>").html(v_data["itmNm"])
-				, $("<td>").html($("<input>").attr("type", "number"))
-				, $("<td>").html($("<input>").attr("type", "number"))
+				, $("<td>").html($("<input>").attr("type", "number").attr("min","1"))
+				, $("<td>").html($("<input>").attr("type", "number").attr("min","1"))
 				, $("<td>").html(v_data["injcPthNm"])
 				, $("<td>").html(v_data["unit"])
 				, $("<td>").html(v_data["payTpNm"])
 			);
-			$preContents.filter("#pre").find("tbody").append(newTr);
+			tbody_pre.append(newTr);
 		} else if (v_id == "sym"){
-			$diagContents.filter("#sym").find("tbody").append($tr.clone());			
+			tbody_sym.append($tr.clone());			
 		} else if (v_id == "radi"){
 			let newTr = $tr.clone();
 			newTr.children().eq(2).remove();
-			$preContents.filter("#film").find("tbody").append(newTr);
+			tbody_film.append(newTr);
 		} else if (v_id == "group"){
 			
 		}
-	})
+	});
+	
+	/* data submit */
+	let $trmForm = $("#insertChartForm");
+	let $submitBtn = $("input[type=button]").on('click', function(){
+		// diag
+		$.each(tbody_diag.find("tr"), function(index, tr){
+			// console.log(index, tr);
+			let name = "diagHistoryVOList[" + index + "].";
+			$trmForm.append($("<input>").attr({
+				type:"hidden"
+				, name: name+"diseaseCd"
+				, value:$(tr).children().eq(0).html().trim()
+			})).append($("<input>").attr({
+				type:"hidden"
+				, name: name+"icdName"
+				, value:$(tr).children().eq(1).html().trim()
+			}));
+			let checkboxs = $(tr).find("input:checkbox");
+			$.each(checkboxs, function(i, ck){
+				// console.log(i, ck);
+				// console.log(ck.name, $(ck).is(":checked"));
+				let isTrue = $(ck).is(":checked");
+				let newInput = $("<input>").attr("type","hidden")
+					.attr("name", name+ck.name).val(isTrue ? "Y" : "N");
+				$trmForm.append(newInput);
+			});
+		});
+		
+		// sym
+		$.each(tbody_sym.find("tr"), function(index, tr){
+			// console.log(index, tr);
+			let name = "symptomVOList[" + index + "].";
+			$trmForm.append($("<input>").attr({
+				type:"hidden"
+				, name: name+"symCd"
+				, value:$(tr).children().eq(0).html().trim()
+			})).append($("<input>").attr({
+				type:"hidden"
+				, name: name+"symDetail"
+				, value:$(tr).children().eq(1).html().trim()
+			}));
+		});
+		
+		//pre
+		$.each(tbody_pre.find("tr"), function(index, tr){
+			console.log(index, tr, $(tr).data("object"));
+			let name = "prescriptionVOList[" + index + "].";
+			$trmForm.append($("<input>").attr({
+				type:"hidden"
+				, name: name+"preCd"
+				, value:$(tr).children().eq(0).html().trim()
+			})).append($("<input>").attr({
+				type:"hidden"
+				, name: name+"preDetail"
+				, value:$(tr).children().eq(1).html().trim()
+			})).append($("<input>").attr({
+				type:"hidden"
+				, name: name+"preNt"
+				, value:$(tr).children().eq(2).children().val().trim()
+			})).append($("<input>").attr({
+				type:"hidden"
+				, name: name+"preTotal"
+				, value:$(tr).children().eq(3).children().val().trim()
+			})).append($("<input>").attr({
+				type:"hidden"
+				, name: name+"injcPthNm"
+				, value:$(tr).children().eq(4).html().trim()
+			})).append($("<input>").attr({
+				type:"hidden"
+				, name: name+"unit"
+				, value:$(tr).children().eq(5).html().trim()
+			})).append($("<input>").attr({
+				type:"hidden"
+				, name: name+"payTpNm"
+				, value:$(tr).children().eq(6).html().trim()
+			}));
+		});
+		
+		//film
+		$.each(tbody_film.find("tr"), function(index, tr){
+			// console.log(index, tr);
+			let name = "filmOrderVOList[" + index + "].";
+			$trmForm.append($("<input>").attr({
+				type:"hidden"
+				, name: name+"filmCd"
+				, value:$(tr).children().eq(0).html().trim()
+			}));
+		});
+		
+		$trmForm.submit();
+		return false;
+	});
+	
+	/* 환자 대기 리스트 */
+	/* 환자 상세 modal */
+	const $patientInfo = $('#patientInfo').on('show.bs.modal',function(event){
+// 		console.log(event.relatedTarget, event.target);
+// 		let memo = $(event.relatedTarget).data("memo");
+// // 		console.log($(event.relatedTarget).parent().siblings('div.modal-header').children('#exampleModalLabel').text());
+// 		let code = $(event.relatedTarget).parent().siblings('div.modal-header').children('#exampleModalLabel').text();
+// 		$(this).find('.modal-title').html(code);
+// 		$(this).find('[name=writer]').val(memo.writer);
+// 		$(this).find('[name=content]').val(memo.content);
+// 		$(this).find('[name=date]').val(memo.date);
+ 	}).on('hidden.bs.modal',function(event){
+// 		$(this).find('.modal-title').empty();
+// 		$(this).find('[name=updateForm]')[0].reset();
+// 		// console.log(updateForm);
+	});
+	let $waitTable = $('#waitTable').on('click','tr',function(){
+		let $tr = $(event.target).parent("tr");
+		let paNo = $tr.find("td").eq(0).html();
+		let url = "${pageContext.request.contextPath}/doctor/main/"+paNo;
+		$.ajax({
+			url : url,
+			method : "get",
+			contentType : "application/json;charset=UTF=8",
+			success : function(resp) {
+				//console.log(resp);
+				$('#patientInfo').modal({ show: false});
+				$('#patientInfo').modal('show');
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	});
+	
+	let f_resetList = function(){
+		
+	}
+	
+	
+	/* 환자의 이전 진료 차트 리스트 */
+	let $chartListTable = $('#chartListTable');
 </script>
