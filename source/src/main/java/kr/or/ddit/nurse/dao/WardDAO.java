@@ -4,6 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.or.ddit.commons.vo.HospitalizationVO;
+import kr.or.ddit.commons.vo.IntakeOutputVO;
+import kr.or.ddit.commons.vo.VitalVO;
+import kr.or.ddit.nurse.vo.NrecVO;
 import kr.or.ddit.nurse.vo.WardVO;
 
 /**
@@ -25,4 +29,20 @@ import kr.or.ddit.nurse.vo.WardVO;
 @Mapper
 public interface WardDAO {
 	public List<WardVO> selectWardPatientList();
+	
+	public WardVO selectWardPatien(int hsptNo);
+	
+	public int insertNrec(NrecVO nrec);
+	
+	public List<NrecVO> selectNrecList(int hsptNo);
+	
+	public int insertVital(VitalVO vital);
+	
+	public List<HospitalizationVO> selectVitalList(int hsptNo);
+
+	public int countIoList(IntakeOutputVO io);
+
+	public int createIO(IntakeOutputVO io);
+
+	public List<IntakeOutputVO> selectIoList(IntakeOutputVO io);
 }

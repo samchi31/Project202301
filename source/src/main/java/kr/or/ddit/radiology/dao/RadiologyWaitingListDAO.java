@@ -44,4 +44,13 @@ public interface RadiologyWaitingListDAO {
 	 * @returnsize 
 	 */
 	public List<WaitHistoryVO> selectRadiAllList(Map<String, String> map);
+	
+	/**
+	 *  대기히스토리 추가(대기중->촬영중)
+	 * @param map : {rcpNo=202302062, waitstCd=WS001, divCd=DV007}
+	 * @returnsize
+	 */
+	public int changeWaitListInsert(Map<String, String> map);
+	
+	
 }

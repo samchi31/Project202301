@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.or.ddit.commons.vo.DivisionTreatVO;
 import kr.or.ddit.commons.vo.DiagHistoryVO;
 import kr.or.ddit.commons.vo.DiseaseVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
@@ -14,6 +15,7 @@ import kr.or.ddit.commons.vo.ReceptionVO;
 import kr.or.ddit.commons.vo.SymptomVO;
 import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
+import kr.or.ddit.commons.vo.WaitStatusVO;
 import kr.or.ddit.doctor.vo.GroupOrderVO;
 
 /**
@@ -66,10 +68,14 @@ public interface DoctorDAO {
 	
 	/**
 	 * 환자 현재 진료 차트
-	 * @param paNo 환자번호
+	 * @param rcpNo 접수번호
 	 * @return 환자의 진료차트
 	 */
-	public TrmChartVO selectTrmChart(int paNo);
+	public TrmChartVO selectTrmChart(int rcpNo);
+	public TrmChartVO selectDiagHist(int rcpNo);
+	public TrmChartVO selectSymHist(int rcpNo);
+	public TrmChartVO selectPreHist(int rcpNo);
+	public TrmChartVO selectFilmHist(int rcpNo);
 	
 	/**
 	 * 환자의 진료 차트 기록 리스트
@@ -134,4 +140,10 @@ public interface DoctorDAO {
 	 */
 	public int insertWaitHistory(WaitHistoryVO waitHistoryVO);
 	
+	/**
+	 * select tag용 카테고리 정보
+	 * @return
+	 */
+	public List<WaitStatusVO> selectWaitStatus();
+	public List<DivisionTreatVO> selectDvTr();
 }

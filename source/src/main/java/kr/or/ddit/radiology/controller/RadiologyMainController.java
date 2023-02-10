@@ -1,12 +1,16 @@
 package kr.or.ddit.radiology.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.commons.vo.FilmCateVO;
@@ -63,6 +67,29 @@ public class RadiologyMainController {
 	public List RadiAllList() {
 		List<WaitHistoryVO> list = service.selectRadiAllList();
 		return list;
+		
+	}
+	
+	// 바뀐 값 가져올 컨트롤러
+	@PostMapping("/changeWaitList")
+	public String changeWaitList(@RequestBody Map<String, String> map) {
+		log.info("map : " + map);
+		
+		System.out.println(map.get("radioVal"));
+		
+		int result = service.changeWaitListInsert(map);
+		log.info("result : " + result);
+		String viewName = "";
+		if(result > 0) {
+			log.info("등록됨 ");
+			viewName = "redirect:/radiology/radiwaitinglist";
+			return viewName;
+		}
+		else {
+			viewName = "redirect:/radiology/radiologyView";
+			return viewName;
+		}
+		
 		
 	}
 }

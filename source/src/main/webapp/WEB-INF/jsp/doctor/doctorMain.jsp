@@ -26,8 +26,55 @@
 	.tab-mid{height:190px;}
 	.tab-bigger{height:320px;} 
 	
+	/* 처방 테이블 input tag width */
 	input {width:100%;}
+	
+	/* 대기 테이블 select tag width */
+	select {width:100%;}
+	
+	#modal {  /* 시퀀스 상 순서를 유지하기 위해서 */
+	    position: fixed;
+	    width: 100%;
+	    height:100%;
+	    left:0px; top:0px;
+	    background-color: rgba(0,0,0, 0.4);
+	    display: none;
+	    z-index:100;
+	}
+	.modal-window {
+	    width: 50%;
+	    height: 50vh;
+	    margin: 20px auto;
+	    background-color: white;
+	    border-radius : 5px;
+	    padding : 10px;
+	}
+	.modal-content{
+	}
+	
+	/* tr 더블클릭 */
+	.dblclick-on{
+		background-color : antiquewhite;
+	}
 </style>
+
+<!-- modal -->
+<div id="modal" onclick="f_modalClose()">
+	<div class="modal-window modal-dialog" onclick="f_block()" >
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" ></h1>
+			  	<button type="button" class="btn-close" aria-label="Close" onclick="f_modalClose()"></button>
+			</div>
+			<div class="modal-body">
+			
+			</div>	
+			<div class="modal-footer">			
+			</div>
+		</div>
+	</div>
+</div>  
+
 
 <div class="wrapper">
 	<div class="grid-stack">
@@ -159,6 +206,7 @@
 								</tr>
 							</thead>
 							<tbody id="chartListTable">
+								
 							</tbody>
 						</table>
 			    	</div>					    	
@@ -185,26 +233,38 @@
 			    	<div class="tabcontent">
 						<table class="table table-bordered table-hover">
 							<colgroup>
-					      		<col style="width: 24%;" />
+					      		<col style="width: 15%;" />
 					      		<col style="width: 25%;" />
-					      		<col style="width: 26%;" />
+					      		<col style="width: 35%;" />
 					      		<col style="width: 25%;" />
 					      	</colgroup>
 							<thead>
 								<tr class="fixedHeader table-light">
-									<th>환자코드</th>
+									<th>코드</th>
 									<th>환자명</th>
 									<th>병과구분</th>
 									<th>대기상태</th>
 								</tr>
 							</thead>
 							<tbody id="waitTable">
-								<c:forEach items="${waitList }" var="patient">
-				      				<tr data-bs-toggle="modal" data-bs-target="#patientInfo">
-				      					<td data-bs-toggle="modal" data-bs-target="#patientInfo">${patient["paNo"] }</td>
-				      					<td>${patient["paName"] }</td>
-				      					<td>${patient["divNm"] }</td>
-				      					<td>${patient["waitstNm"] }</td>
+								<c:forEach items="${waitList }" var="wait">
+				      				<tr data-rcp-no="${wait['rcpNo'] }">
+				      					<td ><a class="paDetail">${wait["paNo"] }</a></td>
+				      					<td>${wait["paName"] }</td>
+				      					<td>
+				      						<select id="divSelect">
+				      							<c:forEach items="${divTreat }" var="divTr">
+				      								<option value="${divTr['divCd'] }" ${divTr['divCd'] eq wait['divCd'] ? "selected" : "" }>${divTr["divNm"] }</option>
+				      							</c:forEach>
+				      						</select>
+				      					</td>
+				      					<td>
+				      						<select id="statusSelect">
+				      							<c:forEach items="${waitStatus }" var="waitSt">
+				      								<option value="${waitSt['waitstCd'] }" ${waitSt['waitstCd'] eq wait['waitstCd'] ? "selected" : "" }>${waitSt["waitstNm"] }</option>
+				      							</c:forEach>
+				      						</select>
+				      					</td>
 				      				</tr>
 				      			</c:forEach>
 							</tbody>
@@ -360,26 +420,15 @@
 <form:form id="insertChartForm" modelAttribute="trmChart" method="post">
 </form:form>
 
-<!-- Modal -->
-<div class="modal fade" id="patientInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="exampleModalLabel">환자상세</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-			</div>	
-		</div>
-	</div>
-</div>
+<%-- <form:form id="insertWaitForm" modelAttribute="waitHistory" method=""> --%>
+	
+<%-- </form:form> --%>
+
+
 
 <!--  xml을 json으로 바꿔주는 라이브러리 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js"></script>
+<script src="${pageContext.request.contextPath }/resources/js/custom.js"></script>
 <script type="text/javascript">
 	GridStack.init();
 		
@@ -396,7 +445,7 @@
 // 				console.log(jsonObj.response.body.items.item); // 눈으로 확인!
 				let data = jsonObj.response.body.items.item;
 				
-				f_makeTable($medi, data);
+				f_makeTable($tbody_medi, data);
 // 				console.log($medi.find("tr").eq(1).data("object"));
 			}
 		};
@@ -421,7 +470,7 @@
 			$tr.data("object",v_data[i]);
 			trTags.push($tr);
 		}
-		$tbody_medi.append(trTags);
+		v_sel.append(trTags);
 	}
   
   /* tab 메뉴 */
@@ -467,30 +516,25 @@
 	});
 	$preNavs.eq(0).click();
 	
-	let tbody_diag = $diagContents.filter("#diag").find("tbody").on('dblclick',function(){
-// 		console.log(event.target);
-		let $tr = $(event.target).parent("tr");
-		$tr.remove();
+	let tbody_diag = $diagContents.filter("#diag").find("tbody").on('dblclick','tr', function(){
+		$(this).remove();
 	});
-	let tbody_sym = $diagContents.filter("#sym").find("tbody").on('dblclick',function(){
-		let $tr = $(event.target).parent("tr");
-		$tr.remove();
+	let tbody_sym = $diagContents.filter("#sym").find("tbody").on('dblclick', 'tr', function(){
+		$(this).remove();
 	});
-	let tbody_pre = $preContents.filter("#pre").find("tbody").on('dblclick',function(){
-		let $tr = $(event.target).parent("tr");
-		$tr.remove();
+	let tbody_pre = $preContents.filter("#pre").find("tbody").on('dblclick', 'tr', function(){
+		$(this).remove();
 	});
-	let tbody_film = $preContents.filter("#film").find("tbody").on('dblclick',function(){
-		let $tr = $(event.target).parent("tr");
-		$tr.remove();
+	let tbody_film = $preContents.filter("#film").find("tbody").on('dblclick', 'tr', function(){
+		$(this).remove();
 	});
 	
 	// input result
-	$('.doc-basic tbody').on('click',function(event){
-// 		console.log($td.parent("tr"));
-// 		console.log($(this).parent().parent().attr('id'));
-		let $tr = $(event.target).parent("tr");
-		let v_id = $(this).parent().parent().attr('id');
+	$('.doc-basic tbody').on('click', 'tr', function(event){
+		// console.log($td.parent("tr"));
+		// console.log($(this).parents().filter("div").attr("id"));
+		let $tr = $(this);
+		let v_id = $(this).parents().filter("div").attr("id");
 		if(v_id == "dise"){
 			let newTr = $tr.clone();
 			newTr.children().eq(1).remove();
@@ -522,7 +566,32 @@
 	});
 	
 	/* data submit */
-	let $trmForm = $("#insertChartForm");
+	let $inputDetail = $("input[type=text]");
+	let $trmForm = $("#insertChartForm").on('submit', function(){
+		event.preventDefault();
+		
+		let data = $(this).serializeObject();
+		console.log(this);
+			
+		$.ajax({
+// 			url : this.action,
+			method : this.method,
+			data : $(this).serialize(),
+			dataType : "json",
+			contentType : "application/json;charset=UTF=8",
+			success : function(resp) {
+				console.log(resp);
+				
+				// alert 띄울?
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});
+		return false;
+	});
 	let $submitBtn = $("input[type=button]").on('click', function(){
 		// diag
 		$.each(tbody_diag.find("tr"), function(index, tr){
@@ -565,7 +634,7 @@
 		
 		//pre
 		$.each(tbody_pre.find("tr"), function(index, tr){
-			console.log(index, tr, $(tr).data("object"));
+ 			//console.log(index, tr, $(tr).data("object"));
 			let name = "prescriptionVOList[" + index + "].";
 			$trmForm.append($("<input>").attr({
 				type:"hidden"
@@ -609,38 +678,39 @@
 			}));
 		});
 		
+		// detail
+		$trmForm.append($("<input>").attr({
+			type:"hidden"
+			, name: "mediRecord"
+			, value: $inputDetail.val()
+		}));
+		
+		// 환자 접수 번호
+		$trmForm.append($("<input>").attr({
+			type:"hidden"
+			, name: "rcpNo"
+			, value: rcpNo
+		}));
+		
 		$trmForm.submit();
 		return false;
 	});
 	
 	/* 환자 대기 리스트 */
+	let $waitTable = $('#waitTable');
+	
 	/* 환자 상세 modal */
-	const $patientInfo = $('#patientInfo').on('show.bs.modal',function(event){
-// 		console.log(event.relatedTarget, event.target);
-// 		let memo = $(event.relatedTarget).data("memo");
-// // 		console.log($(event.relatedTarget).parent().siblings('div.modal-header').children('#exampleModalLabel').text());
-// 		let code = $(event.relatedTarget).parent().siblings('div.modal-header').children('#exampleModalLabel').text();
-// 		$(this).find('.modal-title').html(code);
-// 		$(this).find('[name=writer]').val(memo.writer);
-// 		$(this).find('[name=content]').val(memo.content);
-// 		$(this).find('[name=date]').val(memo.date);
- 	}).on('hidden.bs.modal',function(event){
-// 		$(this).find('.modal-title').empty();
-// 		$(this).find('[name=updateForm]')[0].reset();
-// 		// console.log(updateForm);
-	});
-	let $waitTable = $('#waitTable').on('click','tr',function(){
-		let $tr = $(event.target).parent("tr");
-		let paNo = $tr.find("td").eq(0).html();
-		let url = "${pageContext.request.contextPath}/doctor/main/"+paNo;
+	let $paDetail = $('.paDetail').on('click',function(){
+		let paNo = $(event.target).html();
+		let url = "${pageContext.request.contextPath}/doctor/main/paNo/"+paNo;
 		$.ajax({
 			url : url,
 			method : "get",
 			contentType : "application/json;charset=UTF=8",
 			success : function(resp) {
-				//console.log(resp);
-				$('#patientInfo').modal({ show: false});
-				$('#patientInfo').modal('show');
+				// console.log(resp);
+				f_modalOpen();
+				f_modalBody(resp.patientInfo);
 			},
 			error : function(jqXHR, status, error) {
 				console.log(jqXHR);
@@ -648,7 +718,41 @@
 				console.log(error);
 			}
 		});
+		return false;
 	});
+	
+	const modal = document.querySelector("#modal");
+	const modalBody = document.querySelector(".modal-body");
+	const f_modalOpen = () => {
+		modal.style.display="block";
+	}	
+	function f_block(){
+		event.stopPropagation();
+	}
+	const f_modalClose = () => {		
+		event.stopPropagation();
+ 		modal.style.display="none"; 						
+	}
+	let $modalTitle = $('.modal-title');
+	let f_modalBody = (v_data) => {
+// 		console.log(v_data, v_data.size);
+// 		console.log(modalContent, $(modalContent));
+		modalBody.innerHTML="";
+		$modalTitle.empty();
+		$modalTitle.html("환자상세");
+		let table = $("<table>").append(
+			$("<tr>").append($("<th>").html("환자번호"), $("<td>").html(v_data.paNo))
+			, $("<tr>").append($("<th>").html("이름"), $("<td>").html(v_data.paName))
+			, $("<tr>").append($("<th>").html("생년월일"), $("<td>").html(v_data.paReg))
+			, $("<tr>").append($("<th>").html("전화번호"), $("<td>").html(v_data.paHp))
+			, $("<tr>").append($("<th>").html("우편번호"), $("<td>").html(v_data.paZip))
+			, $("<tr>").append($("<th>").html("주소"), $("<td>").html(v_data.paAdd1))
+			, $("<tr>").append($("<th>").html("상세주소"), $("<td>").html(v_data.paAdd2))
+			, $("<tr>").append($("<th>").html("성별"), $("<td>").html(v_data.paSex))
+		);
+		table.addClass("table table-bordered");
+		$(modalBody).append(table);
+	}
 	
 	let f_resetList = function(){
 		
@@ -656,5 +760,130 @@
 	
 	
 	/* 환자의 이전 진료 차트 리스트 */
-	let $chartListTable = $('#chartListTable');
+	let $chartListTable = $('#chartListTable').on('click', 'tr', function(event){
+		//console.log($(event.target).parent().data("chart"));
+// 		let v_data = $(event.target).parent().data("chart");
+		let v_data = $(this).data("chart");
+		f_modalOpen();
+		modalBody.innerHTML="";
+		$modalTitle.empty();
+		$modalTitle.html("진료차트상세");
+		let table = $("<table>").append(
+			$("<tr>").append($("<th>").html("진료차트코드"), $("<td>").html(v_data.trmCd))
+			, $("<tr>").append($("<th>").html("날짜"), $("<td>").html(v_data.trmDt))
+			, $("<tr>").append($("<th>").html("증상"), $("<td>").html(v_data.symptomVOList))
+			, $("<tr>").append($("<th>").html("진단"), $("<td>").html(v_data.diagHistoryVOList))
+			, $("<tr>").append($("<th>").html("처방"), $("<td>").html(v_data.prescriptionVOList))
+			, $("<tr>").append($("<th>").html("촬영"), $("<td>").html(v_data.filmOrderVOList))
+			, $("<tr>").append($("<th>").html("기록"), $("<td>").html(v_data.mediRecord))
+		);
+		table.addClass("table table-bordered");
+		$(modalBody).append(table);
+	});
+	// chart list 가져오기
+	let f_readChartList = (v_paNo) => {
+		let url = "${pageContext.request.contextPath}/doctor/main/chartlist/"+v_paNo;
+		$.ajax({
+			url : url,
+			method : "get",
+			contentType : "application/json;charset=UTF=8",
+			success : function(resp) {
+				// console.log(resp);
+				$chartListTable.empty();
+				let trTags = [];
+				$.each(resp.chartList, function(index, value){
+					let tr = $("<tr>").append($("<td>").html(value.trmCd), $("<td>").html(value.trmDt));
+					tr.data("chart",value);
+					trTags.push(tr);
+				});
+				$chartListTable.append(trTags);
+				
+				//console.log(resp.chartList.length);
+				if(resp.chartList.length > 0){
+					f_getChart(rcpNo);
+				} 
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	}	
+	
+	// 작성중인 진료차트 잇으면 가져오기
+	let f_getChart = (v_rcpNo) => {
+		let url = "${pageContext.request.contextPath}/doctor/main/chart/"+v_rcpNo;
+		$.ajax({
+			url : url,
+			method : "get",
+			contentType : "application/json;charset=UTF=8",
+			success : function(resp) {
+				console.log(resp);
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	}
+	
+	// 더블 클릭 햇을 시 진료기록엔 과거 진료 기록 리스트 
+	// 1. 작성된 진료차트가 잇는 경우 -> 불러오기 -> 수정
+	// 2. 진료차트가 없고 접수 번호만 잇다! -> 새로 입력
+	let rcpNo = -1;
+	$waitTable.on('dblclick','tr',function(event){
+		// console.log(event.target);
+		$(this).siblings('tr').removeClass("dblclick-on");
+
+		let $tr = $(this);
+		rcpNo = $tr.data("rcpNo");
+		
+// 		$tr.toggleClass("dblclick-on");
+		$tr.addClass("dblclick-on");
+		$trmForm.empty();
+		$trmForm.append($("<input>").attr({
+				type: "hidden"
+				, name: "rcpNo"
+				, value: rcpNo
+		}));
+		
+		f_readChartList($tr.find("a").html());
+	});
+	
+	// 대기 상태 selectbox 바꾸기
+	let $divSelect = $("#divSelect");
+	let $changeWait = $("#statusSelect").on('change',function(){
+		//console.log($divSelect.find("option:selected").val(), $divSelect.find("option:selected").text());
+		let dvCd = $divSelect.find("option:selected").val();
+		let stCd = $(this).find("option:selected").val();
+		// console.log(dvCd, stCd);
+		// console.log($(this).parents().filter("tr").trigger("dblclick"));
+		$(this).parents().filter("tr").trigger("dblclick");
+		
+		if(rcpNo != -1){
+			let url = "${pageContext.request.contextPath}/doctor/main/wait";
+			let data = {
+					"rcpNo" : rcpNo
+					, "waitstCd" : stCd
+					, "divCd" : dvCd
+			}
+			$.ajax({
+				url : url,
+				method : "post",
+				data : data,
+				dataType : "application/json;charset=UTF=8",
+				success : function(resp) {
+					console.log(resp);
+				},
+				error : function(jqXHR, status, error) {
+					console.log(jqXHR);
+					console.log(status);
+					console.log(error);
+				}
+			});
+		}		
+	});
+	
 </script>

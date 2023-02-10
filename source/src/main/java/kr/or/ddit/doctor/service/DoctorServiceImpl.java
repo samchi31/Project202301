@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.ddit.commons.vo.DiagHistoryVO;
 import kr.or.ddit.commons.vo.DiseaseVO;
+import kr.or.ddit.commons.vo.DivisionTreatVO;
 import kr.or.ddit.commons.vo.EmployeeVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
 import kr.or.ddit.commons.vo.PatientVO;
@@ -17,6 +18,7 @@ import kr.or.ddit.commons.vo.ReceptionVO;
 import kr.or.ddit.commons.vo.SymptomVO;
 import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
+import kr.or.ddit.commons.vo.WaitStatusVO;
 import kr.or.ddit.doctor.dao.DoctorDAO;
 import kr.or.ddit.doctor.vo.GroupOrderVO;
 
@@ -47,25 +49,21 @@ public class DoctorServiceImpl implements DoctorService{
 	}
 
 	@Override
-	public TrmChartVO retrieveTrmChart(int paNo) {
+	public TrmChartVO retrieveTrmChart(int rcpNo) {
 		/* 
 		 * 환자번호에 해당하는 접수번호를 얻고
 		 * 접수번호로 해당하는 진료차트 번호 조회
-		 * 진단내역, 증상내역, 처방 내역을 진료차트 번호로 조회
-		 */
-		
-		
-		
-		return null;
+		 * 진단내역, 증상내역, 처방 내역, 촬영 내역을 진료차트 번호로 조회
+		 */		
+		return dao.selectTrmChart(rcpNo);
 	}
 
 	@Override
 	public List<TrmChartVO> retrieveTrmChartList(int paNo) {
 		/*
-		 * 환자번호에 해당하는 접수 번호 전체 조회
 		 * 접수 번호에 해당하는 진료차트 전체 조회
 		 */
-		return null;
+		return dao.selectTrmChartList(paNo);
 	}
 
 	@Override
@@ -88,27 +86,21 @@ public class DoctorServiceImpl implements DoctorService{
 	public int createTrmChart(TrmChartVO trmChartVO) {
 		/*
 		 * 진료 차트 작성
+		 * 
+		 * 접수번호, 사번 있는지 확인
 		 */
-		// 현재 로그인한 의사 사번 넣었다 치고 kkk
-		trmChartVO.setEmpNo(1);
-		// 현재 클릭한 환자 있다 치고
-		trmChartVO.setRcpNo(1);
-		trmChartVO.setMediRecord("이 차트는 insert테스트용입니다");
+		// 차트 삽입
+		int cnt = dao.insertTrmChart(trmChartVO);
+		// 진단 내역 삽입
+		cnt += dao.insertDiagList(trmChartVO);
+		// 증상 내역 삽입
+		cnt += dao.insertSymList(trmChartVO);
+		// 처방 내역 삽입
+		cnt += dao.insertPreList(trmChartVO);
+		// 촬영 내역 삽입
+		cnt += dao.insertRadiList(trmChartVO);
 		
-		int rowcnt = dao.insertTrmChart(trmChartVO);
-		
-		// 증상 내역 잇다 치고
-		List<SymptomVO> symptomVOList = new ArrayList<SymptomVO>();
-		symptomVOList.add(new SymptomVO());
-		symptomVOList.get(1).setSymCd("L08");
-		trmChartVO.setSymptomVOList(symptomVOList);
-		createSymList(trmChartVO);
-		
-		// 진단 내역 잇다 치고
-		List<DiagHistoryVO> diagHistoryVOList = new ArrayList<>();
-		diagHistoryVOList.add(new DiagHistoryVO());
-		
-		return 0;
+		return cnt;
 	}
 
 	@Override
@@ -148,6 +140,16 @@ public class DoctorServiceImpl implements DoctorService{
 		/*
 		 * 대기 상태 변경 시 대기 히스토리 추가
 		 */
-		return 0;
+		return dao.insertWaitHistory(waitHistoryVO);
+	}
+
+	@Override
+	public List<WaitStatusVO> retreiveWaitStatus() {
+		return dao.selectWaitStatus();
+	}
+
+	@Override
+	public List<DivisionTreatVO> retreiveDvTr() {
+		return dao.selectDvTr();
 	}
 }

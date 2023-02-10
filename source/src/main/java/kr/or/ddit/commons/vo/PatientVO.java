@@ -1,5 +1,7 @@
 package kr.or.ddit.commons.vo;
 
+import java.util.List;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,4 +19,6 @@ public class PatientVO {
 	private String paPiyn;
 	private String paDelete;
 	private String paSex;
+	
+	private List<ReceptionVO> receptionList;
 }

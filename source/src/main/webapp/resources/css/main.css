@@ -85,6 +85,18 @@ table td { white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
 /* **************************card 끝****************************** */
 
 /* ************************* a태그를 버튼처럼 꾸며줌 시작***************************** */
-.a_btn{ background-color: #00334E; color: white; padding: 12px 25px; text-align: center; text-decoration: none; display: inline-block; border: none;}
+.a_btn{ background-color: #00334E; color: white; padding: 5px 20px; text-align: center; text-decoration: none; display: inline-block; border: none;}
 .a_btn:hover { background-color: #F7AA00;}
 /* ************************* a태그를 버튼처럼 꾸며줌 끝***************************** */
+
+/* ************************* 버튼 스타일 시작 *************************************** */
+.btn_blue {
+	width: 6.25rem;
+	height: 2.5rem;
+	background-color : #16308D;
+	color: white;
+	border: none;
+	margin: 0.188rem;
+    box-shadow: 1px 1px 2px grey;
+}
+/* ************************* 버튼 스타일 끝 *************************************** */

@@ -4,6 +4,7 @@ import java.util.List;
 
 import kr.or.ddit.commons.vo.DiagHistoryVO;
 import kr.or.ddit.commons.vo.DiseaseVO;
+import kr.or.ddit.commons.vo.DivisionTreatVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.PrescriptionVO;
@@ -11,6 +12,7 @@ import kr.or.ddit.commons.vo.ReceptionVO;
 import kr.or.ddit.commons.vo.SymptomVO;
 import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
+import kr.or.ddit.commons.vo.WaitStatusVO;
 import kr.or.ddit.doctor.vo.GroupOrderVO;
 
 /**
@@ -60,10 +62,10 @@ public interface DoctorService {
 	
 	/**
 	 * 선택한 환자의 진료 차트
-	 * @param paNo
+	 * @param rcpNo
 	 * @return
 	 */
-	public TrmChartVO retrieveTrmChart(int paNo);
+	public TrmChartVO retrieveTrmChart(int rcpNo);
 	
 	/**
 	 * 환자의 과거 진료 차트 기록 리스트
@@ -127,4 +129,11 @@ public interface DoctorService {
 	 * @return
 	 */
 	public int createWaitHistory(WaitHistoryVO waitHistoryVO);
+	
+	/**
+	 * select Tag 용 상태 코드들
+	 * @return
+	 */
+	public List<WaitStatusVO> retreiveWaitStatus();
+	public List<DivisionTreatVO> retreiveDvTr();
 }

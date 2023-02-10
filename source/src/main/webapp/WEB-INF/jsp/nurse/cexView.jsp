@@ -265,15 +265,13 @@ function cexHistoryDetail(cexNo){
 				<div class="patient-info-in">
 					<div class="patient-info-in-top">
 						<h4 id="cex-title">환자 조회</h4>
-						<form id="cex-search-form">
+							<input id="Search" class="btn_blue" type="button" value="검색">
+							<input class="cex-input" id="searchWord" type="text" onkeyup="if(window.event.keyCode==13){patientSearch()}" value=""/>
 							<select id="searchOption" class="cex-select">
 								<option value="no">환자번호</option>
 								<option value="name">이름</option>
 							</select> 
-								<input style="display:none;" type="hidden" id="paNoHidden" value=""/>
-							<input class="cex-input" id="searchWord" type="text" onkeyup="if(window.event.keyCode==13){patientSearch()}" value=""/>
-							<input id="Search" class="btn-submit" type="button" value="검색">
-						</form>
+							<input style="display:none;" type="hidden" id="paNoHidden" value=""/>
 					</div>
 					<table class="cex-table">
 						<thead>
@@ -301,7 +299,7 @@ function cexHistoryDetail(cexNo){
 				<div class="cex-detail-in">
 					<div class="cex-detail-top">
 						<h4 id="cex-title">검사내역상세</h4>			
-						<input style= "display : none;" class="btn-submit" id="cex-register" data-target="#layerpop" data-toggle="modal" type="button" value="검사등록">	
+						<input style= "display : none;" class="btn_blue" id="cex-register" data-bs-target="#layerpop" data-bs-toggle="modal" type="button" value="검사등록">	
 					</div>
 						<table class="cex-table">
 							<thead>
@@ -336,7 +334,7 @@ function cexHistoryDetail(cexNo){
 				<div class="cex-barcode-in">
 					<div class="cex-barcode-top">
 						<h4 id="cex-title"> 바코드 </h4>
-						<input style= "float:right;" id="barcode-print-btn"class="btn-submit" type="button" value="바코드출력" onclick="return printBarcode();">	
+						<input style= "float:right;" id="barcode-print-btn"class="btn_blue" type="button" value="바코드출력" onclick="return printBarcode();">	
 					</div>
 					<div id="barcode-print"></div>
 				</div>
@@ -344,7 +342,7 @@ function cexHistoryDetail(cexNo){
 		</div>
 	</div>
 	
-<!-- 모달 시작 -->
+<!-- **************************모달 시작********************************* -->
 <div class="modal fade" id="layerpop" >
   <div class="modal-dialog">
     <div class="modal-content">
@@ -406,12 +404,13 @@ function cexHistoryDetail(cexNo){
       </div>
       <!-- Footer -->
       <div class="modal-footer">
-        <button type="button" id="cexInsertBtn" class="btn-submit" data-dismiss="modal">저장</button>
-        <button type="button" class="btn-submit" data-dismiss="modal">닫기</button>
+        <button type="button" id="cexInsertBtn" class="btn_blue" data-bs-dismiss="modal">저장</button>
+        <button type="button" class="btn_blue" data-bs-dismiss="modal">닫기</button>
       </div>
     </div>
   </div>
 </div>
+<!-- *******************모달 끝************************* -->
 <script type="text/javascript">
 var btn_cex_register = $("#cex-register");
 

@@ -1,11 +1,13 @@
-package kr.or.ddit.nurse.vo;
+package kr.or.ddit.commons.vo;
+
+import java.util.List;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(of="hsptNo")
 @Data
-public class WardVO {
+public class HospitalizationVO {
 	private Integer hsptNo;
 	private String hsptYn;
 	private String hsptInDt;
@@ -13,13 +15,9 @@ public class WardVO {
 	private Integer bedNo;
 	private Integer wrRno;
 	private String trmCd;
-	
-	private Integer paNo;
-	private String paName;
 	private String diseaseCd;
-	private String icdName;
+	
+	private List<VitalVO> vitalList; // has many 관계 (1:N)
+	private String paName;
 	private String empNm;
-	private String mediRecord;
-	private String paReg;
-	private String paHp;
 }

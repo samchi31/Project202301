@@ -65,7 +65,7 @@
 		WHERE A.CEX_STATUS IS NULL
 	</select>
 	
-	<insert id="insertCex" parameterType="CexVO">
+	<insert id="insertCex" parameterType="kr.or.ddit.nurse.vo.CexVO">
 		INSERT INTO CLINICAL_EXAMINATION (
 		    CEX_NO
 		    , CEX_CBC

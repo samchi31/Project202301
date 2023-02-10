@@ -2,6 +2,10 @@ package kr.or.ddit.nurse.service;
 
 import java.util.List;
 
+import kr.or.ddit.commons.vo.HospitalizationVO;
+import kr.or.ddit.commons.vo.IntakeOutputVO;
+import kr.or.ddit.commons.vo.VitalVO;
+import kr.or.ddit.nurse.vo.NrecVO;
 import kr.or.ddit.nurse.vo.WardVO;
 
 /**
@@ -23,4 +27,20 @@ import kr.or.ddit.nurse.vo.WardVO;
 public interface WardService {
 	
 	public List<WardVO> retrieveWardPatientList();
+	
+	public WardVO retrieveWardPatient(int hsptNo);
+	
+	public int createNrec(NrecVO nrec);
+	
+	public List<NrecVO> retrieveNrecList(int hsptNo);
+	
+	public int createVital(VitalVO vital);
+	
+	public List<HospitalizationVO> retrieveVitalList(int hsptNo);
+
+	public int ioduplicateCheck(IntakeOutputVO io);
+
+	public int ioCreate(IntakeOutputVO io);
+
+	public List<IntakeOutputVO> retrieveIoList(IntakeOutputVO io);
 }

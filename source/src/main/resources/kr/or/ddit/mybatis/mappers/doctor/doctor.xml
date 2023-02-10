@@ -24,24 +24,44 @@
 		FROM    GROUP_ORDER
 	</select>
 
-	<select id="selectTrmChart" parameterType="int" resultType="TrmChartVO">
-		WITH recentReceptionView AS
-		(   SELECT  PA_NO, RCP_DATE, RCP_NO
-		    FROM    (
-		                SELECT  PA_NO, RCP_DATE, RCP_NO
-		                FROM    RECEPTION
-		                WHERE   PA_NO = #{paNo}
-		                ORDER   BY 2 DESC
-		            )
-		    WHERE   ROWNUM = 1  )
+	<resultMap type="TrmChartVO" id="trmChartMap" autoMapping="true">
+		<id property="trmCd" column="TRM_CODE" />
+		<collection property="diagHistoryVOList" ofType="DiagHistoryVO" autoMapping="true">
+			<id property="trmCd" column="TRM_CD"/>
+		</collection>
+		<collection property="symptomVOList" ofType="SymptomVO" autoMapping="true">
+			<id property="trmCd" column="TRM_CD"/>
+		</collection>
+		<collection property="prescriptionVOList" ofType="PrescriptionVO" autoMapping="true">
+			<id property="trmCd" column="TRM_CD"/>
+		</collection>
+		<collection property="filmOrderVOList" ofType="FilmOrderVO" autoMapping="true">
+			<id property="trmCd" column="TRM_CD"/>
+		</collection>
+	</resultMap>
+	<select id="selectTrmChart" parameterType="int" resultMap="trmChartMap">
+		WITH trmChartView AS    (
 		SELECT  A.*
-		FROM    TRM_CHART A INNER JOIN recentReceptionView B ON (A.RCP_NO = B.RCP_NO)
+		FROM    TRM_CHART A INNER JOIN RECEPTION B ON (A.RCP_NO = B.RCP_NO)
+		WHERE   B.RCP_NO = #{rcpNo}    
+		)
+		SELECT  T.TRM_CD AS TRM_CODE, T.MEDI_RECORD, TO_CHAR(T.TRM_DT, 'YYYY/MM/DD') AS TRM_DT, T.EMP_NO, T.RCP_NO
+		        , B.*
+		        , C.*
+		        , D.*
+		        , E.*
+		FROM    TRMCHARTVIEW T  
+		        LEFT OUTER JOIN DIAGNOSIS_HISTORY B  ON (T.TRM_CD = B.TRM_CD)
+		        LEFT OUTER JOIN SYMPTOM_HISTORY C ON (T.TRM_CD = C.TRM_CD)
+		        LEFT OUTER JOIN PRESCRIPTION_HISTORY D ON (T.TRM_CD = D.TRM_CD)
+		        LEFT OUTER JOIN FILM_ORDER E ON (T.TRM_CD = E.TRM_CD)
 	</select>
 	
 	<select id="selectTrmChartList" parameterType="int" resultType="TrmChartVO">
-		SELECT  TRM_CD, MEDI_RECORD, TRM_DT, EMP_NO, RCP_NO
+		SELECT  TRM_CD, MEDI_RECORD, to_char(TRM_DT,'YYYY/MM/DD') as TRM_DT, EMP_NO, RCP_NO
 		FROM    V_TRM_CHART
 		WHERE   PA_NO = #{paNo}
+		AND		RCP_NO = #{rcpNo}
 		ORDER   BY 3 DESC
 	</select>
 	
@@ -53,20 +73,20 @@
 		SELECT  A.RCP_NO, A.WAIT_NUM, A.PA_NO, A.PA_NAME, A.DIV_CD, A.DIV_NM, A.WAITST_CD, A.WAITST_NM
 		FROM    V_WAIT_HIST A   INNER JOIN  testView B ON(A.RCP_NO = B.RCP_NO AND A.WAIT_NUM = B.WAIT_NUM)
 		WHERE   EMP_NO = #{empNo}
-<!-- 		AND     TO_CHAR(RCP_DATE,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD') -->
+		AND     TO_CHAR(RCP_DATE,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
 	</select>
 	
 	<select id="selectPaInfo" parameterType="int" resultType="PatientVO">
 		SELECT  PA_NO
-		        ,PA_NAME
-		        ,PA_REG
-		        ,PA_HP
-		        ,PA_PRN
-		        ,PA_ZIP
-		        ,PA_ADD1
-		        ,PA_ADD2
-		        ,PA_DELETE
-		        ,PA_SEX
+		        , PA_NAME
+		        , PA_REG
+		        , PA_HP
+		        , PA_PRN
+		        , PA_ZIP
+		        , PA_ADD1
+		        , PA_ADD2
+		        , PA_DELETE
+		        , PA_SEX
 		FROM    PATIENT
 		WHERE   PA_NO = #{paNo}
 	</select>
@@ -166,23 +186,33 @@
 		SELECT	* FROM DUAL
 	</insert>
 	
-<!-- 	<insert id="insertWaitHistory" parameterType="WaitHistoryVO"> -->
-<!-- 		INSERT INTO waiting_history ( -->
-<!-- 		    wait_no, -->
-<!-- 		    rcp_no, -->
-<!-- 		    wait_dt, -->
-<!-- 		    wait_num, -->
-<!-- 		    waitst_cd, -->
-<!-- 		    div_cd -->
-<!-- 		) VALUES ( -->
-<!-- 		    SEQ_WAITING_HISTORY.Nextval, -->
-<!-- 		    , #{rcpNo,jdbcType=NUMERIC} -->
-<!-- 		    , SYSDATE -->
-<!-- 		    , (select nvl(max(wait_num), 0) + 1 -->
-<!-- 		        from waiting_history -->
-<!-- 		        where rcp_no = #{}) -->
-<!-- 		    , #{waitstCd,jdbcType=VARCHAR} -->
-<!-- 			, #{divCd,jdbcType=VARCHAR}	 -->
-<!-- 		) -->
-<!-- 	</insert> -->
+	<insert id="insertWaitHistory" parameterType="WaitHistoryVO">
+		INSERT INTO waiting_history (
+		    wait_no,
+		    rcp_no,
+		    wait_dt,
+		    wait_num,
+		    waitst_cd,
+		    div_cd
+		) 
+		SELECT  SEQ_WAITING_HISTORY.Nextval
+		        , #{rcpNo,jdbcType=NUMERIC}
+		        , SYSDATE
+		        , SNUM
+		        , #{waitstCd,jdbcType=VARCHAR}
+				, #{divCd,jdbcType=VARCHAR}
+		FROM    (
+				SELECT nvl(max(wait_num), 0)+1 as SNUM
+		        FROM    waiting_history
+		        WHERE   rcp_no = #{rcpNo,jdbcType=NUMERIC}	)
+	</insert>
+
+	<select id="selectWaitStatus" resultType="WaitStatusVO">
+		SELECT	*	FROM WAIT_STATUS
+	</select>
+	
+	<select id="selectDvTr" resultType="DivisionTreatVO">
+		SELECT *	FROM DIVISION_TREAT
+	</select>
+	
 </mapper>

@@ -1,5 +1,7 @@
 package kr.or.ddit.commons.vo;
 
+import java.util.List;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -21,4 +23,6 @@ public class EmployeeVO {
 	private String jobCd;
 	private String posiCd;
 	private String majorCd;
+	
+	private List<VitalVO> vitalList;
 }

@@ -12,4 +12,5 @@ import lombok.ToString;
 public class SymptomVO {	
 	private String symCd;
 	private String symDetail;
+	private String trmCd;
 }

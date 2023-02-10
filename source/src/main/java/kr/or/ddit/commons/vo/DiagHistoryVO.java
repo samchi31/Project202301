@@ -18,4 +18,5 @@ public class DiagHistoryVO {
 	private String operTf;
 	private String physiotherapyTf;
 	
+	private HospitalizationVO hospitalization;
 }

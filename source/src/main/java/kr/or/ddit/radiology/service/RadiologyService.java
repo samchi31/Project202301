@@ -25,7 +25,10 @@ import kr.or.ddit.enumpkg.ServiceResult;
  */ 
 public interface RadiologyService {
 
-	public List<FilmCateVO> retrieveFilmRecodeList(Map<String, String> map);
+	public List<FilmCateVO> retrieveFilmRecordList(Map<String, String> map);
+	
+	
+	public List<FilmCateVO> retrieveFilmList();
 	
 	
 	/**
@@ -33,11 +36,8 @@ public interface RadiologyService {
 	 * @param filmCd
 	 * @return
 	 */
-	public FilmCateVO retrieveFilmRecode(String filmCd);
+	public FilmCateVO retrieveFilmRecord(String filmCd);
 
-	public List<FilmCateVO> retrieveFilmList();
-	
-	
 	/**
 	 * xray대기실 상황
 	 * @return
@@ -68,6 +68,17 @@ public interface RadiologyService {
 	 * @return
 	 */
 	public List<WaitHistoryVO> selectRadiAllList();
+	
+	
+	/**
+	 * 촬영 결과 전송 리스트 조회
+	 * @return
+	 */
+	public List<WaitHistoryVO> selectfilmResultList(String paNo);
+
+	//대기히스토리 추가(대기중->촬영중)
+	//map : {rcpNo=202302062, waitstCd=WS001, divCd=DV007}
+	public int changeWaitListInsert(Map<String, String> map);
 
 
 }
