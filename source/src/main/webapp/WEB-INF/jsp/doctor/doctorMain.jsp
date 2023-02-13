@@ -2,28 +2,25 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
-<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
-<script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
-
+<title>doctor-Main</title>
 <style type="text/css">
   	/* table */
   	table {table-layout: fixed;}
   	
     /*tab css*/
-	.tab { overflow:hidden;}
-	.tabnav{font-size:0;}
-	.tabnav li{display: inline-block; text-align:center; border-right:1px solid #ddd;}
-	.tabnav li a:before{content:""; position:absolute; left:0; top:0px; width:100%; height:3px; }
-	.tabnav li a.active:before{background:#7ea21e;}
-	.tabnav li a.active{border-bottom:1px solid #fff;}
-	.tabnav li a{ position:relative; display:block; background: #f8f8f8; color: #000; padding:0 15px; line-height:230%; text-decoration:none; font-size:16px;}
-	.tabnav li a:hover, .tabnav li a.active{background:#fff; color:#7ea21e; }
-	.tabcontent{ border-top:none; background:#fff;}
-	.tabcontentWrap{ overflow-y:auto; overflow-x:auto;  border-top:none; background:#fff;} 
+/* 	.tab { overflow:hidden;} */
+/* 	.tabnav{font-size:0;} */
+/* 	.tabnav li{display: inline-block; text-align:center; border-right:1px solid #ddd;} */
+/* 	.tabnav li a:before{content:""; position:absolute; left:0; top:0px; width:100%; height:3px; } */
+/* 	.tabnav li a.active:before{background:#4E73DF;} */
+/* 	.tabnav li a.active{border-bottom:1px solid #fff;} */
+/* 	.tabnav li a{ position:relative; display:block; background: #f8f8f8; color: #000; padding:0 15px; line-height:230%; text-decoration:none; font-size:16px;} */
+/* 	.tabnav li a:hover, .tabnav li a.active{background:#fff; color:#4E73DF; } */
+/* 	.tabcontent{ border-top:none; background:#fff;} */
+/* 	.tabcontentWrap{ overflow-y:auto; overflow-x:auto;  border-top:none; background:#fff;}  */
 	
-	.tab-big{height:280px;}
-	.tab-mid{height:190px;}
+	.tab-big{height:340px;}
+	.tab-mid{height:215px;}
 	.tab-bigger{height:320px;} 
 	
 	/* 처방 테이블 input tag width */
@@ -55,6 +52,10 @@
 	/* tr 더블클릭 */
 	.dblclick-on{
 		background-color : antiquewhite;
+	}
+	
+	#detailText{
+		min-height : 260px;
 	}
 </style>
 
@@ -191,7 +192,7 @@
 		<div class="grid-stack-item" 
 			gs-x="4" gs-y="0" gs-w="3" gs-h="2" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card " >
-				<h4>진료기록</h4>
+				<h4>진료내역</h4>
 				<div class="tabcontentWrap tab-mid">
 			    	<div class="tabcontent">
 			    		<table class="table table-bordered table-hover">
@@ -217,9 +218,9 @@
 			gs-x="5" gs-y="2" gs-w="2" gs-h="3" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card" >
 				<h4>상세기록</h4>
-				<div class="tabcontentWrap tab-bigger">
+				<div class="tabcontentWrap tab-big">
 					<div class="tabcontent">
-						<input type="text" />
+						<input type="text" id="detailText"/>
 						<input type="button" value="등록" />
 					</div>
 				</div>
@@ -566,19 +567,20 @@
 	});
 	
 	/* data submit */
-	let $inputDetail = $("input[type=text]");
+	let $inputDetail = $("#detailText");
 	let $trmForm = $("#insertChartForm").on('submit', function(){
 		event.preventDefault();
 		
-		let data = $(this).serializeObject();
-		console.log(this);
+		let data = $(this).serialize();
+		let method = this.method;
+		console.log(data, method);
 			
 		$.ajax({
 // 			url : this.action,
-			method : this.method,
-			data : $(this).serialize(),
-			dataType : "json",
-			contentType : "application/json;charset=UTF=8",
+			method : method,
+			data : data,
+// 			dataType : "application/json;charset=UTF=8",
+// 			contentType : "json",
 			success : function(resp) {
 				console.log(resp);
 				
@@ -591,7 +593,7 @@
 			}
 		});
 		return false;
-	});
+	}); 
 	let $submitBtn = $("input[type=button]").on('click', function(){
 		// diag
 		$.each(tbody_diag.find("tr"), function(index, tr){
@@ -686,12 +688,13 @@
 		}));
 		
 		// 환자 접수 번호
-		$trmForm.append($("<input>").attr({
-			type:"hidden"
-			, name: "rcpNo"
-			, value: rcpNo
-		}));
+// 		$trmForm.append($("<input>").attr({
+// 			type:"hidden"
+// 			, name: "rcpNo"
+// 			, value: rcpNo
+// 		}));
 		
+		console.log($trmForm);
 		$trmForm.submit();
 		return false;
 	});
@@ -731,6 +734,8 @@
 	}
 	const f_modalClose = () => {		
 		event.stopPropagation();
+		modalBody.innerHTML="";
+		$modalTitle.empty();
  		modal.style.display="none"; 						
 	}
 	let $modalTitle = $('.modal-title');
@@ -758,28 +763,138 @@
 		
 	}
 	
+	let f_list = (v_list, v_col) => {
+		let result = "";
+		let lastIndex = v_list.length - 1;
+		$(v_list).each(function(index){
+			result += v_list[index][v_col];
+			if(index == lastIndex){
+				return;
+			}
+			result += ", \n";
+		});
+		return result;
+	}
 	
-	/* 환자의 이전 진료 차트 리스트 */
-	let $chartListTable = $('#chartListTable').on('click', 'tr', function(event){
-		//console.log($(event.target).parent().data("chart"));
-// 		let v_data = $(event.target).parent().data("chart");
-		let v_data = $(this).data("chart");
-		f_modalOpen();
+	let f_chartDetail = (v_data) => {
+		// console.log(v_data);
 		modalBody.innerHTML="";
 		$modalTitle.empty();
-		$modalTitle.html("진료차트상세");
+		$modalTitle.html("진료차트상세");		
+		
 		let table = $("<table>").append(
 			$("<tr>").append($("<th>").html("진료차트코드"), $("<td>").html(v_data.trmCd))
 			, $("<tr>").append($("<th>").html("날짜"), $("<td>").html(v_data.trmDt))
-			, $("<tr>").append($("<th>").html("증상"), $("<td>").html(v_data.symptomVOList))
-			, $("<tr>").append($("<th>").html("진단"), $("<td>").html(v_data.diagHistoryVOList))
-			, $("<tr>").append($("<th>").html("처방"), $("<td>").html(v_data.prescriptionVOList))
-			, $("<tr>").append($("<th>").html("촬영"), $("<td>").html(v_data.filmOrderVOList))
+			, $("<tr>").append($("<th>").html("증상"), $("<td>").html(f_list(v_data.symptomVOList, "symCd")))
+			, $("<tr>").append($("<th>").html("진단"), $("<td>").html(f_list(v_data.diagHistoryVOList,"icdName")))
+			, $("<tr>").append($("<th>").html("처방"), $("<td>").html(f_list(v_data.prescriptionVOList,"preCd")))
+			, $("<tr>").append($("<th>").html("촬영"), $("<td>").html(f_list(v_data.filmOrderVOList,"filmCd")))
 			, $("<tr>").append($("<th>").html("기록"), $("<td>").html(v_data.mediRecord))
 		);
 		table.addClass("table table-bordered");
 		$(modalBody).append(table);
+	};
+	
+	// 진료차트 rcp 로 가져오기
+	let f_getChart = (v_rcpNo, v_function) => {
+		let url = "${pageContext.request.contextPath}/doctor/main/chart/"+v_rcpNo;
+		$.ajax({
+			url : url,
+			method : "get",
+			contentType : "application/json;charset=UTF=8",
+			success : function(resp) {
+ 				// console.log(resp);
+				let data = resp.chartVO;
+				v_function(data);
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	}
+	
+	/* 환자의 이전 진료 차트 */
+	let $chartListTable = $('#chartListTable').on('click', 'tr', function(event){
+		//console.log($(event.target).parent().data("chart"));
+// 		let v_data = $(event.target).parent().data("chart");
+		let data = $(this).data("chart");
+		//console.log(data);
+		f_modalOpen();
+		f_getChart(data.rcpNo, f_chartDetail);
 	});
+	
+	let f_makeRecentChart = (v_data) => {
+		
+		console.log(v_data);
+		
+		tbody_diag.empty();
+		tbody_pre.empty();
+		tbody_sym.empty();
+		tbody_film.empty();
+		$inputDetail.empty();
+		
+		if(!v_data){ return; }
+		
+		$trmForm.append($("<input>").attr({
+			type: "hidden"
+			, name: "trmCd"
+			, value: v_data.trmCd
+		}));
+		
+		$(v_data.diagHistoryVOList).each(function(i,v){
+			// console.log(i,v);
+			if(!v.diseaseCd){ return; }
+			tbody_diag.append(
+				$("<tr>").append(
+					$("<td>").html(v.diseaseCd)
+					, $("<td>").html(v.icdName)
+					//, $("<td>").html(v.operTf)
+					//, $("<td>").html(v.physiotherapyTf)
+					, v.operTf == "Y" ? $("<td>").html("<input type='checkbox' name='operTf' checked/>") : $("<td>").html("<input type='checkbox' name='operTf'/>")
+					, v.physiotherapyTf == "Y" ? $("<td>").html("<input type='checkbox' name='physiotherapyTf' checked/>") : $("<td>").html("<input type='checkbox' name='physiotherapyTf' />")
+			));	
+		});
+		
+		$(v_data.symptomVOList).each(function(i,v){
+			if(!v.symCd){ return; }
+			tbody_sym.append(
+				$("<tr>").append(
+					$("<td>").html(v.symCd)
+					, $("<td>").html(v.symDetail)
+			));
+		});
+		
+		$(v_data.prescriptionVOList).each(function(i,v){
+			//console.log(i,v);
+			if(!v.preCd){ return; }
+			tbody_pre.append(
+				$("<tr>").append(
+					$("<td>").html(v.preCd)
+					, $("<td>").html(v.preDetail)
+					//, $("<td>").html(v.preNt)
+					//, $("<td>").html(v.preTotal)
+					, $("<td>").html($("<input>").attr("type", "number").attr("min","1").val(v.preNt))
+					, $("<td>").html($("<input>").attr("type", "number").attr("min","1").val(v.preTotal))
+					, $("<td>").html(v.injcPthNm)
+					, $("<td>").html(v.unit)
+					, $("<td>").html(v.payTpNm)
+			));	
+		});
+		
+		$(v_data.filmOrderVOList).each(function(i,v){
+			if(!v.filmCd){ return; }
+			tbody_film.append(
+				$("<tr>").append(
+					$("<td>").html(v.filmCd)
+					, $("<td>").html(v.filmCd)
+			));
+		});
+		
+		$inputDetail.val(v_data.mediRecord);
+	};
+
 	// chart list 가져오기
 	let f_readChartList = (v_paNo) => {
 		let url = "${pageContext.request.contextPath}/doctor/main/chartlist/"+v_paNo;
@@ -798,9 +913,10 @@
 				});
 				$chartListTable.append(trTags);
 				
+				// 차트리스트가 하나 이상이면 현재 차트가 잇을수도
 				//console.log(resp.chartList.length);
 				if(resp.chartList.length > 0){
-					f_getChart(rcpNo);
+					f_getChart(rcpNo, f_makeRecentChart);
 				} 
 			},
 			error : function(jqXHR, status, error) {
@@ -811,28 +927,11 @@
 		});
 	}	
 	
-	// 작성중인 진료차트 잇으면 가져오기
-	let f_getChart = (v_rcpNo) => {
-		let url = "${pageContext.request.contextPath}/doctor/main/chart/"+v_rcpNo;
-		$.ajax({
-			url : url,
-			method : "get",
-			contentType : "application/json;charset=UTF=8",
-			success : function(resp) {
-				console.log(resp);
-			},
-			error : function(jqXHR, status, error) {
-				console.log(jqXHR);
-				console.log(status);
-				console.log(error);
-			}
-		});
-	}
-	
 	// 더블 클릭 햇을 시 진료기록엔 과거 진료 기록 리스트 
 	// 1. 작성된 진료차트가 잇는 경우 -> 불러오기 -> 수정
 	// 2. 진료차트가 없고 접수 번호만 잇다! -> 새로 입력
 	let rcpNo = -1;
+	let trmCd = -1;
 	$waitTable.on('dblclick','tr',function(event){
 		// console.log(event.target);
 		$(this).siblings('tr').removeClass("dblclick-on");

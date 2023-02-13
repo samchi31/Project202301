@@ -14,7 +14,8 @@ h4{
    border-radius: 5px;
    border-top: 5px solid #4F80FF;
    box-shadow: 1px 1px 5px grey;
-   padding: 10px;
+   padding: 17px;
+   
 }
 label{
 	margin:20px
@@ -70,13 +71,40 @@ label{
     text-decoration: none;
     font-weight: 600;
     transition: 0.25s;
+    padding: 7px 19px;
+    font-size: 14px;
 }
 .modal-footer{
 	margin: -9px;
 	
 }
 
+.modal-header{
+	padding-top: 4px;
+    padding-bottom: 10px;
+}
+
+.modal-dialog{
+	height: 52%;
+    width: 25%;
+}
 .btn-close {
-	margin: 0;
-    border: none;
+	
+}
+button{
+	border: 0px;
+	margin-bottom: 4px;
+	font-size: 27px;
+}
+
+
+
+/*오프캔버스*/
+#offcanvasscrolling{
+	width: 40%;
+} 
+
+.offcanvas-footer{
+	margin-bottom: 50px;
+    margin-right: 17px;
 }

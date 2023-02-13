@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(of="outputNo")
 @Data
 public class OutputVO {
-	private Integer outputNo;
+	private String outputNo;
 	private String ioDate;
 	private String outputCapa;
 	private String outputNe;

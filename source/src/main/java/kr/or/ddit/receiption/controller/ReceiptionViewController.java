@@ -1,54 +1,59 @@
 package kr.or.ddit.receiption.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import kr.or.ddit.commons.service.PatientService;
-import kr.or.ddit.commons.vo.PagingVO;
-import kr.or.ddit.commons.vo.PatientVO;
-import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.receiption.service.ReceptionService;
+import kr.or.ddit.receiption.vo.ReceiptionVO;
 
 @Controller
 @RequestMapping("/receiption")
 public class ReceiptionViewController {
-    @Inject 
-	PatientService service;
+ 
+    @Inject
+    ReceptionService service;
 	
-    @ModelAttribute("patient")
-    public PatientVO patient() {
-    	return new PatientVO();
+    @ModelAttribute("receiptionVO")
+    public ReceiptionVO receiptionVO() {
+    	return new ReceiptionVO();
     }
     
     @GetMapping("/receiptionView")
-	public String receiptionView(PagingVO<PatientVO> pagingvo
-		,PatientVO patient, Model model) {
+	public String receiptionView() {
     	
-    	  List<PatientVO> patientList = service.retrievePatientList(pagingvo);
-		
-    	model.addAttribute("patientList",patientList);
 		String viewName = null;
 		viewName = "receiption/receiptionView";
       
 		return viewName;
 	}
     
-    @PostMapping("/receiptionView")
-    public String insertForm(PatientVO patient) {
+    @ResponseBody
+    @PostMapping("/receiptionPatientSearch")
+    public List patientSearch(@RequestBody Map<String, String> map) {
     	String viewName=null;
     	
-    	ServiceResult createPatient = service.createPatient(patient);
-    	if(createPatient == ServiceResult.OK) {
-    		viewName = "receiption/receiptionView";
-    	}
-    	return viewName;
+    	List<ReceiptionVO> searchPatientList = service.searchPatientList(map);
+    	return searchPatientList;
     }
+    
+    
+    @PostMapping("/registration")
+    @ResponseBody
+    public void registRCP(
+    		 @ModelAttribute("receiptionVO") @RequestBody ReceiptionVO receiptionVO) {
+  
+    	service.createReceiption(receiptionVO);
+    }
+ 
 }
 

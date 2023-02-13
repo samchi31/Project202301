@@ -96,6 +96,13 @@ public interface DoctorService {
 	public int createTrmChart(TrmChartVO trmChartVO);
 	
 	/**
+	 * 진료차트 수정
+	 * @param trmChartVO
+	 * @return
+	 */
+	public int modifyTrmChart(TrmChartVO trmChartVO);
+	
+	/**
 	 * 진료 차트 작성 시 증상 내역 입력
 	 * @param symptomVOList
 	 * @return
@@ -107,21 +114,21 @@ public interface DoctorService {
 	 * @param diseaseVOList
 	 * @return
 	 */
-	public int createDisList(List<DiagHistoryVO> diagHistoryVOList);
+	public int createDiagList(TrmChartVO trmChartVO);
 	
 	/**
 	 * 진료 차트 작성 시 처방 내역 입력
 	 * @param prescriptionVOList
 	 * @return
 	 */
-	public int createPreList(List<PrescriptionVO> prescriptionVOList);
+	public int createPreList(TrmChartVO trmChartVO);
 	
 	/**
 	 * 진료 차트 작성 시 영상 촬영 오더 내역 입력
 	 * @param filmCateVOList
 	 * @return
 	 */
-	public int createRadiList(List<FilmCateVO> filmCateVOList);
+	public int createRadiList(TrmChartVO trmChartVO);
 	
 	/**
 	 * 진료 후 환자의 대기 상태 변경

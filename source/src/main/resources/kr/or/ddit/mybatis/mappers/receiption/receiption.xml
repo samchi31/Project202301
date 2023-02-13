@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.receiption.dao.ReceiptionDAO">
+	
+	<select id="seekReceptionList" parameterType="hashmap" resultType="kr.or.ddit.receiption.vo.ReceiptionVO">
+		select pa_no, pa_name, pa_reg, pa_sex,pa_hp
+		 from patient 
+		 <where>
+			<if test="searchOption!=null">
+				<choose>
+					<when test="searchOption=='paName'">
+						AND PA_NAME = #{searchWord}
+					</when>
+					<when test="searchOption=='paHp'">
+						AND PA_HP LIKE '%' || #{searchWord} || '%'
+					</when>
+					<when test="searchOption=='paReg'">
+						AND PA_REG LIKE '%' || #{searchWord} || '%'
+					</when>
+				</choose>
+			</if>
+		</where>      
+	</select>
+
+
+	<insert id="insertReceiption" parameterType="ReceiptionVO" >
+		insert into reception
+		values(
+			RCP_NO
+			, #{paNo}
+			, RCP_DATE
+			, #{officeCd}
+		)
+	</insert>
+</mapper>

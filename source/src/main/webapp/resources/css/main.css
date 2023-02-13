@@ -1,102 +1,274 @@
 @charset "UTF-8";
 
+/* ***********************크롬 클릭했을 때 검정색 라인 제거******************************* */
+input:focus {
+	outline: none;
+}
+/* select:focus, option:focus, textarea:focus, button:focus { */
+/* 	outline: none; */
+/* }  */
+
 /* ***********************header 시작******************************* */
-*{
-	margin:0px;
-	padding:0px;
-}
-.menu{
-    display: flex;
-    background: #4E73DF;
-    font-family: 'NanumSquareRound';
-}
-.menu-item{
-    flex-grow: 1;
-    background: #4E73DF;
-    transition: 0.5s;
-}
-.menu-item:hover {
-    flex-grow: 1.5;
-/*     background: #F7AA00; 마우스 올렸을 때 색*/
-}
-.menu-link{
-    display : block;
-    padding: 1em;
-    font-size : 1.2rem;
-    font-weight: bold;
-    color : white;
-    text-decoration: none;
-    text-align: center;
-}
-.menu-link:hover{
-    color:black; 
-}
-ul{
-    list-style:none;
-    padding: 0;
-}
-#main_logo{
-    text-align: center;
-    padding-top : 10px;
-    padding-left: 10px;
-}
-.menu-link-user{
-    display : block;
-    padding: 1.5em;
-    font-size : 0.9rem;
-    color : white;
-    text-decoration: none;
-    text-align: center;
+* {
+	margin: 0px;
+	padding: 0px;
 }
 
-.user-photo-link{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: gold;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    margin: 0px;
-    margin-top: 10px;
+.menu {
+	display: flex;
+	background: #4E73DF;
+	font-family: 'NanumSquareRound';
 }
+
+.menu-item {
+	flex-grow: 1;
+	background: #4E73DF;
+	transition: 0.5s;
+}
+
+.menu-item:hover {
+	flex-grow: 1.5;
+	/*     background: #F7AA00; 마우스 올렸을 때 색*/
+}
+
+.menu-link {
+	display: block;
+	padding: 1em;
+	font-size: 1.2rem;
+	font-weight: bold;
+	color: white;
+	text-decoration: none;
+	text-align: center;
+}
+
+.menu-link:hover {
+	color: black;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+}
+
+#main_logo {
+	text-align: center;
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+.menu-link-user {
+	display: block;
+	padding: 1.5em;
+	font-size: 0.9rem;
+	color: white;
+	text-decoration: none;
+	text-align: center;
+}
+
+.user-photo-link {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: gold;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	margin: 0px;
+	margin-top: 10px;
+}
+
 .user_info {
 	font-family: 'normal';
 }
+
 dl, ol, ul {
-    margin-bottom: 0; 
+	margin-bottom: 0;
 }
+
+/* **************************body시작****************************** */
+body {
+	font-family: 'spo';
+	font-size: 12px
+}
+
+/* **************************body시작 끝****************************** */
+
 /* **************************header 끝****************************** */
+h4 {
+	font-family: 'Nanum Gothic', sans-serif;
+	/* 	font-weight: bold; */
+	margin-top: 5px;
+	margin-bottom: 13px;
+	margin-left: 10px;
+	color: #6A6A6A;
+}
 
 /* **************************card 시작****************************** */
-.card{
+.card {
 	background-color: #ddd;
-    border-radius: 5px;
+	border-radius: 5px;
 	border-top: 5px solid #4F80FF;
-    box-shadow: 1px 1px 5px grey;
-    padding : 10px;
+	box-shadow: 1px 1px 5px grey;
+	padding: 10px;
 }
+
 .card table tr.fixedHeader {
 	position: sticky;
 	top: -1px;
-	background-color:white;
+	background-color: white;
 }
-table td { white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+
+table td {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
 /* **************************card 끝****************************** */
 
+/* ************************ tab 메뉴 시작 *********************************/
+.tab { overflow:hidden;}
+.tabnav{font-size:0;}
+.tabnav li{display: inline-block; text-align:center; border-right:1px solid #ddd;}
+.tabnav li a:before{content:""; position:absolute; left:0; top:0px; width:100%; height:3px; }
+.tabnav li a.active:before{background:#4E73DF;}
+.tabnav li a.active{border-bottom:1px solid #fff;}
+.tabnav li a{ position:relative; display:block; background: #f8f8f8; color: #000; padding:0 15px; line-height:230%; text-decoration:none; font-size:16px;}
+.tabnav li a:hover, .tabnav li a.active{background:#fff; color:#4E73DF; }
+.tabcontent{ border-top:none; background:#fff;}
+.tabcontentWrap{ overflow-y:auto; overflow-x:auto;  border-top:none; background:#fff;} 
+/* ************************ tab 메뉴 끝 *********************************/
+
 /* ************************* a태그를 버튼처럼 꾸며줌 시작***************************** */
-.a_btn{ background-color: #00334E; color: white; padding: 5px 20px; text-align: center; text-decoration: none; display: inline-block; border: none;}
-.a_btn:hover { background-color: #F7AA00;}
+.a_btn {
+	background-color: #00334E;
+	color: white;
+	padding: 5px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	border: none;
+}
+
+.a_btn:hover {
+	background-color: #F7AA00;
+}
 /* ************************* a태그를 버튼처럼 꾸며줌 끝***************************** */
 
 /* ************************* 버튼 스타일 시작 *************************************** */
 .btn_blue {
 	width: 6.25rem;
 	height: 2.5rem;
-	background-color : #16308D;
+	background-color: #16308D;
 	color: white;
 	border: none;
 	margin: 0.188rem;
-    box-shadow: 1px 1px 2px grey;
+	box-shadow: 1px 1px 2px grey;
 }
 /* ************************* 버튼 스타일 끝 *************************************** */
+
+/* ************************* 검색창 시작  ****************************************/
+.search-form {
+	float: right;
+	padding-bottom: 20px;
+	padding-top: 10px;
+}
+
+.search-form>select {
+	width: 6.5rem;
+	height: 1.6rem;
+	font-size: 13px;
+	border: 1px solid #ddd;
+}
+
+.search-form>.btn-submit {
+	width: 5.25rem;
+	height: 1.7rem;
+	background-color: #004262;
+	color: white;
+	border: none;
+	/* 	margin: 0.188rem; */
+	/* 	box-shadow: 1px 1px 2px grey; */
+	font-size: 13px;
+}
+
+.search-form>input {
+	width: 14.25rem;
+	height: 1.6rem;
+	/* 	padding-bottom: 5px; */
+	font-size: 16px;
+	border: 1px solid #ddd;
+}
+
+.film-submit-in {
+	width: 31.938rem;
+	height: 23.438rem;
+	margin: 0.625rem;
+	padding: 1.25rem;
+	background-color: #F2F1F1;
+	border-radius: 5px;
+	border-top: 5px solid #4F80FF;
+	box-shadow: 1px 1px 5px grey;
+	overflow: auto;
+	margin-top: 30px;
+	margin-left: 40px;
+}
+
+.film-submit-table {
+	width: 37.5rem;
+	height: 15rem;
+	padding-top: 0.5rem;
+}
+
+.film-submit {
+	width: 41.438rem;
+	height: 21.875rem;
+}
+/* ***************************************검색창 끝  *************************************** */
+
+/* ***************************************grid-stack 스타일  시작*************************************** */
+.grid-stack {
+	background: #FFFFFF;
+	border-radius: 10px;
+}
+
+.grid-stack-item-content {
+	background-color: #FCFFFE;
+	border-radius: 5px;
+	border-top: 5px solid #4E73DF;
+	box-shadow: 1px 1px 5px grey;
+	padding: 20px;
+}
+
+.btn_blue {
+	width: 5.25rem;
+	height: 1.7rem;
+	background-color: #004262;
+	color: white;
+	border: none;
+	/* 	margin: 0.188rem; */
+	/* 	box-shadow: 1px 1px 2px grey; */
+	font-size: 13px;
+}
+/* ***************************************grid-stack 스타일 끝  *************************************** */
+.table1 {
+	margin: 20px 0 40px 0;
+	width: 100%;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	display: table;
+	text-align: center;
+	border-width: 0 1px;
+	
+}
+
+.cex-wait-table {
+	margin: 20px 0 40px 0;
+	width: 100%;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	display: table;
+	text-align: center;
+	border-width: 0 1px;
+}
+thead tr {
+	background-color: #3161A3;
+	color: #ffffff
+}

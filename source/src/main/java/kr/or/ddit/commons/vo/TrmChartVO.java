@@ -22,4 +22,5 @@ public class TrmChartVO {
 	private List<SymptomVO> symptomVOList;
 	private List<PrescriptionVO> prescriptionVOList;
 	private List<FilmOrderVO> filmOrderVOList;
+	
 }

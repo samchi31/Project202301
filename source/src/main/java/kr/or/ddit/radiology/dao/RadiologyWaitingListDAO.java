@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
 
 @Mapper
@@ -52,5 +53,11 @@ public interface RadiologyWaitingListDAO {
 	 */
 	public int changeWaitListInsert(Map<String, String> map);
 	
+	/**
+	 * 환자 현재 진료 차트
+	 * @param rcpNo 접수번호
+	 * @return 환자의 진료차트
+	 */
+	public TrmChartVO selectTrmChart(int rcpNo);
 	
 }

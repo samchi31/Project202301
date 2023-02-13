@@ -4,8 +4,11 @@ import java.util.List;
 
 import kr.or.ddit.commons.vo.HospitalizationVO;
 import kr.or.ddit.commons.vo.IntakeOutputVO;
+import kr.or.ddit.commons.vo.IntakeVO;
 import kr.or.ddit.commons.vo.VitalVO;
+import kr.or.ddit.nurse.vo.IntakeCategoryVO;
 import kr.or.ddit.nurse.vo.NrecVO;
+import kr.or.ddit.nurse.vo.OutputCategoryVO;
 import kr.or.ddit.nurse.vo.WardVO;
 
 /**
@@ -43,4 +46,23 @@ public interface WardService {
 	public int ioCreate(IntakeOutputVO io);
 
 	public List<IntakeOutputVO> retrieveIoList(IntakeOutputVO io);
+	
+	/**
+	 * 환자의 intake 기록을 입력
+	 * @param intake
+	 * @return 성공, 실패
+	 */
+	public int intakeCreate(IntakeVO intake);
+	
+	/**
+	 * intake 입력 항목 리스트 검색
+	 * @return intake 입력 항목 리스트
+	 */
+	public List<IntakeCategoryVO> retrieveIntakeList();
+	
+	/**
+	 * output 입력 항목 리스트 검색
+	 * @return output 입력 항목 리스트
+	 */
+	public List<OutputCategoryVO> retrieveOutputList();
 }

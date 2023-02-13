@@ -2,8 +2,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<link href="${pageContext.request.contextPath }/resources/css/filmRecord.css" rel="stylesheet"/>
-<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+<link href="${pageContext.request.contextPath }/resources/css/filmRecord.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css" />
 <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
 <%-- <%@ taglib uri="http://www.ddit.or.kr/class305" prefix="ui" %> --%>
 <!DOCTYPE html>
@@ -35,7 +35,7 @@
 				<div class="patient-info-in">
 					<div class="patient-info-in-top">
 						<h4 id="radi-title">촬영기록</h4>
-						<form id="radi-search-form" name="searchForm" onkeydown="f_block()">
+						<form id="radi-search-form" class="search-form" name="searchForm" onkeydown="f_block()">
 							<select id="searchOption" class="radi-select">
 								<option value>검색하기</option>
 								<option value="filmName">촬영실</option>
@@ -46,13 +46,13 @@
 						</form>
 					</div>
 					<div id="film-record-in">
-					<table class="table table-bordered table-hover" >
+					<table class="table-bordered table-hover table1" >
 						<thead>
-							<tr class="table-primary">
-								<th><a>촬영실구분</a></th>
-								<th><a>환자명</a></th>
-								<th><a>대기상태</a></th>
-								<th><a>진료일자</a></th>
+							<tr>
+								<td>촬영실구분</td>
+								<td>환자명</td>
+								<td>대기상태</td>
+								<td>진료일자</td>
 							</tr>
 						</thead>
 						<tbody id="radiTBody">
@@ -64,13 +64,13 @@
 				<div class="film-submit">
 					<div class="film-submit-in">
 						<h4>촬영결과전송</h4>
-						<table class="film-submit-table w-100 table table-bordered table-hover" >
+						<table class="film-submit-table w-100 table1 table-bordered table-hover" >
 							<thead>
-								<tr class="table-primary"> 
-									<th><a>촬영실구분</a></th>
-									<th><a>환자명</a></th>
-									<th><a>대기상태</a></th>
-									<th><a>진료일자</a></th>
+								<tr> 
+									<td>촬영실구분</td>
+									<td>환자명</td>
+									<td>대기상태</td>
+									<td>진료일자</td>
 								</tr>
 							</thead>
 								<tbody id="film-submit-tbody">
@@ -158,8 +158,8 @@
 		    <input type="text" name="trmCd" id="trmCd_offcanvas" readonly="readonly">
 		</div>
 		<div class="form-group">
-		    <label class="film_title" for="filmCd">촬영실</label>
-		    <input type="text" name="filmCd" id="filmCd_offcanvas" readonly="readonly">
+		    <label class="film_title" for="divNm">촬영실</label>
+		    <input type="text" name="divNm" id="divNm_offcanvas" readonly="readonly">
 		</div>
 		<div class="filebox">
 		    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
@@ -315,7 +315,7 @@ $(document).ready(function(){
 					console.log(v);
 					let trTag = $("<tr>").attr("class","filmClass")
 					.append(
-						$("<td>").html(v.divNm)
+						$("<td>").html(v.rcpCd)
 						, $("<td>").html(v.paName)
 						, $("<td>").html(v.waitstNm)
 						, $("<td>").html(v.waitDt)
@@ -355,9 +355,7 @@ function filmsubmit(value){
 		url : "filmResultList",
 		method : "post",
 		contentType : "application/json;charset=utf-8",
-// 		contentType : "application/x-www-form-urlencoded",
 		data : JSON.stringify(data),
-// 		data : data,
 		dataType : "json",
 		success : function(result){
 			console.log(result);

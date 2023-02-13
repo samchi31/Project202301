@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.commons.vo.FilmCateVO;
+import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
+import kr.or.ddit.doctor.dao.DoctorDAO;
+import kr.or.ddit.doctor.service.DoctorService;
 import kr.or.ddit.radiology.service.RadiologyService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +29,7 @@ public class RadiologyMainController {
 	@Inject
 	private RadiologyService service;
 	
+
 	@GetMapping("/radiologyView") //메인페이지
 	public String RadiologyView() {
 		String viewName = null;
@@ -89,7 +94,6 @@ public class RadiologyMainController {
 			viewName = "redirect:/radiology/radiologyView";
 			return viewName;
 		}
-		
-		
 	}
+	
 }

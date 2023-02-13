@@ -45,7 +45,7 @@
 	<!-- 환자검색 -->
 	<select id="selectPatientList" resultType="kr.or.ddit.commons.vo.PatientVO" parameterType="hashMap">
 		SELECT PA_NO, PA_NAME, PA_REG
-		    , PA_HP, PA_PRN , PA_ZIP
+		    , PA_HP,  PA_ZIP
 		    , PA_ADD1, PA_ADD2, PA_PIYN
 		    , PA_SEX              
 		  FROM PATIENT   

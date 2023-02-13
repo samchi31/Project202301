@@ -12,6 +12,7 @@ import kr.or.ddit.commons.vo.DiseaseVO;
 import kr.or.ddit.commons.vo.DivisionTreatVO;
 import kr.or.ddit.commons.vo.EmployeeVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
+import kr.or.ddit.commons.vo.FilmOrderVO;
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.PrescriptionVO;
 import kr.or.ddit.commons.vo.ReceptionVO;
@@ -92,15 +93,30 @@ public class DoctorServiceImpl implements DoctorService{
 		// 차트 삽입
 		int cnt = dao.insertTrmChart(trmChartVO);
 		// 진단 내역 삽입
-		cnt += dao.insertDiagList(trmChartVO);
+		cnt += createDiagList(trmChartVO);
 		// 증상 내역 삽입
-		cnt += dao.insertSymList(trmChartVO);
+		cnt += createSymList(trmChartVO);
 		// 처방 내역 삽입
-		cnt += dao.insertPreList(trmChartVO);
+		cnt += createPreList(trmChartVO);
 		// 촬영 내역 삽입
-		cnt += dao.insertRadiList(trmChartVO);
+		cnt += createRadiList(trmChartVO);
 		
 		return cnt;
+	}
+
+
+	@Override
+	public int createDiagList(TrmChartVO trmChartVO) {
+		/*
+		 * 작성된 진료차트 코드로 진단내역 작성
+		 */
+		
+		int rowcnt = 0;
+		if(trmChartVO.getDiagHistoryVOList() != null) {
+			rowcnt = dao.insertDiagList(trmChartVO);
+		}
+		
+		return rowcnt;
 	}
 
 	@Override
@@ -108,31 +124,35 @@ public class DoctorServiceImpl implements DoctorService{
 		/*
 		 * 작성된 진료차트 코드로 증상내역 작성
 		 */
-		return 0;
+		int rowcnt = 0;
+		if(trmChartVO.getSymptomVOList() != null) {
+			rowcnt = dao.insertSymList(trmChartVO);
+		}
+		return rowcnt;
 	}
 
 	@Override
-	public int createDisList(List<DiagHistoryVO> diagHistoryVOList) {
-		/*
-		 * 작성된 진료차트 코드로 진단내역 작성
-		 */
-		return 0;
-	}
-
-	@Override
-	public int createPreList(List<PrescriptionVO> prescriptionVOList) {
+	public int createPreList(TrmChartVO trmChartVO) {
 		/*
 		 * 작성된 진료차트 코드로 처방내역 작성
 		 */
-		return 0;
+		int rowcnt = 0;
+		if(trmChartVO.getPrescriptionVOList() != null) {
+			rowcnt = dao.insertPreList(trmChartVO);
+		}
+		return rowcnt;
 	}
 
 	@Override
-	public int createRadiList(List<FilmCateVO> filmCateVOList) {
+	public int createRadiList(TrmChartVO trmChartVO) {
 		/*
 		 * 작성된 진료차트 코드로 영상촬영오더 내역 작성
 		 */
-		return 0;
+		int rowcnt = 0;
+		if(trmChartVO.getFilmOrderVOList() != null) {
+			rowcnt = dao.insertRadiList(trmChartVO);
+		}
+		return rowcnt;
 	}
 
 	@Override
@@ -151,5 +171,31 @@ public class DoctorServiceImpl implements DoctorService{
 	@Override
 	public List<DivisionTreatVO> retreiveDvTr() {
 		return dao.selectDvTr();
+	}
+	
+	@Override
+	public int modifyTrmChart(TrmChartVO trmChartVO) {
+		// trmCd에 해당하는 진료차트 상세기록 수정
+		// trmCd에 해당하는 진단, 처방, 증상, 촬영오더내역 삭제
+		// 기존 trmCd로 새로 진단, 처방, 증상, 촬영오더내역 입력
+		
+		int rowcnt = dao.updateTrmChart(trmChartVO);
+		
+		String trmCd = trmChartVO.getTrmCd();
+		rowcnt += dao.deleteDiagHist(trmCd);
+		rowcnt += dao.deleteSymHist(trmCd);
+		rowcnt += dao.deletePreHist(trmCd);
+		rowcnt += dao.deleteFilmOrder(trmCd);
+		
+		// 진단 내역 삽입
+		rowcnt += createDiagList(trmChartVO);
+		// 증상 내역 삽입
+		rowcnt += createSymList(trmChartVO);
+		// 처방 내역 삽입
+		rowcnt += createPreList(trmChartVO);
+		// 촬영 내역 삽입
+		rowcnt += createRadiList(trmChartVO);
+		
+		return rowcnt;
 	}
 }

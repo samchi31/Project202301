@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.commons.vo.HospitalizationVO;
 import kr.or.ddit.commons.vo.IntakeOutputVO;
+import kr.or.ddit.commons.vo.IntakeVO;
 import kr.or.ddit.commons.vo.VitalVO;
 import kr.or.ddit.nurse.service.WardService;
 import kr.or.ddit.nurse.vo.NrecVO;
@@ -28,10 +30,12 @@ public class wardMainController {
 	private WardService service;
 	
 	@GetMapping("/wardMain")
-	public String wardView() {
+	public String wardView(Model model) {
 		String viewName = null;
 		viewName = "nurse/wardMain";
 		
+		model.addAttribute("intakeList", service.retrieveIntakeList());
+		model.addAttribute("outputList", service.retrieveOutputList());
 		return viewName;
 	}
 	
@@ -95,6 +99,7 @@ public class wardMainController {
 		return list;
 	}
 	
+//	IO 중복체크 (한 환자당 한 날짜에 하나씩)
 	@ResponseBody
 	@PostMapping("/ioDuplicateCheck")
 	public int ioDuplicateCheck(@RequestBody IntakeOutputVO io) {
@@ -102,10 +107,19 @@ public class wardMainController {
 		return result;
 	}
 	
+//	IO 생성
 	@ResponseBody
 	@PostMapping("/ioCreate")
 	public int ioCreate(@RequestBody IntakeOutputVO io) {
 		int result = service.ioCreate(io);
+		return result;
+	}
+	
+//	intake 입력
+	@ResponseBody
+	@PostMapping("/intakeCreate")
+	public int intakeCreate(@RequestBody IntakeVO intake) {
+		int result = service.intakeCreate(intake);
 		return result;
 	}
 }

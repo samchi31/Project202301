@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<!-- <title>test</title> -->
 <c:if test="${not empty message }">
 	<script type="text/javascript">
 		alert("${message}");
@@ -17,6 +17,7 @@
 <body>
 <tiles:insertAttribute name="headerMenu" />
 <tiles:insertAttribute name="content" />
+<tiles:insertAttribute name="rolling" />
 <tiles:insertAttribute name="postScript" />
 </body>
 </html>

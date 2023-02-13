@@ -3,22 +3,72 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <link href="${pageContext.request.contextPath }/resources/css/radiList.css" rel="stylesheet"/>
+<title>영상의학과/대기실</title>
 <style type="text/css">
 .raditable{ 
  height : 100px; 
  background-color : white; 
- } 
-</style>
+} 
 
+ /*tab css*/
+.tab { overflow:hidden;}
+.tabnav{font-size:0;}
+.tabnav li{display: inline-block; text-align:center; border-right:1px solid #ddd;}
+.tabnav li a:before{content:""; position:absolute; left:0; top:0px; width:100%; height:3px; }
+.tabnav li a.active:before{background:#7ea21e;}
+.tabnav li a.active{border-bottom:1px solid #fff;}
+.tabnav li a{ position:relative; display:block; background: #f8f8f8; color: #000; padding:0 15px; line-height:230%; text-decoration:none; font-size:16px;}
+.tabnav li a:hover, .tabnav li a.active{background:#fff; color:#7ea21e; }
+.tabcontent{ border-top:none; background:#fff;}
+.tabcontentWrap{ overflow-y:auto; overflow-x:auto;  border-top:none; background:#fff;} 
+
+</style>
+<!-- 오프 캔버스 -->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true"
+		data-bs-backdrop="false" tabindex="-1" id="offcanvasscrolling"
+		aria-labelledby="offcanvasscrollinglabel">
+	<div class="offcanvas-header">
+		<h3 class="offcanvas-title" id="offcanvasscrollinglabel">진료차트</h3>
+		<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+			aria-label="close"></button>
+	</div>
+	<!-- body -->
+	<div class="offcanvas-body">
+	  	<div class="form-group">
+		    <label class="film_title" for="paNo">접수번호</label>
+		    <input type="text" name="paNo" id="paNo_offcanvas" class="film_input" readonly="readonly" />
+		</div>
+              <div class="form-group">
+		    <label class="film_title" for="paName">환자명</label>
+		    <input type="text" name="paName" id="paName_offcanvas" class="film_input" readonly="readonly" />
+		</div>
+		<div class="form-group">
+		    <label class="film_title" for="trmCd">진료차트</label>
+		    <input type="text" name="trmCd" id="trmCd_offcanvas" readonly="readonly">
+		</div>
+		<div class="form-group">
+		    <label class="film_title" for="divNm">촬영구분코드</label>
+		    <input type="text" name="divNm" id="divNm_offcanvas" readonly="readonly">
+		</div>
+        <div class="form-group">
+		    <label class="ward_title" for="prMemo">비고</label>
+		    <textarea class="ward_input" id="film_ne"></textarea>
+		</div>
+		</div>
+	    <!-- Footer -->
+	    <div class="offcanvas-footer">
+	       <button type="button" id="filmInsertBtn" class="btn_blue" data-bs-dismiss="offcanvas">저장</button>
+	    </div>
+</div>
 <div class="wrapper">
 <div class="raditable">
 <div class="grid-stack raditable">
 	<div class="grid-stack-item" gs-w="4" gs-h="5" gs-x="0" gs-y="0">
 		<div class="grid-stack-item-content card" >
 			<h4>환자정보조회</h4>
-			<table class="radi-table w-100" >
+			<table class="radi-table w-100 table-bordered table-hover" >
 				<thead>
-					<tr>
+					<tr class="table-primary">
 						<th><a>촬영실구분</a></th>
 						<th><a>환자명</a></th>
 						<th><a>진료일자</a></th>
@@ -34,9 +84,9 @@
 	<div class="grid-stack-item" gs-w="2" gs-h="3" gs-x="4" gs-y="0">
 		<div class="grid-stack-item-content card" >
 			<h4>X-RAY촬영실</h4>
-			<table class="radi-table w-100" >
+			<table class="radi-table w-100 table-bordered table-hover" >
 				<thead>
-					<tr>
+					<tr class="table-primary">
 						<th><a>순번</a></th>
 						<th><a>환자명</a></th>
 						<th><a>촬영실</a></th>
@@ -52,9 +102,9 @@
 	<div class="grid-stack-item" gs-w="2" gs-h="3" gs-x="6" gs-y="0">
 		<div class="grid-stack-item-content card" >
 			<h4>MRI촬영실</h4>
-			<table class="radi-table w-100" >
+			<table class="radi-table w-100 table-bordered table-hover" >
 				<thead>
-					<tr>
+					<tr class="table-primary">
 						<th><a>순번</a></th>
 						<th><a>환자명</a></th>
 						<th><a>촬영실</a></th>
@@ -70,9 +120,9 @@
 	<div class="grid-stack-item" gs-w="2" gs-h="3" gs-x="8" gs-y="0">
 		<div class="grid-stack-item-content card" >
 			<h4>CT촬영실</h4>
-			<table class="radi-table w-100" >
+			<table class="radi-table w-100 table-bordered table-hover" >
 				<thead>
-					<tr>
+					<tr class="table-primary">
 						<th><a>순번</a></th>
 						<th><a>환자명</a></th>
 						<th><a>촬영실</a></th>
@@ -88,9 +138,9 @@
 	<div class="grid-stack-item" gs-w="2" gs-h="3" gs-x="10" gs-y="0">
 		<div class="grid-stack-item-content card" >
 			<h4>초음파촬영실</h4>
-			<table class="radi-table w-100" >
+			<table class="radi-table w-100 table-bordered table-hover" >
 				<thead>
-					<tr>
+					<tr class="table-primary">
 						<th><a>순번</a></th>
 						<th><a>환자명</a></th>
 						<th><a>촬영실</a></th>
@@ -106,12 +156,12 @@
 	<div class="grid-stack-item" gs-w="4" gs-h="2" gs-x="4" gs-y="3">
 		<div class="grid-stack-item-content card" >
 			<h4>대기실</h4>
-			<table class="radi-table w-100" >
+			<table class="radi-table w-100 table-bordered table-hover" >
 				<thead>
-					<tr>
-						<th><a>순번</a></th>
+					<tr class="table-primary">
+						<th><a>접수번호</a></th>
 						<th><a>환자명</a></th>
-						<th><a>촬영실</a></th>
+						<th><a>진료차트</a></th>
 						<th><a>대기상태</a></th>
 					</tr>
 				</thead>
@@ -145,22 +195,22 @@
 			<div class="modal-body">
 				<fieldset>
 					<label>
-					  <input type="radio" name="divCd" value="DV004" />
+					  <input type="radio" name="filmCd" value="X-RAY" />
 					  <span>X-RAY</span>
 					</label><br>
 					
 					<label>
-					  <input type="radio" name="divCd" value="DV007" />
+					  <input type="radio" name="filmCd" value="MRI" />
 					  <span>MRI</span>
 					</label><br>
 					
 					<label>
-					  <input type="radio" name="divCd" value="DV006" />
+					  <input type="radio" name="filmCd" value="CT" />
 					  <span>CT</span>
 					</label><br>
 					
 					<label>
-					  <input type="radio" name="divCd" value="DV005" />
+					  <input type="radio" name="filmCd" value="URSONIC" />
 					  <span>초음파</span>
 					</label>
 				</fieldset>
@@ -197,7 +247,7 @@ function xrayWait_list(){
 								.append(
 									$("<td>").html(v.waitNum)		
 									, $("<td>").html(v.paName)		
-									, $("<td>").html(v.divNm)		
+									, $("<td>").html(v.filmCd)		
 									, $("<td>").html(v.waitstNm)		
 								).data("waitVO",v);
 				trTags.push(trTag)
@@ -228,7 +278,7 @@ function mriWait_list(){
 								.append(
 									$("<td>").html(v.waitNum)		
 									, $("<td>").html(v.paName)		
-									, $("<td>").html(v.divNm)		
+									, $("<td>").html(v.filmCd)		
 									, $("<td>").html("촬영중")		
 								).data("waitVO",v);
 				trTags.push(trTag)
@@ -257,7 +307,7 @@ function ctWait_list(){
 								.append(
 									$("<td>").html(v.waitNum)		
 									, $("<td>").html(v.paName)		
-									, $("<td>").html(v.divNm)		
+									, $("<td>").html(v.filmCd)		
 									, $("<td>").html("촬영중")		
 								).data("waitVO",v);
 					trTags.push(trTag)
@@ -288,7 +338,7 @@ function ultraWait_list(){
 								.append(
 									$("<td>").html(v.waitNum)		
 									, $("<td>").html(v.paName)		
-									, $("<td>").html(v.divNm)		
+									, $("<td>").html(v.filmCd)		
 									, $("<td>").html(v.waitstNm)		
 								).data("waitVO",v);
 				trTags.push(trTag)
@@ -303,7 +353,7 @@ function ultraWait_list(){
 		}
 	});	
 }
-function radiWait_list(){
+function radiWait_list(){	
 	$.ajax({
 		url : "radiwaitinglist",
 		method : "get",
@@ -315,11 +365,11 @@ function radiWait_list(){
 
 			let trTags = [];
 			$.each(result, function(i, v){
-				let aTag = $("<a>").html(v.waitstNm).attr({
-					"data-bs-toggle":"modal"
-					,"href":"#layerpop"
-					,"class":"waitClass"
-				});
+// 				let aTag = $("<a>").html(v.divCd).attr({
+// 					"data-bs-toggle":"modal"
+// 					,"href":"#layerpop"
+// 					,"class":"waitClass"
+// 				});
 // 					aTag.on("click",()=>{
 // 						let curA = event.currentTarget;
 // 						console.log("check:", curA.parentElement.parentElement);
@@ -327,18 +377,28 @@ function radiWait_list(){
 // 					});
 				console.log("v : " + JSON.stringify(v));
 				
-				let trTag = $("<tr>")
-								.append(
-									$("<td>").html(v.waitNum)		
+				let trTag = $("<tr>").attr({
+								"class":"filmsubmitClass",
+								"data-bs-toggle" : "offcanvas",
+								"data-bs-target" : "#offcanvasScrolling",
+								"aria-controls" : "offcanvasScrolling"
+								
+						}).append(
+									$("<td>").html(v.rcpNo)		
 									, $("<td>").html(v.paName)		
-									, $("<td>").html(v.divNm)		
-									, $("<td>").html(aTag)		
+									, $("<td>").html(v.divCd)		
+									, $("<td>").html(v.waitstNm)		
 								).data("waitVO",v);
 				trTags.push(trTag)
 				
 			});
 			
 			$("#radiWaitBody").html(trTags);
+			$(".filmsubmitClass").on("click",function(){
+				console.log(this);
+				$('div.offcanvas').offcanvas('show');
+				f_radi_register(result[0].paNo, result[0].paName, result[0].trmCd, result[0].divNm);
+			});
 			
 		},
 		error : function(jqXHR, status, error) {
@@ -348,7 +408,8 @@ function radiWait_list(){
 		}
 		
 	});	
-	
+
+	/*
 	$("#layerpop").on("shown.bs.modal", function(event){
 		let aTag = $(event.relatedTarget);
 		let waitVO = aTag.parents("tr:first").data("waitVO");
@@ -357,14 +418,22 @@ function radiWait_list(){
 		sessionStorage.setItem("waitstCd",waitVO.waitstCd);
 		sessionStorage.setItem("divCd",waitVO.divCd);
 		console.log("waitVO : " + JSON.stringify(waitVO));
-		console.log($(this).find(`[name="divCd"][value="\${waitVO.divCd}"]`));
-		$(this).find(`[name="divCd"][value="\${waitVO.divCd}"]`).prop("checked", true);
+		console.log($(this).find(`[name="filmCd"][value="\${waitVO.filmCd}"]`));
+		$(this).find(`[name="filmCd"][value="\${waitVO.filmCd}"]`).prop("checked", true);
 	});
+	*/
 
 }
 
-/////////////////////모달//////////////////
+function f_radi_register(pa_no, pa_name, trm_cd, div_nm){
+	$(".offcanvas-body #paNo_offcanvas").val(rcp_no);
+	$(".offcanvas-body #paName_offcanvas").val(pa_name);
+	$(".offcanvas-body #trmCd_offcanvas").val(trm_cd);
+	$(".offcanvas-body #filmCd_offcanvas").val(film_nm);
+}
 
+/////////////////////모달//////////////////
+/*
 // jQuery만 쓰면 약간 그래용.. 미래를 위해 javascript도 때때로 같이 섞어서 쓰도록 해용
 const radiWaitListForm =  document.querySelector("#waitForm");
 console.log(radiWaitListForm);
@@ -372,12 +441,13 @@ console.log(radiWaitListForm);
 radiWaitListForm.addEventListener("submit",()=>{
 	event.preventDefault();
 // 	console.log(this);
-	var radioVal = $('input[name="divCd"]:checked').val();
+	var radioVal = $('input[name="filmCd"]:checked').val();
 	
 	let data = {
 			rcpNo : sessionStorage.getItem("rcpNo"),
 			waitstCd : sessionStorage.getItem("waitstCd"),
-			divCd : radioVal
+			divCd : sessionStorage.getItem("divCd"),
+			filmCd : radioVal
 	};
 	console.log("data", data);
 	$.ajax({
@@ -403,7 +473,7 @@ radiWaitListForm.addEventListener("submit",()=>{
 // 	$("#radiUBody").append($(myTR));
 	$("#layerpop").modal("hide");
 })
-
+*/
 </script>      
 
 </body>

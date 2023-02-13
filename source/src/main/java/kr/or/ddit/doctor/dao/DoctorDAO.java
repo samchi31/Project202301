@@ -72,10 +72,6 @@ public interface DoctorDAO {
 	 * @return 환자의 진료차트
 	 */
 	public TrmChartVO selectTrmChart(int rcpNo);
-	public TrmChartVO selectDiagHist(int rcpNo);
-	public TrmChartVO selectSymHist(int rcpNo);
-	public TrmChartVO selectPreHist(int rcpNo);
-	public TrmChartVO selectFilmHist(int rcpNo);
 	
 	/**
 	 * 환자의 진료 차트 기록 리스트
@@ -146,4 +142,21 @@ public interface DoctorDAO {
 	 */
 	public List<WaitStatusVO> selectWaitStatus();
 	public List<DivisionTreatVO> selectDvTr();
+	
+	/**
+	 * 진료 차트 수정(추가 입력)
+	 * @param trmChartVO
+	 * @return
+	 */
+	public int updateTrmChart(TrmChartVO trmChartVO);
+	
+	/**
+	 * 진료 차트 수정 시 내역들 전체 삭제
+	 * @param trmCd
+	 * @return
+	 */
+	public int deleteDiagHist(String trmCd);
+	public int deleteSymHist(String trmCd);
+	public int deletePreHist(String trmCd);
+	public int deleteFilmOrder(String trmCd);
 }

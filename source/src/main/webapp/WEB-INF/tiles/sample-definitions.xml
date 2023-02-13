@@ -4,8 +4,9 @@
 	<definition name="parent" template="/WEB-INF/jsp/template.jsp" >
 		<put-attribute name="preScript" value="/includee/preScript.jsp" />  	
 		<put-attribute name="headerMenu" value="/includee/headerMenu.jsp" />  	
-		<put-attribute name="footer" value="/includee/footer.jsp" />  	
+		<put-attribute name="rolling" value="/includee/rolling.jsp" />
 		<put-attribute name="postScript" value="/includee/postScript.jsp" />
+		
 	</definition>
 	
 	<definition name="index" extends="parent" preparer="mainMenuPrepare">

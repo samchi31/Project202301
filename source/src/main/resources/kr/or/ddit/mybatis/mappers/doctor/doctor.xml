@@ -27,16 +27,16 @@
 	<resultMap type="TrmChartVO" id="trmChartMap" autoMapping="true">
 		<id property="trmCd" column="TRM_CODE" />
 		<collection property="diagHistoryVOList" ofType="DiagHistoryVO" autoMapping="true">
-			<id property="trmCd" column="TRM_CD"/>
+			<id property="diseaseCd" column="DISEASE_CD"/>
 		</collection>
 		<collection property="symptomVOList" ofType="SymptomVO" autoMapping="true">
-			<id property="trmCd" column="TRM_CD"/>
+			<id property="symCd" column="SYM_CD"/>
 		</collection>
 		<collection property="prescriptionVOList" ofType="PrescriptionVO" autoMapping="true">
-			<id property="trmCd" column="TRM_CD"/>
+			<id property="preCd" column="PRE_CD"/>
 		</collection>
 		<collection property="filmOrderVOList" ofType="FilmOrderVO" autoMapping="true">
-			<id property="trmCd" column="TRM_CD"/>
+			<id property="filmCd" column="FILM_CD"/>
 		</collection>
 	</resultMap>
 	<select id="selectTrmChart" parameterType="int" resultMap="trmChartMap">
@@ -61,7 +61,7 @@
 		SELECT  TRM_CD, MEDI_RECORD, to_char(TRM_DT,'YYYY/MM/DD') as TRM_DT, EMP_NO, RCP_NO
 		FROM    V_TRM_CHART
 		WHERE   PA_NO = #{paNo}
-		AND		RCP_NO = #{rcpNo}
+<!-- 		AND		RCP_NO = #{rcpNo} -->
 		ORDER   BY 3 DESC
 	</select>
 	
@@ -81,7 +81,6 @@
 		        , PA_NAME
 		        , PA_REG
 		        , PA_HP
-		        , PA_PRN
 		        , PA_ZIP
 		        , PA_ADD1
 		        , PA_ADD2
@@ -115,10 +114,12 @@
 		<foreach collection="symptomVOList" item="symptom" >
 			INTO symptom_history (
 			    trm_cd,
-			    sym_cd
+			    sym_cd,
+			    sym_detail
 			) VALUES (
 			    #{trmCd,jdbcType=VARCHAR}
-				, #{symptom.symCd,jdbcType=VARCHAR}				    
+				, #{symptom.symCd,jdbcType=VARCHAR}		
+				, #{symptom.symDetail,jdbcType=VARCHAR}		    
 			)
 		</foreach>
 		SELECT	* FROM DUAL
@@ -214,5 +215,28 @@
 	<select id="selectDvTr" resultType="DivisionTreatVO">
 		SELECT *	FROM DIVISION_TREAT
 	</select>
+	
+	<update id="updateTrmChart" parameterType="TrmChartVO">
+		UPDATE	TRM_CHART
+		SET		medi_record = #{mediRecord,jdbcType=VARCHAR}
+		WHERE	TRM_CD = #{trmCd,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteDiagHist">
+		DELETE FROM diagnosis_history
+		WHERE	trm_cd = #{trmCd,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteSymHist">
+		DELETE FROM symptom_history
+		WHERE	trm_cd = #{trmCd,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deletePreHist">
+		DELETE FROM prescription_history
+		WHERE	trm_cd = #{trmCd,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteFilmOrder">
+		DELETE FROM film_order
+		WHERE	trm_cd = #{trmCd,jdbcType=VARCHAR}
+	</delete>
 	
 </mapper>

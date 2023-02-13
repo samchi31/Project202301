@@ -6,30 +6,29 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
-<script
-	src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
-<link
-	href="<%=request.getContextPath()%>/resources/css/gridstack.min.css"
-	rel="stylesheet" />
-<link
-	href="${pageContext.request.contextPath }/resources/css/ptStyle.css"
-	rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+<link href="<%=request.getContextPath()%>/resources/css/gridstack.min.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath }/resources/css/ptStyle.css" rel="stylesheet" />
+	
+<title>물리치료실</title>
+	
 <div class="grid-stack">
 	<div class="grid-stack-item" gs-w="4" gs-h="5">
 		<div class="grid-stack-item-content">
 			<div>
-				<h3>환자 조회</h3>
-				<form id="pt-search-from" style="text-align: right;">
-					<select id="searchOption" class="pt-select">
+				<h4 style="font-weight : bold;">환자 조회</h4>
+				<form id="serarchButton" class="search-form" name="searchForm" >
+					<select id="searchOption" class="radi-select ">
 						<option value='no'>환자 번호</option>
 						<option value='name'>환자 이름</option>
 					</select> 
-					<input class="pt-input" id="searchWord" type="text" onkeyup="if(window.event.keyCode==13){patientSearch()}" value="" />
-					<input id="serarchButton" class="btn-submit" type="button" value="검색">
-				</form>
+					<input name="searchBtn" class="radi-input" id="searchWord" type="text" value="" >
+					<input class="btn-submit" id="Search" type="button" value="검색">
+				</form>	
+					
 			</div>
-
 			<table class="table1">
+					<hr>
 				<thead>
 					<tr>
 						<td>환자번호</td>
@@ -53,7 +52,7 @@
 	</div>
 	<div class="grid-stack-item" gs-w="4" gs-h="5">
 		<div class="grid-stack-item-content">
-			<h3>물리치료실 현황</h3>
+			<h4>물리치료실 현황</h4>
 			<table class="table2">
 				<c:set var="cnt" value="0" />
 				<c:forEach begin="0" end="2">
@@ -70,7 +69,8 @@
 										<c:url value='/resources/images/ptbedfull.png' var="imgUrl" />
 									</c:if>
 									<img src="${imgUrl}" alt="물리치료bed" class="pic pthis" />
-									<div class="patient">${ptBedList[cnt].rcpNo } ${ptBedList[cnt].paName}</div>
+									<div class="patient">${ptBedList[cnt].rcpNo }
+										${ptBedList[cnt].paName}</div>
 								</button>
 							</td>
 							<c:set var="cnt" value="${cnt+1 }" />
@@ -79,7 +79,7 @@
 				</c:forEach>
 			</table>
 
-			<h3>물리치료실 대기 현황</h3>
+			<h4>물리치료실 대기 현황</h4>
 			<table class="table1">
 				<thead>
 					<tr>
@@ -111,39 +111,42 @@
 	</div>
 	<div class="grid-stack-item" gs-w="4">
 		<div class="grid-stack-item-content">
-			<h3>공지사항</h3>
+			<h4>공지사항</h4>
 			<p>컨텐츠 or 버튼 들어갈꺼임~</p>
 		</div>
 	</div>
 	<div class="grid-stack-item" gs-w="4">
 		<div class="grid-stack-item-content">
-			<h3>데이터 통계</h3>
+			<h4>데이터 통계</h4>
 			<p>컨텐츠 or 버튼 들어갈꺼임~</p>
 		</div>
 	</div>
 
 	<div class="grid-stack-item" gs-w="4" gs-h="3">
 		<div class="grid-stack-item-content">
-			<h3>스케쥴 관리</h3>
+			<h4>스케쥴 관리</h4>
 			<p>컨텐츠 or 버튼 들어갈꺼임~</p>
 		</div>
 	</div>
 </div>
-<form action="<c:url value='/pt/ptBedFull'/>" id="bedfullform" method="post">
-	<input type="text" name="ptBedCd" value="">
-	<input type="text" name="rcpNo" value="">
+<form action="<c:url value='/pt/ptBedFull'/>" id="bedfullform"
+	method="post">
+	<!-- 	<input type="text" name="ptBedCd" value=""> -->
+	<!-- 	<input type="text" name="rcpNo" value=""> -->
+	<input type="hidden" name="ptBedCd" value=""> <input
+		type="hidden" name="rcpNo" value="">
 </form>
 
 <script type="text/javascript">
+$("")
 //침대에 배정하는 함수
 $(function(){
-	
 let bedfullform = $("#bedfullform").on("submit",function(event){
 	event.preventDefault();
 	let url = this.action;
 	let method = this.method;
 	let data = $(this).serialize();
-	console.log("url : " + url + ", method : " + method + ", data : " + data);
+// 	console.log("url : " + url + ", method : " + method + ", data : " + data);
 	$.ajax({
 			url : url,
 			method : method,
@@ -153,24 +156,18 @@ let bedfullform = $("#bedfullform").on("submit",function(event){
 				if(resultMap.result>0) {
 					Swal.fire('배정이 완료 되었습니다.', '  ', 'success');
 // 					location.href=location.href
-// 					var change = "${ptBedList[cnt].rcpNo } ${ptBedList[cnt].paName}";
-// 					$("#dispParent").append(
-// 					$("div").html(change)	
-// 					);	
-// 					bedfullform.get(0).ptBedCd.value
 					
 					let rcpNo = resultMap.receptionVO.rcpNo;
 					let paName = resultMap.receptionVO.patient.paName;
 					let bedNo = resultMap.ptAssinmentVO.ptBedCd;
 					let pthis = $("#" + bedNo);
 					pthis.data("rcpNo",rcpNo);				
-					$(pthis).find(".patient").html(`\${rcpNo} \${paName}`)
+					$(pthis).find(".patient").html(`\${rcpNo} \${paName}`);
+					$(".bedbutton").removeClass('active');
 					
 // 					밑에 데이타 있는 걸 빼주는 작업//템플릿연산자
 					$(`#tr_\${rcpNo }`).remove(); //이거는 보여지는 효과만 준 것임 DB에서 바꿔주는 걸 해야함
 
-					
-					
 					pthis.find(".pthis").attr("src", "<c:url value='/resources/images/ptbedfull.png'/>");
 					
 					
@@ -187,7 +184,7 @@ let bedfullform = $("#bedfullform").on("submit",function(event){
 	return false;
 	
 	})
-	
+	//배정버튼
 	$(".assignmentbutton").on("click",function(){
 // 		let ptBedState = $("#ptBedState").val;
 		let rcpNo1 = $(this).data("rcpNo")
@@ -199,16 +196,19 @@ let bedfullform = $("#bedfullform").on("submit",function(event){
 	});
 });
 
+//bedbutton 클릭했을 때 효과 이벤트
+$(".bedbutton").on("click",function(){
+	$(this).toggleClass('active'); //toggleClass : 클래스를 넣었다가 붙였다가 하는 것
+});
 
 //배정하는 것
 	const f_clk=(pthis)=>{
 // 		$(pthis).find(".pic").attr("src","../resources/images/ptbedfull.png"); //pthis안에서 pic를 찾아서 거기에 src=""를 붙인다
 		let rcpNo = $(pthis).data("rcpNo");
 		let v_bedNo = $(pthis).attr("id");
+// 		let data = $(this).serialize();
 		$("[name=ptBedCd]").val(v_bedNo);
-		console.log(rcpNo + "------------------------");
-		if(rcpNo) { //rcpNo가 있으면 빈배드 설정해준다
-			
+		if(rcpNo) { 
 		Swal.fire({
 				title : '치료를 완료하시겠습니까?', 
 				icon : 'warning',
@@ -216,14 +216,13 @@ let bedfullform = $("#bedfullform").on("submit",function(event){
 				confirmButtonText: '승인',
                 cancelButtonText: '취소'
                 }).then((result1) => {
-//                 	console.log("rcpNo : " + rcpNo + ", v_bedNo : " + v_bedNo);
                 	if(result1.isConfirmed) {
-                		console.log("v_bedNo" + v_bedNo);
+                		console.log("rcpNo" + rcpNo);
                 		$.ajax({
                 				url : "/HurryUp/pt/ptBedEmpty",
                 				method : "post",
-                				data : {ptBedCd : v_bedNo},
-                				dataType : "text",
+                				data : {ptBedCd : v_bedNo, rcpNo : rcpNo},
+                				dataType : "json",
                 				success : function(result) {
                 					if(!parseInt(result)) {
                 						Swal.fire('치료가 완료 되었습니다.', '', 'success');
@@ -231,6 +230,7 @@ let bedfullform = $("#bedfullform").on("submit",function(event){
                 						$(pthis).removeAttr("data-rcp-no");
                 						$(pthis).find(".patient").empty();
                 						$(pthis).find(".pthis").attr("src", "<c:url value='/resources/images/ptbedemty.png'/>");
+                						$(".bedbutton").removeClass('active');
                 					} else {
                 						Swal.fire('베드를 비우는데 실패했습니다.', '  ', 'error');
                 					}
@@ -244,11 +244,58 @@ let bedfullform = $("#bedfullform").on("submit",function(event){
                 		}
                	 });
 		
-		} else { //클릭했을 때, 이게 클릭되었다는 걸 알려 줄 수 있는 이미지..ㅎ
+		} else { //클릭했을 때, 이게 클릭되었다는 걸 알려 줄 수 있는 이미지..ㅎ..g?클릭했을때,,,이미지....horb
 			
 		}
 	};
+//환자 검색
+$(function(){
+	$("#serarchButton").on("click",function(){
+		let searchOption = $("#searchOption option:selected").val();
+		let searchWord = $("#searchWord").val();
+		if(searchWord == '') {
+			swal('검색 실패!', "검색어를 입력해주세요", 'warning');
+			return false;
 
+		} 
+		let data = {
+					searchOption:searchOption,
+					searchWord:searchWord
+		}
+		
+		$.ajax({
+			url : "ptPatientSearch",
+			method : "post",
+			data : JSON.stringify(data),
+			contentType: "application/json;charset=utf-8",
+			dataType : "json",
+			success : function(result) {
+				let paNo = ''
+				if(result == null || result.length == 0) {
+					//환자가 없을 때
+					swal('검색 실패!',"검색하신 환자 정보가 없습니다.",'error');
+				} else if(result.length == 1) {
+					//환자가 한명일 때
+					$.each(result, function(i,v){
+// 						paNo = `<a href='javascript:void(0);' onclick='patientptHistory(\${v.paNo})';>\${v.paNo}</a>`
+						$("#p_No").html(v.paNo);
+						$("#p_Nm").html(v.paName);
+						$("#p_reg1").html(v.paReg);
+						$("#p_sex").html(v.paSex);	
+					});
+				} else {
+// 					환자가 여러명일 때
+				}
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});
+		$("#searchWord").val("");
+	});
+});
 
 //그리드 스택 시작	
 	GridStack.init();

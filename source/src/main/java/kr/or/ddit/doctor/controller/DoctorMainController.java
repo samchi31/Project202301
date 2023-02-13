@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.commons.vo.EmployeeVO;
 import kr.or.ddit.commons.vo.TrmChartVO;
@@ -80,27 +82,47 @@ public class DoctorMainController {
 	
 	@PostMapping("/main")
 	public String submitChart(
-		@ModelAttribute("trmChart") TrmChartVO trmChart
+		@ModelAttribute TrmChartVO trmChart
+		, Model model
 //		, @AuthenticationPrincipal EmployeeVO emp
 	) {
-		 log.info("{}",trmChart);
+		log.info("{}",trmChart);
 		
-		// 현재 로그인한 의사 사번 넣기	kkk	
-		trmChart.setEmpNo(1);
-		service.createTrmChart(trmChart);
+		if(trmChart.getTrmCd() != null) {
+			// 수정
+			int rowcnt = service.modifyTrmChart(trmChart);
+			if(rowcnt > 0) {
+				model.addAttribute("message", "수정 성공");
+			} else {
+				model.addAttribute("message", "수정 실패");
+			}
+		} else {	
+			// 새로 삽입
+			// 현재 로그인한 의사 사번 넣기	kkk	
+			trmChart.setEmpNo(1);
+			int rowcnt = service.createTrmChart(trmChart);
+			if(rowcnt > 0) {
+				model.addAttribute("message", "최초 삽입 성공");
+			} else {
+				model.addAttribute("message", "최초 삽입 실패");
+			}
+		}
 		return "jsonView";
 	}
 	
 	@PostMapping("/main/wait")
 	public String changeWait(
 		@ModelAttribute WaitHistoryVO waitHistoryVO
+		, Model model
 	) {
 		//log.info("{}",waitHistoryVO);
 		int rowcnt = service.createWaitHistory(waitHistoryVO);
 		
 		// websocket으로 다른 접속자들한테도 알리기
 		if(rowcnt > 0) {
-			
+			model.addAttribute("message", "대기 히스토리 성공");
+		} else {
+			model.addAttribute("message", "대기 히스토리 실패");
 		}
 		return "jsonView";
 	}

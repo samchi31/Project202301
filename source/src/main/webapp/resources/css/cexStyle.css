@@ -6,7 +6,7 @@ html, body {
 }
 
 thead {
-	height: 4.375rem;
+	height: 2.375rem;
 }
 
 tbody {
@@ -14,13 +14,13 @@ tbody {
 }
 
 th, td {
-	background-color: white;
-	border-radius: 5px;
+/* 	background-color: white; */
+/* 	border-radius: 5px; */
 	text-align: center;
 }
 
-h4 {
-	font-size: 30px;
+.search-form{
+	padding: 0;
 }
 
 .left {
@@ -65,7 +65,7 @@ h4 {
     padding: 1.25rem;
     background-color: #F2F1F1;
     border-radius: 5px;
-	border-top: 5px solid #4F80FF;
+	border-top: 5px solid #4E73DF;
     box-shadow: 1px 1px 5px grey;
     overflow:auto;
 }
@@ -77,7 +77,7 @@ h4 {
 	background-color: #F2F1F1;
 	padding: 1.25rem;
 	border-radius: 5px;
-	border-top: 5px solid #4F80FF;
+	border-top: 5px solid #4E73DF;
 	box-shadow: 1px 1px 5px grey;
 }
 
@@ -88,7 +88,7 @@ h4 {
     padding: 1.25rem;
     background-color: #F2F1F1;
     border-radius: 5px;
-	border-top: 5px solid #4F80FF;
+	border-top: 5px solid #4E73DF;
     box-shadow: 1px 1px 5px grey;
     overflow:auto;
 }
@@ -100,18 +100,18 @@ h4 {
 	padding : 1.25rem;
 	background-color: #F2F1F1;
 	border-radius: 5px;
-	border-top: 5px solid #4F80FF;
+	border-top: 5px solid #4E73DF;
 	box-shadow: 1px 1px 5px grey;
 }
 
 .cex-barcode-in{
 	width: 73.938rem;
-    height: 14rem;
+    height: 13rem;
 	margin: 0.625rem; 
 	padding : 1.25rem;
 	background-color: #F2F1F1;
 	border-radius: 5px;
-	border-top: 5px solid #4F80FF;
+	border-top: 5px solid #4E73DF;
     box-shadow: 1px 1px 5px grey;
 	display: flex;
     flex-direction: column;
@@ -146,36 +146,25 @@ h4 {
 
 .cex-table {
 	width: 73.938rem;
-	height: 11.5rem;
+/* 	height: 11.5rem; */
 	padding-top: 0.5rem;
 }
 
 .cex-wait-table {
-	width: 37.5rem;
-	height: 23.875rem;
-	padding-top: 1.5rem;
+/* 	width: 37.5rem; */
+/* 	height: 23.875rem; */
+/* 	padding-top: 1.5rem; */
 }
 
 .cex-history-table{
-	width: 37.5rem;
-    height: 15rem;
-    padding-top: 0.5rem;
+	width: 100%;
+/*     height: 15rem; */
+/*     padding-top: 0.5rem; */
 }
 
 #barcode-print{
-	width: 73.938rem;
+	width: 25.938rem;
     height: 17.813rem;
 /*     background-color: white; */
 /*     margin-top: 1.25rem; */
-}
-
-#searchOption{
-	float:right;
-}
-
-#searchWord{
-	float:right;
-}
-#Search{
-	float:right;
 }

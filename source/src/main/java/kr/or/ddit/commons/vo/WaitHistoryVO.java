@@ -21,6 +21,8 @@ public class WaitHistoryVO {
 	private String paName;
 	private String divNm;
 	private String waitstNm;
+	private String trmCd;
+	private String filmCd;
 	
 	
 }

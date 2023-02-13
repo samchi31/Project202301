@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<title>ward Main</title>
 <style>
 *, ::after, ::before{
 	box-sizing: content-box;
@@ -176,12 +178,6 @@ function wardPatientDetail(hsptNo){
 	let input_paName = $('.input_paName');
 	let input_hsptNo = $('.input_hsptNo');
 	
-	let v_paName = input_paName.val();
-	
-	nrec_list(hsptNo);
-	vital_list(hsptNo);
-	io_list(hsptNo, v_paName);
-	
 	$.ajax({
 		url : "wardPatientDetail",
 		method : "post",
@@ -214,6 +210,12 @@ function wardPatientDetail(hsptNo){
 			
 			// io 생성 모달창에 환자정보 넣어줌
 			io_modal_click(result.hsptNo, result.paNo, result.paName);
+			
+			let v_paName = input_paName.val();
+			
+			nrec_list(hsptNo);
+			vital_list(hsptNo);
+			io_list(hsptNo, v_paName);
 
 		},
 		error : function(jqXHR, status, error) {
@@ -461,6 +463,8 @@ function io_list(hsptNo, paName){
 		success : function(result) {
 			console.log(result);
 			let trTags = [];
+			let optionTags = [];
+			let optionTag = '';
             $.each(result, function(i, v){
                let trTag = $("<tr>")
                            .append(
@@ -472,9 +476,13 @@ function io_list(hsptNo, paName){
                               , $("<td>").html()
                               , $("<td>").html()
                            );
-               trTags.push(trTag)
+               trTags.push(trTag);
+               
+               optionTag = $("<option>").append(v.ioDate);
+               optionTags.push(optionTag);
             });
             $("#ioTbody").html(trTags);
+            $("#ioDateSelect").html(optionTags);
 		},
 		error : function(jqXHR, status, error) {
 			console.log(jqXHR);
@@ -636,17 +644,36 @@ function io_list(hsptNo, paName){
 						</tr>
 						<tr>
 							<td>날짜</td>
+							<td>
+								<select id="ioDateSelect">
+									<option>선택</option>
+								</select>
+							</td>
 						</tr>
 						<tr>
 							<td>항목</td>
+							<td>
+								<select id="ioCateSelect" onchange="f_ioselectDetail(this.value)">
+									<option>선택</option>
+									<option value="intake">Intake</option>
+									<option value="output">Output</option>
+								</select>
+							</td>
 						</tr>
 						<tr>
 							<td>항목상세</td>
+							<td>
+								<select id="ioSelectDetail">
+									<c:forEach items="${intakeList}" var="intake">
+										<option>${intake.intakeCateNm}</option>
+									</c:forEach>
+								</select>
+							</td>
 						</tr>
 						<tr>
 							<td>용량</td>
 							<td>
-								<input style="float:left" id="io_capa" type="text" value="" readonly="readonly">
+								<input style="float:left" id="io_capa" type="text" value="">
 							</td>
 						</tr>
 						<tr>
@@ -654,7 +681,7 @@ function io_list(hsptNo, paName){
 							<td><textarea id="io_textarea"></textarea></td>
 						</tr>
 						<tr>
-							<td><input class="btn_blue" id="vital-register" type="button" value="등록" onclick="vital_insert()"></td>
+							<td><input class="btn_blue" id="io-register" type="button" value="등록" onclick="io_detail_insert()"></td>
 						</tr>
 					</table>
 				</div>
@@ -804,6 +831,8 @@ function io_modal_click(hsptNo, paNo, paName){
 function ioDateChange(){
 	let ioDate = $('#ioDate_modal');
 	if(ioDate.val()){
+		/* 날짜를 입력해야 모달이 닫힘 */
+		document.querySelector('#ioModalBtn').setAttribute("data-bs-dismiss", "modal");
 		$('#ioDateError').html('');
 	}
 }
@@ -811,18 +840,20 @@ function ioDateChange(){
 function insertIo(){
 	let ioModalBtn = document.querySelector('#ioModalBtn');
 	let hsptNo_modal = document.querySelector('#hsptNo_modal');
+	let paName_modal = document.querySelector('#paName_modal');
 	let ioDate_modal = document.querySelector('#ioDate_modal');
 	
-	/* 날짜를 입력 안하면 모달이 안 닫히게 */
+	let v_hsptNo_modal = hsptNo_modal.value;
+	let v_paName_modal = paName_modal.value;
+	let v_ioDate_modal = ioDate_modal.value;
+	
 	if(!ioDate_modal.value){
 		$('#ioDateError').html('날짜를 선택해 주세요');
 	}else{
 		let data = {
-			ioDate : ioDate_modal.value,
-			hsptNo : hsptNo_modal.value
+			ioDate : v_ioDate_modal,
+			hsptNo : v_hsptNo_modal
 		}
-		/* 이게 적용되야 모달이 닫힘 */
-		ioModalBtn.setAttribute("data-bs-dismiss", "modal");
 		/*  io중복검사   */
 		$.ajax({
 			url : "ioDuplicateCheck",
@@ -844,6 +875,8 @@ function insertIo(){
 						success : function(result) {
 							if(result==1){
 								swal("생성완료","io생성이 완료되었습니다.", "success")
+								/* 생성된 io를 반영하기 위해 리스트 다시 띄우기 */
+								io_list(v_hsptNo_modal, v_paName_modal)
 							}else{
 								swal("생성실패","io생성이 실패했습니다.", "error")
 							}
@@ -867,6 +900,106 @@ function insertIo(){
 	}
 }
 
+function io_detail_insert(){
+	let io_hsptNo = document.getElementById('io_hsptNo');
+	let io_Date = document.getElementById('ioDateSelect');
+	let io_CateSelect = document.getElementById('ioCateSelect');
+	let io_select_detail = document.getElementById('ioSelectDetail');
+	let io_capa = document.getElementById('io_capa');
+	let io_textarea = document.getElementById('io_textarea');
+	
+	let v_io_hsptNo = io_hsptNo.value;
+	let v_io_Date = io_Date.options[io_Date.selectedIndex].value;
+	let v_io_CateSelect = io_CateSelect.options[io_CateSelect.selectedIndex].value;
+	let v_io_select_detail = io_select_detail.options[io_select_detail.selectedIndex].value;
+	let v_io_capa = io_capa.value;
+	let v_io_textarea = io_textarea.value;
+	
+	let data = {};
+	
+	if(v_io_CateSelect == 'intake'){
+		data = {
+				hsptNo : v_io_hsptNo,
+				ioDate : v_io_Date,
+				intakeCateCd : v_io_select_detail,
+				intakeCapa : v_io_capa,
+				intakeNe : v_io_textarea
+		}
+		
+		$.ajax({
+			url : "intakeCreate",
+			method : "post",
+			data : JSON.stringify(data),
+			contentType: "application/json;charset=utf-8",
+			dataType : "json",
+			success : function(result) {
+				if(result == 1){
+					swal("입력성공","Intake 입력이 성공했습니다.", "success");
+					wardPatientDetail(v_io_hsptNo);
+				}else{
+					swal("입력실패","Intake 입력이 실패했습니다.", "error");
+				}
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	} else if(v_io_CateSelect == 'output'){
+		data = {
+				hsptNo : v_io_hsptNo,
+				ioDate : v_io_Date,
+				outputCateCd : v_io_select_detail,
+				outputCapa : v_io_capa,
+				outputNe : v_io_textarea
+		}
+		
+		$.ajax({
+			url : "",
+			method : "",
+			data : {},
+			dataType : "",
+			success : function(resp) {
+
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	}
+	
+	
+}
+
+function f_ioselectDetail(val){
+	let optionTags = [];
+	let optionTag = '';
+	let ioSelectDetail = $('#ioSelectDetail');
+	if(val=='intake'){  
+		
+// 		optionTag1 = $("<option>").html('선택');
+// 		optionTag2 = $("<option>").html('경구').attr("value","I01");
+// 		optionTag3 = $("<option>").html('정맥').attr("value","I02");
+//     	optionTags.push(optionTag1);
+//     	optionTags.push(optionTag2);
+//     	optionTags.push(optionTag3);
+    
+	}else if(val=='output'){
+		optionTag1 = $("<option>").html('선택');
+		optionTag2 = $("<option>").html('소변').attr("value","O01");
+		optionTag3 = $("<option>").html('대변').attr("value","O02");
+		optionTag4 = $("<option>").html('토물').attr("value","O03");
+    	optionTags.push(optionTag1);
+    	optionTags.push(optionTag2);
+	    optionTags.push(optionTag3);
+	    optionTags.push(optionTag4);
+	}
+	
+	ioSelectDetail.html(optionTags);
+}
 
 	/* tab 메뉴 */
 $(function(){

@@ -12,11 +12,9 @@ public class PatientVO {
 	private String paName;
 	private Integer paReg;
 	private String paHp;
-	private String paPrn;
 	private Integer paZip;
 	private String paAdd1;
 	private String paAdd2;
-	private String paPiyn;
 	private String paDelete;
 	private String paSex;
 	

@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 
 import kr.or.ddit.commons.vo.HospitalizationVO;
 import kr.or.ddit.commons.vo.IntakeOutputVO;
+import kr.or.ddit.commons.vo.IntakeVO;
 import kr.or.ddit.commons.vo.VitalVO;
 import kr.or.ddit.nurse.dao.WardDAO;
+import kr.or.ddit.nurse.vo.IntakeCategoryVO;
 import kr.or.ddit.nurse.vo.NrecVO;
+import kr.or.ddit.nurse.vo.OutputCategoryVO;
 import kr.or.ddit.nurse.vo.WardVO;
 
 @Service
@@ -62,6 +65,21 @@ public class WardServiceImpl implements WardService {
 	@Override
 	public List<IntakeOutputVO> retrieveIoList(IntakeOutputVO io) {
 		return wardDAO.selectIoList(io);
+	}
+
+	@Override
+	public int intakeCreate(IntakeVO intake) {
+		return wardDAO.insertIntake(intake);
+	}
+
+	@Override
+	public List<IntakeCategoryVO> retrieveIntakeList() {
+		return wardDAO.selectIntakeCategory();
+	}
+
+	@Override
+	public List<OutputCategoryVO> retrieveOutputList() {
+		return wardDAO.selectOutputCategory();
 	}
 
 	

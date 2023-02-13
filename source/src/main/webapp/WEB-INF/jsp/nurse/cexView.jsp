@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link href="${pageContext.request.contextPath }/resources/css/cexStyle.css" rel="stylesheet"/>
-
+<title>cex-Main</title>
 <style>
 *, ::after, ::before{
 	box-sizing: content-box;
@@ -177,7 +177,7 @@ function cexHistoryDetail(cexNo){
 			$("#cex_ne").html(result.cexNe);
 			
 			let barcode = '';
-			barcode += '<img src="'
+			barcode += '<img style="width: 100%"src="'
 			barcode += 'https://bwipjs-api.metafloor.com/?bcid=code128&text='
 			barcode += 'paNo:'
 			barcode += result.paNo
@@ -228,7 +228,7 @@ function cexHistoryDetail(cexNo){
 					<h4>대기자 목록</h4>
 					<table class="cex-wait-table">
 						<thead>
-							<tr>
+							<tr class="">
 								<th>차트번호</th>
 								<th>상병코드</th>
 								<th>환자번호</th>
@@ -265,13 +265,15 @@ function cexHistoryDetail(cexNo){
 				<div class="patient-info-in">
 					<div class="patient-info-in-top">
 						<h4 id="cex-title">환자 조회</h4>
-							<input id="Search" class="btn_blue" type="button" value="검색">
-							<input class="cex-input" id="searchWord" type="text" onkeyup="if(window.event.keyCode==13){patientSearch()}" value=""/>
-							<select id="searchOption" class="cex-select">
-								<option value="no">환자번호</option>
-								<option value="name">이름</option>
-							</select> 
-							<input style="display:none;" type="hidden" id="paNoHidden" value=""/>
+						<form id="serarchButton" class="search-form" name="searchForm">
+			               <select id="searchOption" class="cex-select">
+			                  <option value="no">환자 번호</option>
+			                  <option value="name">환자 이름</option>
+			               </select> 
+			               <input name="searchBtn" class="cex-input" id="searchWord" type="text" value="">
+			               <input class="btn-submit" id="Search" type="button" value="검색">
+						   <input style="display:none;" type="hidden" id="paNoHidden" value=""/>
+			            </form>
 					</div>
 					<table class="cex-table">
 						<thead>
@@ -301,7 +303,7 @@ function cexHistoryDetail(cexNo){
 						<h4 id="cex-title">검사내역상세</h4>			
 						<input style= "display : none;" class="btn_blue" id="cex-register" data-bs-target="#layerpop" data-bs-toggle="modal" type="button" value="검사등록">	
 					</div>
-						<table class="cex-table">
+						<table class="cex-table table">
 							<thead>
 								<tr>
 									<th>임상검사번호</th>

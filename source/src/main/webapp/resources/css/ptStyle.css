@@ -1,32 +1,11 @@
 @charset "UTF-8";
-body {
-	font-family: 'spo';
-	font-size: 12px
-}
-
-.grid-stack {
-	background: #FFFFFF;
-	border-radius: 10px;
-}
-
-.grid-stack-item-content {
-	background-color: #FCFFFE;
-	border-radius: 10px;
-	border-top: 10px solid #4E73DF;
-	box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1);
-	padding: 20px;
-}
-
-#serarchButton {
-	background-color: #00334E;
-	font-size: 15px;
-	text-align: right;
-	color: #ffffff;
-	border-radius: 5px
-}
 
 button {
 	border: none;
+}
+
+.bedbutton {
+	background: none;
 }
 
 .table1 {
@@ -35,6 +14,7 @@ button {
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 	display: table;
 	text-align: center;
+	border-width: 0 1px;
 }
 
 .table2 {
@@ -49,3 +29,8 @@ thead tr {
 	background-color: #3161A3;
 	color: #ffffff
 }
+
+.active {
+	border: 3px solid #4E73DF;
+}
+
