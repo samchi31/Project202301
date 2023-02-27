@@ -14,10 +14,11 @@ public class CexVO {
 	private String cexDate;
 	private String cexNe;
 	private Integer empNo;
+	private String empNm;
 	private String cexStatus;
 	private String trmCd;
 	
-	private Integer paNo;
+	private String paNo;
 	private String paName;
 	
 	private String diseaseCd;

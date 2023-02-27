@@ -3,10 +3,13 @@ package kr.or.ddit.radiology.service;
 import java.util.List;
 import java.util.Map;
 
+import kr.or.ddit.commons.vo.DiagHistoryVO;
+import kr.or.ddit.commons.vo.FilmAtchVO;
+import kr.or.ddit.commons.vo.FilmAttachVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
-import kr.or.ddit.commons.vo.PagingVO;
+import kr.or.ddit.commons.vo.SymptomVO;
+import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
-import kr.or.ddit.enumpkg.ServiceResult;
 
 /**
  * <pre>
@@ -24,12 +27,35 @@ import kr.or.ddit.enumpkg.ServiceResult;
  * </pre>
  */ 
 public interface RadiologyService {
+	
 
-	public List<FilmCateVO> retrieveFilmRecordList(Map<String, String> map);
+	/**
+	 * 환자 리스트 조회
+	 * @return
+	 */
+	public List<FilmCateVO> retrievePatientList();
+
 	
+	/**
+	 * 환자 검색
+	 * @param map
+	 * @return
+	 */
+	public List<FilmCateVO> retrievePatientSearchList(Map<String, String> map);
 	
-	public List<FilmCateVO> retrieveFilmList();
+	/**
+	 * xray환자 검색
+	 * @param map
+	 * @return
+	 */
+	public List<FilmCateVO> retrieveXrayPatientSearchList(Map<String, String> map);
 	
+	/**
+	 * mri환자 검색
+	 * @param map
+	 * @return
+	 */
+	public List<FilmCateVO> retrieveMriPatientSearchList(Map<String, String> map);
 	
 	/**
 	 * 영상 기록 상세 조회
@@ -69,16 +95,68 @@ public interface RadiologyService {
 	 */
 	public List<WaitHistoryVO> selectRadiAllList();
 	
+	/**
+	 * 선택한 환자의 진료 차트
+	 * @param rcpNo
+	 * @return
+	 */
+	public TrmChartVO retrieveTrmChart(String rcpNo);
+	
+	
+	/**
+	 * 선택한 환자의 차트 입력폼
+	 * @param rcpNo
+	 * @return
+	 */
+	public TrmChartVO retrieveFilmChart(String rcpNo);
 	
 	/**
 	 * 촬영 결과 전송 리스트 조회
 	 * @return
 	 */
-	public List<WaitHistoryVO> selectfilmResultList(String paNo);
+	public List<WaitHistoryVO> selectChartList(String paNo);
 
+	/**
+	 * 대기상태 select
+	 * @return
+	 */
+	public List<WaitHistoryVO> retreiveWaitStatus();
+	public List<FilmCateVO> retrieveFilmCate();
+	
+	/**
+	 * 증상,상병 리스트
+	 * @param map
+	 * @return
+	 */
+	public List<SymptomVO> retrieveSymptomList(Map<String, String> map);
+	public List<DiagHistoryVO> retrieveDiagList(Map<String, String> map);
+
+	/**
+	 * 촬영실에 해당하는 대기실 환자 리스트
+	 * @param empNo 촬영사 사번
+	 * @return 대기 환자 리스트 ()
+	 */
+//	public List<WaitHistoryVO> retrieveWaitHistory(int empNo);
+
+	/**
+	 * 진료 후 환자의 대기 상태 변경
+	 * @param waitHistoryVO
+	 * @return
+	 */
+//	public int createWaitHistory(WaitHistoryVO waitHistoryVO);
+	
 	//대기히스토리 추가(대기중->촬영중)
 	//map : {rcpNo=202302062, waitstCd=WS001, divCd=DV007}
-	public int changeWaitListInsert(Map<String, String> map);
+	public int modifyWaitListInsert(Map<String, String> map);
 
+	public String processAttachList(FilmAtchVO filmAtchVO);
+
+
+
+
+	public int updateFilmDate(Map<String, String> map);
+
+
+	
 
 }

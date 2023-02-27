@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import kr.or.ddit.commons.vo.HospitalizationVO;
 import kr.or.ddit.commons.vo.IntakeOutputVO;
 import kr.or.ddit.commons.vo.IntakeVO;
+import kr.or.ddit.commons.vo.OutputVO;
 import kr.or.ddit.commons.vo.VitalVO;
 import kr.or.ddit.nurse.service.WardService;
+import kr.or.ddit.nurse.vo.DietRecordVO;
 import kr.or.ddit.nurse.vo.NrecVO;
 import kr.or.ddit.nurse.vo.WardVO;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +38,7 @@ public class wardMainController {
 		
 		model.addAttribute("intakeList", service.retrieveIntakeList());
 		model.addAttribute("outputList", service.retrieveOutputList());
+		model.addAttribute("dietCateList", service.retrieveDietCateList());
 		return viewName;
 	}
 	
@@ -72,6 +75,16 @@ public class wardMainController {
 		return result;
 	}
 	
+	// 식이기록 리스트 출력
+	@ResponseBody
+	@PostMapping("/dietList")
+	public List<DietRecordVO> dietList(@RequestBody DietRecordVO diet){
+		int hsptNo = diet.getHsptNo();
+		List<DietRecordVO> list = service.retrieveDietList(hsptNo);
+		return list;
+	}
+	
+	// 간호기록 리스트 출력
 	@ResponseBody
 	@PostMapping("/nrecList")
 	public List<NrecVO> nrecList(
@@ -81,7 +94,8 @@ public class wardMainController {
 		List<NrecVO> list = service.retrieveNrecList(hsptNo);
 		return list;
 	}
-	
+
+	// IO 리스트 출력
 	@ResponseBody
 	@PostMapping("/vitalList")
 	public List<HospitalizationVO> vitalList(
@@ -92,6 +106,7 @@ public class wardMainController {
 		return list;
 	}
 	
+	// IO 리스트 출력
 	@ResponseBody
 	@PostMapping("/ioList")
 	public List<IntakeOutputVO> ioList(@RequestBody IntakeOutputVO io){
@@ -99,7 +114,7 @@ public class wardMainController {
 		return list;
 	}
 	
-//	IO 중복체크 (한 환자당 한 날짜에 하나씩)
+	// IO 중복체크 (한 환자당 한 날짜에 하나씩)
 	@ResponseBody
 	@PostMapping("/ioDuplicateCheck")
 	public int ioDuplicateCheck(@RequestBody IntakeOutputVO io) {
@@ -107,7 +122,7 @@ public class wardMainController {
 		return result;
 	}
 	
-//	IO 생성
+	// IO 생성
 	@ResponseBody
 	@PostMapping("/ioCreate")
 	public int ioCreate(@RequestBody IntakeOutputVO io) {
@@ -115,11 +130,27 @@ public class wardMainController {
 		return result;
 	}
 	
-//	intake 입력
+	// intake 입력
 	@ResponseBody
 	@PostMapping("/intakeCreate")
 	public int intakeCreate(@RequestBody IntakeVO intake) {
 		int result = service.intakeCreate(intake);
+		return result;
+	}
+	
+	// output 입력
+	@ResponseBody
+	@PostMapping("/outputCreate")
+	public int outputCreate(@RequestBody OutputVO output) {
+		int result = service.outputCreate(output);
+		return result;
+	}
+	
+	// diet 입력
+	@ResponseBody
+	@PostMapping("/dietInsert")
+	public int dietCreate(@RequestBody DietRecordVO diet) {
+		int result = service.dietCreate(diet);
 		return result;
 	}
 }

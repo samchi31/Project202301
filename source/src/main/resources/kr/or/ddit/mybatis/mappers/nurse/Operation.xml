@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.nurse.dao.OperationDAO">
+
+	<resultMap type="OperationInfomationVO" id="operationListMap" autoMapping="true">
+		<id property="opNo" column="OP_NO"/>
+		<association property="diagHistory" javaType="DiagHistoryVO" autoMapping="true">
+			<association property="cex" javaType="CexVO" autoMapping="true"></association>
+		</association>
+		<collection property="operationJoinList" ofType="OperationJoinVO" autoMapping="true"></collection>
+	</resultMap>
+<!-- 	수술 대상 환자 중 수술 예약이 실시되지 않은 환자 리스트를 조회 -->
+	<select id="selectOperationList" resultMap="operationListMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectOperationList */
+	
+		SELECT
+		    A.TRM_CD
+		    , B.DISEASE_CD 
+		    , D.PA_NO
+		    , D.PA_NAME
+		    , B.ICD_NAME
+		    , F.CEX_STATUS
+		FROM TRM_CHART A
+		INNER JOIN DIAGNOSIS_HISTORY B
+		ON A.TRM_CD = B.TRM_CD
+		LEFT OUTER JOIN OPERATION_INFOMATION E
+		ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
+		LEFT OUTER JOIN CLINICAL_EXAMINATION F
+		ON B.DISEASE_CD = F.DISEASE_CD AND B.TRM_CD = F.TRM_CD
+		INNER JOIN RECEPTION C
+		ON A.RCP_NO = C.RCP_NO
+		INNER JOIN PATIENT D
+		ON C.PA_NO = D.PA_NO
+		WHERE B.OPER_TF = 'Y'
+		AND E.OP_NO IS NULL OR E.OP_STATE = 'F'
+		ORDER BY TRM_CD, DISEASE_CD 
+	</select>
+	
+	<resultMap type="TrmChartVO" id="operationDetailMap" autoMapping="true">
+		<collection property="diagHistoryVOList" ofType="DiagHistoryVO" autoMapping="true">
+		</collection>
+	</resultMap>
+<!-- 	수술/검사 화면의 진단상세 내용 불러오기  -->
+	<select id="selectDiagnosis" parameterType="hashMap" resultMap="operationDetailMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectDiagnosis */
+		SELECT 
+		    D.TRM_CD
+		    , D.DISEASE_CD
+		    , D.ICD_NAME
+		    , A.PA_NO
+		    , A.PA_NAME
+		    , C.MEDI_RECORD
+		    , F.EMP_NM
+		FROM PATIENT A
+		INNER JOIN RECEPTION B
+		ON A.PA_NO = B.PA_NO
+		INNER JOIN TRM_CHART C
+		ON B.RCP_NO = C.RCP_NO 
+		INNER JOIN EMPLOYEE F
+        ON C.EMP_NO = F.EMP_NO
+		INNER JOIN DIAGNOSIS_HISTORY D
+		ON C.TRM_CD = D.TRM_CD
+		WHERE D.TRM_CD = #{trmCd}
+		AND D.DISEASE_CD = #{diseaseCd}
+	</select>
+	
+	<!-- 환자의 증상목록을 조회 -->
+	<select id="selectSymptomList" parameterType="hashMap" resultType="SymptomVO">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectSymptomList */
+		
+		SELECT
+		    TRM_CD,
+		    SYM_CD,
+		    SYM_DETAIL
+		FROM
+		    SYMPTOM_HISTORY
+		WHERE TRM_CD = #{trmCd}
+	</select>
+	
+	<insert id="insertCex" parameterType="hashMap">
+		INSERT INTO CLINICAL_EXAMINATION (
+		    CEX_NO
+		    , CEX_STATUS
+		    , TRM_CD
+		    , DISEASE_CD
+		) VALUES (
+		    ('C'||LPAD(SEQ_CEX.NEXTVAL, 4, '0'))
+			, 'F'
+			, #{trmCd}
+			, #{diseaseCd}
+		)
+	</insert>
+	
+	<select id="selectCexHistory" resultType="int" parameterType="String">
+		SELECT
+		    COUNT(*)
+		FROM
+		    CLINICAL_EXAMINATION
+		WHERE TRM_CD = #{trmCd}
+		AND DISEASE_CD = #{diseaseCd}
+	</select>
+	
+	<resultMap type="PatientVO" id="PatientCexMap" autoMapping="true">
+    	<collection property="receptionList" ofType="ReceptionVO" autoMapping="true">
+           <association property="trmChart" javaType="TrmChartVO" autoMapping="true">
+              <collection property="diagHistoryVOList" ofType="DiagHistoryVO" autoMapping="true">
+			<association property="cex" javaType="CexVO" autoMapping="true">
+				<id property="cexNo" column="CEX_NO"/>
+			</association>
+              </collection>
+           </association>
+        </collection>
+   </resultMap>
+
+	<select id="selectCexWaitList" resultMap="PatientCexMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectCexWaitList */	
+		SELECT 
+		    C.TRM_CD
+		    , D.DISEASE_CD
+		    , A.PA_NO
+		    , A.PA_NAME
+		    , A.PA_SEX
+		    , A.PA_REG
+		    , E.CEX_NO
+		FROM PATIENT A
+		INNER JOIN RECEPTION B
+		ON A.PA_NO = B.PA_NO
+		INNER JOIN TRM_CHART C
+		ON B.RCP_NO = C.RCP_NO
+		INNER JOIN DIAGNOSIS_HISTORY D
+		ON C.TRM_CD =D.TRM_CD
+		INNER JOIN CLINICAL_EXAMINATION E
+		ON D.TRM_CD =E.TRM_CD AND D.DISEASE_CD = E.DISEASE_CD
+		WHERE CEX_STATUS = 'F'
+	</select>
+	
+	<select id="selectCexCompleteList" resultMap="PatientCexMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectCexCompleteList */	
+		SELECT 
+		    C.TRM_CD
+		    , D.DISEASE_CD
+		    , A.PA_NO
+		    , A.PA_NAME
+		    , A.PA_SEX
+		    , A.PA_REG
+		    , E.CEX_NO
+		FROM PATIENT A
+		INNER JOIN RECEPTION B
+		ON A.PA_NO = B.PA_NO
+		INNER JOIN TRM_CHART C
+		ON B.RCP_NO = C.RCP_NO
+		INNER JOIN DIAGNOSIS_HISTORY D
+		ON C.TRM_CD =D.TRM_CD
+		INNER JOIN CLINICAL_EXAMINATION E
+		ON D.TRM_CD =E.TRM_CD AND D.DISEASE_CD = E.DISEASE_CD
+		WHERE CEX_STATUS = 'T'
+	</select>
+	
+	<select id="selectCexList" resultMap="PatientCexMap" parameterType="hashMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectCexList */		
+		SELECT 
+		    C.TRM_CD
+		    , D.DISEASE_CD
+		    , A.PA_NO
+		    , A.PA_NAME
+		    , A.PA_SEX
+		    , A.PA_REG
+		    , E.CEX_NO
+		FROM PATIENT A
+		INNER JOIN RECEPTION B
+		ON A.PA_NO = B.PA_NO
+		INNER JOIN TRM_CHART C
+		ON B.RCP_NO = C.RCP_NO
+		INNER JOIN DIAGNOSIS_HISTORY D
+		ON C.TRM_CD =D.TRM_CD
+		INNER JOIN CLINICAL_EXAMINATION E
+		ON D.TRM_CD =E.TRM_CD AND D.DISEASE_CD = E.DISEASE_CD
+		WHERE E.CEX_STATUS = 'T'
+		<if test="searchOption!=null">
+			<choose>
+				<when test="searchOption=='no'">
+					AND A.PA_NO = #{searchWord}
+				</when>
+				<when test="searchOption=='name'">
+					AND A.PA_NAME LIKE '%' || #{searchWord} || '%'
+				</when>
+			</choose>
+		</if>
+	</select>
+	
+	<select id="selectOperationHistory" resultType="OperationInfomationVO" parameterType="hashMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectOperationHistory */
+	SELECT
+	    E.op_no
+	    , D.PA_NAME
+	    , D.PA_REG
+	    , E.OP_END_TIME
+	FROM TRM_CHART A
+	INNER JOIN DIAGNOSIS_HISTORY B
+	ON A.TRM_CD = B.TRM_CD
+	INNER JOIN OPERATION_INFOMATION E
+	ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
+	LEFT OUTER JOIN CLINICAL_EXAMINATION F
+	ON B.DISEASE_CD = F.DISEASE_CD AND B.TRM_CD = F.TRM_CD
+	INNER JOIN RECEPTION C
+	ON A.RCP_NO = C.RCP_NO
+	INNER JOIN PATIENT D
+	ON C.PA_NO = D.PA_NO
+	WHERE E.OP_STATE = 'T'
+	ORDER BY OP_NO
+	<if test="searchOption!=null">
+			<choose>
+				<when test="searchOption=='no'">
+					AND D.PA_NO = #{searchWord}
+				</when>
+				<when test="searchOption=='name'">
+					AND D.PA_NAME LIKE '%' || #{searchWord} || '%'
+				</when>
+			</choose>
+		</if>
+	</select>
+	
+	<!-- 검사결과를 등록 -->
+	<update id="updateCex" parameterType="CexVO">
+	/* kr.or.ddit.nurse.dao.OperationDAO.updateCex */
+		UPDATE clinical_examination
+		SET
+		    CEX_CBC = #{cexCbc}
+		    , CEX_ECG = #{cexEcg}
+		    , CEX_UA = #{cexUa}
+		    , CEX_PFTS = #{cexPfts}
+		    , CEX_DATE = SYSDATE
+		    , CEX_NE = #{cexNe}
+		    , EMP_NO = 6
+		    , CEX_STATUS = 'T'
+		WHERE
+		    CEX_NO = #{cexNo}
+	</update>
+	
+	<select id="selectCexDetail" parameterType="CexVO" resultType="CexVO">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectCexDetail */
+		SELECT
+		    A.cex_cbc
+		    , A.cex_ecg
+		    , A.cex_ua
+		    , A.cex_pfts
+		    , TO_CHAR(A.cex_date, 'YY/MM/DD') AS cex_date
+		    , A.cex_ne
+		    , A.emp_no
+		    , B.emp_nm
+		FROM clinical_examination A
+		INNER JOIN EMPLOYEE B
+		ON A.EMP_NO = B.EMP_NO
+		WHERE CEX_NO = #{cexNo}
+	</select>
+	
+	<!-- 예약된 수술리스트를 모두 조회 -->
+	<select id="selectOperInfoList" resultMap="operationListMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectOperInfoList */
+		
+		SELECT
+		    E.op_no
+		    , E.op_date
+		    , E.op_state
+		    , E.trm_cd
+		    , E.op_start_time
+		    , E.op_end_time
+		    , E.disease_cd
+		    , E.op_reserv_starttime
+		    , E.op_reserv_endtime
+		    , E.OP_COLOR_CD
+		    , D.PA_NO
+		    , D.PA_NAME
+		    , G.OP_KR_NM
+		    , G.OP_EN_NM
+		    , H.EMP_NO
+		    , I.EMP_NM
+		FROM TRM_CHART A
+		INNER JOIN DIAGNOSIS_HISTORY B ON A.TRM_CD = B.TRM_CD
+		INNER JOIN OPERATION_INFOMATION E ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
+		LEFT OUTER JOIN OPERATION G ON E.OP_CD = G.OP_CD
+		LEFT OUTER JOIN OPERATION_JOIN H ON E.OP_NO = H.OP_NO
+		LEFT OUTER JOIN EMPLOYEE I ON H.EMP_NO = I.EMP_NO
+		LEFT OUTER JOIN CLINICAL_EXAMINATION F ON B.DISEASE_CD = F.DISEASE_CD AND B.TRM_CD = F.TRM_CD
+		INNER JOIN RECEPTION C ON A.RCP_NO = C.RCP_NO
+		INNER JOIN PATIENT D ON C.PA_NO = D.PA_NO
+		
+	</select>
+	
+	<!-- 수술번호를 통해 수술 예약정보를 조회 -->
+	<select id="selectOperationReserv" parameterType="OperationInfomationVO" resultMap="operationListMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.insertOperation */
+		SELECT
+		    D.PA_NAME
+		    , D.PA_REG
+		    , B.ICD_NAME
+		    , I.EMP_NM
+		    , E.OP_START_TIME
+		    , E.OP_END_TIME
+		    , E.OP_RECORD
+		FROM TRM_CHART A
+		INNER JOIN DIAGNOSIS_HISTORY B ON A.TRM_CD = B.TRM_CD
+		INNER JOIN OPERATION_INFOMATION E ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
+		INNER JOIN OPERATION G ON E.OP_CD = G.OP_CD
+		INNER JOIN OPERATION_JOIN H ON E.OP_NO = H.OP_NO
+		INNER JOIN EMPLOYEE I ON H.EMP_NO = I.EMP_NO
+		INNER JOIN RECEPTION C ON A.RCP_NO = C.RCP_NO
+		INNER JOIN PATIENT D ON C.PA_NO = D.PA_NO
+		WHERE E.OP_NO = #{opNo}
+	</select>
+	
+	<!-- 수술 예약 정보를 입력 -->
+	<insert id="insertOperation" parameterType="hashMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.insertOperation */
+		INSERT INTO operation_infomation (
+		    op_no
+		    , op_state
+		    , trm_cd
+		    , disease_cd
+		    , op_reserv_starttime
+		    , op_reserv_endtime
+		) VALUES (
+		    'OP'||LPAD(SEQ_OPERATION.NEXTVAL, 4, '0')
+		    , 'F'
+		    , #{trmCd,jdbcType=VARCHAR}
+		    , #{diseaseCd,jdbcType=VARCHAR}
+		    , TO_DATE(#{opReservStarttime,jdbcType=DATE}, 'YYYY-MM-DD HH24:MI:SS')
+		    , TO_DATE(#{opReservEndtime,jdbcType=DATE}, 'YYYY-MM-DD HH24:MI:SS')
+		)
+	</insert>
+	
+	<select id="selectOperReservList" resultType="OperationInfomationVO">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectOperReservList */	
+		SELECT
+		    E.op_no
+		    , D.PA_NAME
+            , D.PA_REG
+            , E.OP_RESERV_STARTTIME
+		FROM TRM_CHART A
+		INNER JOIN DIAGNOSIS_HISTORY B
+		ON A.TRM_CD = B.TRM_CD
+		INNER JOIN OPERATION_INFOMATION E
+		ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
+		LEFT OUTER JOIN CLINICAL_EXAMINATION F
+		ON B.DISEASE_CD = F.DISEASE_CD AND B.TRM_CD = F.TRM_CD
+		INNER JOIN RECEPTION C
+		ON A.RCP_NO = C.RCP_NO
+		INNER JOIN PATIENT D
+		ON C.PA_NO = D.PA_NO
+		WHERE E.OP_STATE = 'F'
+		ORDER BY OP_NO
+	</select>
+	
+	<select id="selectOperCompleteList" resultType="OperationInfomationVO">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectOperCompleteList */	
+		SELECT
+		    E.op_no
+		    , D.PA_NAME
+            , D.PA_REG
+            , E.OP_END_TIME
+		FROM TRM_CHART A
+		INNER JOIN DIAGNOSIS_HISTORY B
+		ON A.TRM_CD = B.TRM_CD
+		INNER JOIN OPERATION_INFOMATION E
+		ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
+		LEFT OUTER JOIN CLINICAL_EXAMINATION F
+		ON B.DISEASE_CD = F.DISEASE_CD AND B.TRM_CD = F.TRM_CD
+		INNER JOIN RECEPTION C
+		ON A.RCP_NO = C.RCP_NO
+		INNER JOIN PATIENT D
+		ON C.PA_NO = D.PA_NO
+		WHERE E.OP_STATE = 'T'
+		ORDER BY OP_NO
+	</select>
+	
+	<resultMap type="PatientVO" id="PatientOperationMap" autoMapping="true">
+      <id property="paNo" column="PA_NO"/>
+         <collection property="receptionList" ofType="ReceptionVO" autoMapping="true">
+            <association property="trmChart" javaType="TrmChartVO" autoMapping="true">
+               <collection property="diagHistoryVOList" ofType="DiagHistoryVO" autoMapping="true">
+					<association property="operation" javaType="OperationInfomationVO" autoMapping="true">
+						<collection property="operationJoinList" ofType="kr.or.ddit.nurse.vo.OperationJoinVO" autoMapping="true"></collection>
+					</association>
+               </collection>
+            </association>
+         </collection>
+   </resultMap>
+	
+	<!-- 수술번호를 받아 그에 해당하는 수술정보를 검색 -->
+	<select id="selectOperReservDetail" resultMap="PatientOperationMap" parameterType="String">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectOperReservList */
+	
+		SELECT 
+		    E.OP_NO
+		    , A.PA_NO
+		    , A.PA_NAME
+		    , A.PA_REG
+		    , J.OP_CD
+		    , J.OP_KR_NM
+		    , J.OP_EN_NM
+		    , E.OP_COLOR_CD
+		    , F.EMP_NO
+		    , G.EMP_NM
+            , E.OP_START_TIME
+            , E.OP_END_TIME
+            , E.OP_RECORD
+            , D.ICD_NAME
+		FROM PATIENT A
+		INNER JOIN RECEPTION B ON A.PA_NO = B.PA_NO
+		INNER JOIN TRM_CHART C ON B.RCP_NO = C.RCP_NO
+		INNER JOIN DIAGNOSIS_HISTORY D ON C.TRM_CD = D.TRM_CD
+		INNER JOIN OPERATION_INFOMATION E ON D.TRM_CD = E.TRM_CD AND D.DISEASE_CD = E.DISEASE_CD
+		LEFT OUTER JOIN OPERATION_JOIN F ON E.OP_NO = F.OP_NO
+		LEFT OUTER JOIN EMPLOYEE G ON F.EMP_NO = G.EMP_NO
+		LEFT OUTER JOIN OPERATION J ON E.OP_CD = J.OP_CD
+		WHERE E.OP_NO = #{opNo}
+	</select>
+	
+	<!-- 수술 셀렉트박스에 사용할 항목들 불러옴 -->
+	<select id="selectOperationOption" resultType="kr.or.ddit.nurse.vo.OperationVO">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectOperationOption */
+		SELECT
+		    op_cd
+		    , op_kr_nm
+		    , op_en_nm
+		FROM
+		    operation
+	</select>
+	
+	<!-- 의사 선택 셀렉트박스에 사용할 항목들 불러옴 -->
+	<select id="selectDocOption" resultType="EmployeeVO">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectDocOption */
+		SELECT 
+		    A.EMP_NO
+		    , A.EMP_NM
+		FROM EMPLOYEE A
+		INNER JOIN POSITION B ON A.POSI_CD = B.POSI_CD
+		WHERE A.POSI_CD = 'D001'
+	</select>
+	
+	<!-- 수술 참여진에 집도의 추가 -->
+	<insert id="InsertOperationJoin" parameterType="hashMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.InsertOperationJoin */
+		INSERT INTO operation_join (
+		    op_no,
+		    emp_no,
+		    op_nm
+		) VALUES (
+		    #{opNo,jdbcType=VARCHAR}
+		    , #{empNo,jdbcType=NUMERIC}
+		    , '집도의'
+		)
+	</insert>
+	
+	<!-- 수술예약정보 업데이트 -->
+	<update id="updateOperation" parameterType="hashMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.updateOperation */
+		UPDATE operation_infomation
+		   SET 
+		       OP_CD = #{opCd,jdbcType=VARCHAR}
+		       , OP_COLOR_CD = #{opColorCd,jdbcType=VARCHAR}
+		 WHERE OP_NO = #{opNo}
+	</update>
+	
+	<!-- 수술참여 중복 검사 -->
+	<select id="selectOperationJoin" parameterType="hashmap" resultType="int">
+	/* kr.or.ddit.nurse.dao.OperationDAO.selectOperationJoin */
+		SELECT COUNT(*)
+		FROM OPERATION_INFOMATION A
+		INNER JOIN OPERATION_JOIN B
+		ON A.OP_NO = B.OP_NO
+		WHERE B.OP_NO = #{opNo}
+	</select>
+	
+	<!-- 수술예약정보 삭제 -->
+	<delete id="deleteOperation" parameterType="OperationInfomationVO">
+	/* kr.or.ddit.nurse.dao.OperationDAO.deleteOperation */	
+		DELETE FROM operation_infomation
+		 WHERE op_no = #{opNo}
+	</delete>
+	
+	<!-- 예약정보삭제 전 참여진 예약정보 테이블과 관련된 수술참여진 데이터를 조회함 -->
+	<select id="checkOperationJoin" parameterType="OperationInfomationVO" resultType="int">
+	/* kr.or.ddit.nurse.dao.OperationDAO.checkOperationJoin */
+		SELECT COUNT(*)
+		FROM
+		    operation_join
+		where op_no = #{opNo}	
+	</select>
+	
+	<!-- 수술참여진 삭제 -->
+	<delete id="deleteOperationJoin" parameterType="OperationInfomationVO">
+	/* kr.or.ddit.nurse.dao.OperationDAO.deleteOperationJoin */
+		DELETE FROM operation_join
+		WHERE op_no = #{opNo}
+	</delete>
+	
+	<!-- 수술참여진 삭제(파라미터 맵) -->
+	<delete id="deleteOperationJoinMap" parameterType="hashMap">
+	/* kr.or.ddit.nurse.dao.OperationDAO.deleteOperationJoinMap */
+		DELETE FROM operation_join
+		WHERE op_no = #{opNo}
+	</delete>
+	
+	<!-- 수술시작시간 업데이트 -->
+	<update id="updateOperationStarttime" parameterType="OperationInfomationVO">
+	/* kr.or.ddit.nurse.dao.OperationDAO.updateOperationStarttime */
+		
+		UPDATE operation_infomation
+	    SET
+	        OP_START_TIME = #{opStartTime,jdbcType=TIMESTAMP}
+		WHERE
+		    op_no = #{opNo}
+	</update>
+	
+	<!-- 수술종료시간 업데이트 -->
+	<update id="updateOperationEndtime" parameterType="OperationInfomationVO">
+	/* kr.or.ddit.nurse.dao.OperationDAO.updateOperationEndtime */
+	
+		UPDATE operation_infomation
+	    SET
+	        OP_END_TIME = #{opEndTime,jdbcType=TIMESTAMP}
+	        , OP_RECORD = #{opRecord,jdbcType=VARCHAR}
+	        , OP_STATE = 'T'
+		WHERE
+		    op_no = #{opNo}
+	</update>
+</mapper>

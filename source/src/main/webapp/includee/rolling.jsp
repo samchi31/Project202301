@@ -2,19 +2,30 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link href="<c:url value = '/resources/css/rolling.css'/>" rel = "stylesheet" />
 
-<div class="container">
-		<div class="rollingbanner">
-			<div class="wrap">
-				<div class="roller">
-					<ul>
-						<li class="kapi">
-								<strong class="name">2023 . 02 . 11 (토요일) 오늘도 고생했어유 우리 3조 ^^^^^^^^^^^^ 모두모두 꼭 업데이트 커밋하고 집에가기</strong>
-						</li>
-					</ul>
-				</div>
-			</div>
+<!-- <div class="container"> -->
+<!-- 		<div class="rollingbanner"> -->
+<!-- 			<div class="wrap"> -->
+<!-- 				<div class="roller"> -->
+<!-- 					<ul> -->
+<!-- 						<li class="kapi"> -->
+<!-- 								<strong class="name">2023 . 02 . 11 (토요일) 오늘도 고생했어유 우리 3조 ^^^^^^^^^^^^ 모두모두 꼭 업데이트 커밋하고 집에가기</strong> -->
+<!-- 						</li> -->
+<!-- 					</ul> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+<div class="rollingbanner">
+	<div class="wrap">
+		<div class="roller">
+			<ul>
+				<li class="kapi">
+						<strong class="name">2023 . 02 . 11 (토요일) 오늘도 고생했어유 우리 3조 ^^^^^^^^^^^^ 모두모두 꼭 업데이트 커밋하고 집에가기</strong>
+				</li>
+			</ul>
 		</div>
 	</div>
+</div>
 <script>
 //DOM 생성 후
 var originalID, cloneID; //인터벌 포인터

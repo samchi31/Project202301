@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.commons.vo.EmployeeVO;
+import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
 import kr.or.ddit.doctor.service.DoctorService;
@@ -31,99 +32,108 @@ public class DoctorMainController {
 	private DoctorService service;
 	
 	@GetMapping("/main")
-	public String enterMainView(Model model) {
+	public String enterMainView(Model model
+			, @AuthenticationPrincipal(expression="realMember") EmployeeVO emp
+	) {
 		
 		/*
 		 * 
 		 */
+		
+//		log.info("empNo : {} " , emp.getEmpNo() );
 		model.addAttribute("waitStatus", service.retreiveWaitStatus());
 		model.addAttribute("divTreat", service.retreiveDvTr());
 		
 		model.addAttribute("disList", service.retrieveDisList());
 		model.addAttribute("symList", service.retrieveSymList());
 		model.addAttribute("filmList", service.retrieveRadiList());
-		model.addAttribute("goList", service.retrieveGOList());
-		model.addAttribute("waitList", service.retrieveWaitHistory(1));		// kkk 로그인한 사람 잇다 치고
+//		model.addAttribute("goList", service.retrieveGOList());
+		model.addAttribute("waitList", service.retrieveWaitHistory(emp.getEmpNo()));
 		
 		return "doctor/doctorMain";
 	}
 	
-	@GetMapping("/main/paNo/{paNo}")
-	public String getPaInfo(
-			@PathVariable int paNo
-			, Model model
+	@ResponseBody
+	@GetMapping(value="/main/paNo/{paNo}", produces="application/json;charset=UTF-8")
+	public PatientVO getPaInfo(
+			@PathVariable String paNo
 			) {
 //		log.info("{}",paNo);
-		model.addAttribute("patientInfo", service.retrievePaInfo(paNo));
 		
-		return "jsonView";
+		PatientVO patientVO = service.retrievePaInfo(paNo);
+		return patientVO;
 	}
 	
-	@GetMapping("/main/chartlist/{paNo}")
-	public String getChartList(
-			@PathVariable int paNo
-			, Model model
-			) {
+	@ResponseBody
+	@GetMapping(value="/main/chartlist/{paNo}", produces="application/json;charset=UTF-8")
+	public List<TrmChartVO> getChartList(@PathVariable String paNo) {
 		// 회원 과거 차트 기록 잇는지
 		List<TrmChartVO> trmChartList = service.retrieveTrmChartList(paNo);
-		model.addAttribute("chartList", trmChartList);		
-		return "jsonView";
+		return trmChartList;
 	}
 	
-	@GetMapping("/main/chart/{rcpNo}")
-	public String getChart(
-			@PathVariable int rcpNo
-			, Model model) {
+	@ResponseBody
+	@GetMapping(value="/main/chart/{rcpNo}", produces="application/json;charset=UTF-8")
+	public TrmChartVO getChart(@PathVariable String rcpNo) {
+		TrmChartVO trmChartVO = service.retrieveTrmChart(rcpNo);
 		
-		model.addAttribute("chartVO", service.retrieveTrmChart(rcpNo));
+		log.info(" getChart - trmVO : {}", trmChartVO);
 		
-		return "jsonView";
+		return trmChartVO;
 	}
 	
-	@PostMapping("/main")
+	@ResponseBody
+	@PostMapping(value="/main", produces="text/plain;charset=UTF-8")
 	public String submitChart(
-		@ModelAttribute TrmChartVO trmChart
-		, Model model
-//		, @AuthenticationPrincipal EmployeeVO emp
+		@RequestBody TrmChartVO trmChart
+		, @AuthenticationPrincipal(expression="realMember") EmployeeVO emp
 	) {
-		log.info("{}",trmChart);
+		// log.info("updateTrmChart {}",trmChart);
+		
+		String msg = null;
 		
 		if(trmChart.getTrmCd() != null) {
 			// 수정
 			int rowcnt = service.modifyTrmChart(trmChart);
 			if(rowcnt > 0) {
-				model.addAttribute("message", "수정 성공");
+				msg = "수정 성공";
 			} else {
-				model.addAttribute("message", "수정 실패");
+				msg = "수정 실패";
 			}
 		} else {	
 			// 새로 삽입
-			// 현재 로그인한 의사 사번 넣기	kkk	
-			trmChart.setEmpNo(1);
+			trmChart.setEmpNo(emp.getEmpNo());
 			int rowcnt = service.createTrmChart(trmChart);
 			if(rowcnt > 0) {
-				model.addAttribute("message", "최초 삽입 성공");
+				msg = "최초 삽입 성공";
 			} else {
-				model.addAttribute("message", "최초 삽입 실패");
+				msg = "최초 삽입 실패";
 			}
 		}
-		return "jsonView";
+		return msg;
 	}
 	
-	@PostMapping("/main/wait")
-	public String changeWait(
-		@ModelAttribute WaitHistoryVO waitHistoryVO
-		, Model model
-	) {
-		//log.info("{}",waitHistoryVO);
+	@PostMapping(value="/main/wait", produces="text/plain;charset=UTF-8")
+	@ResponseBody	// ajax는 이걸로 다한다
+	public String changeWait( @RequestBody WaitHistoryVO waitHistoryVO ) {
+		// log.info("wait vo request : {}",waitHistoryVO);
 		int rowcnt = service.createWaitHistory(waitHistoryVO);
 		
 		// websocket으로 다른 접속자들한테도 알리기
+		String resp = null;
 		if(rowcnt > 0) {
-			model.addAttribute("message", "대기 히스토리 성공");
+			resp= "대기 히스토리 성공";
 		} else {
-			model.addAttribute("message", "대기 히스토리 실패");
+			resp = "대기 히스토리 실패";
 		}
-		return "jsonView";
-	}
+		return resp;
+	}	
 }
+
+/*
+ * modelAttribute : form 데이터일때 받을 때, controller에서 jsp로 보낼때
+ * 
+ * responseBody : 응답 보낼 때 -> produces 설정으로 dataType, encoding 해줌
+ * 
+ * requestBody : 요청 데이터 받을 때
+ */

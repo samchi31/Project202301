@@ -5,7 +5,10 @@ import java.util.List;
 import kr.or.ddit.commons.vo.HospitalizationVO;
 import kr.or.ddit.commons.vo.IntakeOutputVO;
 import kr.or.ddit.commons.vo.IntakeVO;
+import kr.or.ddit.commons.vo.OutputVO;
 import kr.or.ddit.commons.vo.VitalVO;
+import kr.or.ddit.nurse.vo.DietCategoryVO;
+import kr.or.ddit.nurse.vo.DietRecordVO;
 import kr.or.ddit.nurse.vo.IntakeCategoryVO;
 import kr.or.ddit.nurse.vo.NrecVO;
 import kr.or.ddit.nurse.vo.OutputCategoryVO;
@@ -55,6 +58,13 @@ public interface WardService {
 	public int intakeCreate(IntakeVO intake);
 	
 	/**
+	 * 환자의 output 기록을 입력
+	 * @param output
+	 * @return 성공, 실패
+	 */
+	public int outputCreate(OutputVO output);
+	
+	/**
 	 * intake 입력 항목 리스트 검색
 	 * @return intake 입력 항목 리스트
 	 */
@@ -65,4 +75,25 @@ public interface WardService {
 	 * @return output 입력 항목 리스트
 	 */
 	public List<OutputCategoryVO> retrieveOutputList();
+
+	/**
+	 * diet 코드 항목 리스트 검색
+	 * @return diet코드 항목 리스트
+	 */
+	public List<DietCategoryVO> retrieveDietCateList();
+
+	/**
+	 * 환자의 diet 기록을 입력
+	 * @param DietRecordVO
+	 * @return 성공, 실패
+	 */
+	public int dietCreate(DietRecordVO diet);
+
+	/**
+	 * 해당 환자의 식이기록 리스트 출력
+	 * @param hsptNo
+	 * @return hsptNo에 해당하는 식이 리스트
+	 */
+	public List<DietRecordVO> retrieveDietList(int hsptNo);
+
 }

@@ -3,19 +3,19 @@
 <mapper namespace="kr.or.ddit.receiption.dao.ReceiptionDAO">
 	
 	<select id="seekReceptionList" parameterType="hashmap" resultType="kr.or.ddit.receiption.vo.ReceiptionVO">
-		select pa_no, pa_name, pa_reg, pa_sex,pa_hp
+		select pa_no, pa_name, pa_reg, pa_sex,pa_hp,pa_zip,pa_add1,pa_add2
 		 from patient 
 		 <where>
-			<if test="searchOption!=null">
+			<if test="searchOption neq null" >
 				<choose>
-					<when test="searchOption=='paName'">
-						AND PA_NAME = #{searchWord}
+					<when test="searchOption eq 'paName'">
+						AND PA_NAME LIKE '%' || #{searchWord} || '%'
 					</when>
-					<when test="searchOption=='paHp'">
+					<when test="searchOption eq 'paHp'">
 						AND PA_HP LIKE '%' || #{searchWord} || '%'
 					</when>
-					<when test="searchOption=='paReg'">
-						AND PA_REG LIKE '%' || #{searchWord} || '%'
+					<when test="searchOption eq 'paReg'">
+						AND PA_REG LIKE  #{searchWord} || '%'
 					</when>
 				</choose>
 			</if>
@@ -23,13 +23,159 @@
 	</select>
 
 
-	<insert id="insertReceiption" parameterType="ReceiptionVO" >
-		insert into reception
-		values(
+	<insert id="insertReceiption" parameterType="kr.or.ddit.receiption.vo.RegistVO" >
+		insert into reception(
 			RCP_NO
-			, #{paNo}
+			, PA_NO
 			, RCP_DATE
-			, #{officeCd}
+			, OFFICE_CD
+		)
+		values(
+			'RCP'||LPAD(SEQ_RCP_RCPNO.NEXTVAL, 4, '0')
+			, #{paNo, jdbcType=VARCHAR}
+			, TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+			, #{officeCd, jdbcType=VARCHAR}
 		)
 	</insert>
+	
+	<insert id="insertWaitHistory" >
+        INSERT INTO waiting_history (
+		    wait_no,
+		    rcp_no,
+		    wait_dt,
+		    wait_num,
+		    waitst_cd,
+		    div_cd
+		) 
+		SELECT  SEQ_WAITING_HISTORY.Nextval
+		        , (select a.RCP_NO
+                    from(
+                    select rownum as rnum, RCP_NO, RCP_DATE
+                    from RECEPTION
+                    order by RCP_NO desc)a
+                    where rnum = 1)
+		        , TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+		        , SNUM
+		        , 'WS001'
+				, 'DV001'
+		FROM    (
+				SELECT nvl(max(wait_num), 0)+1 as SNUM
+		        FROM    waiting_history
+		        WHERE   rcp_no = (select a.RCP_NO
+                    from(
+                    select rownum as rnum, RCP_NO, RCP_DATE
+                    from RECEPTION
+                    order by RCP_NO desc)a
+                    where rnum = 1)	)
+	</insert>
+	
+	<insert id="insertPatient" parameterType="PatientVO" >
+		INSERT INTO patient (
+		    PA_NO
+		    , PA_NAME
+		    , PA_REG
+		    , PA_HP
+		    , PA_ZIP
+		    , PA_ADD1
+		    , PA_ADD2
+		    , PA_SEX
+		) VALUES (
+		    'P'||LPAD(SEQ_PATIENT.NEXTVAL, 4, '0')
+		    , #{paName,jdbcType=VARCHAR}
+		    , #{paReg,jdbcType=VARCHAR}
+		    , #{paHp,jdbcType=VARCHAR}
+		    , #{paZip,jdbcType=NUMERIC}
+		    , #{paAdd1,jdbcType=VARCHAR}
+		    , #{paAdd2,jdbcType=VARCHAR}
+		    , #{paSex,jdbcType=CHAR}
+		)
+	
+	</insert>
+	<select id="selectRegistVO" parameterType="String" resultType="kr.or.ddit.receiption.vo.ReadRegistVO">
+		with A as (
+		select rownum as rnum, rcp_no, pa_no
+		from reception
+		order by rnum desc)
+		
+		select A.*
+		from A
+		where a.RNUM = (select max(a.rnum)
+		                from A)
+        and a.pa_no = #{paNo,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectPatient" resultType="kr.or.ddit.receiption.vo.SelectPatientVO">
+		select a.pa_no, a.pa_name, a.pa_reg, a.pa_hp, a.pa_sex
+		from(
+		select rownum as rnum, pa_no, pa_name, pa_reg, pa_hp, pa_sex
+		from patient
+		order by pa_no desc)a
+		where rnum = 1
+	</select>
+	
+	<!-- 
+	선택된 대기실 목록 refresh
+	DIV_CD : 진료과(ex : DV001(진료실))
+	WAITST_CD : 대기히스토리에서 대기상태(ex : WS001(대기중))
+	 -->
+	<select id="selectWaitList" parameterType="String" resultType="kr.or.ddit.receiption.vo.WaitListVO">
+		WITH T AS(
+		    select    b.office_nm
+		            , c.PA_NO, c.PA_NAME, c.PA_REG 
+		            ,(SELECT MAX(D.WAITST_CD) FROM WAITING_HISTORY D WHERE a.RCP_NO = d.RCP_NO) WAITST_CD
+		            , (SELECT E.WAITST_NM FROM WAIT_STATUS E WHERE E.WAITST_CD =(SELECT MAX(D.WAITST_CD) FROM WAITING_HISTORY D WHERE a.RCP_NO = d.RCP_NO)) WAITST_NM
+		    from reception a
+		            inner join doctor_office b
+		            on a.OFFICE_CD = B.OFFICE_CD
+		            inner join patient c
+		            on a.PA_NO = c.PA_NO
+		    where B.OFFICE_CD = #{officeCd, jdbcType=VARCHAR}
+		)
+		SELECT T.PA_NO, T.PA_NAME, T.PA_REG, T.WAITST_NM
+		FROM   T
+		WHERE  T.WAITST_CD = 'WS001'
+	</select>
+	
+	
+	<select id="selectOperationList" parameterType="String" resultType="SelectOperationListVO">
+		select a.PA_NAME, a.PA_NO, a.PA_REG
+		     , e.OPER_TF, d.emp_no, d.emp_nm, c.trm_cd
+		from patient a
+		    inner join reception b 
+		    on a.pa_no = b.pa_no
+		    inner join TRM_CHART c
+		    on b.rcp_no = c.rcp_no
+		    inner join employee d
+		    on c.EMP_NO = d.emp_no
+		    inner join DIAGNOSIS_HISTORY e
+		    on c.TRM_CD = e.trm_cd
+		where e.OPER_TF = #{operTf}
+	</select>
+	
+	<insert id="insertSms" parameterType="String">
+		INSERT INTO statement (
+		    stt_cd,
+		    sms_cont
+		) VALUES (
+		   'STT'||LPAD(SEQ_STT_CD.nextval,4,'0')
+		   ,#{smsCont}
+		)
+		
+	</insert>
+	
+	<select id="selectSmsList"  resultType="kr.or.ddit.receiption.vo.SmsVO">
+		select *
+		  from statement
+	</select>
+	
+	<update id="updateSms" parameterType="kr.or.ddit.receiption.vo.SmsVO">
+		UPDATE statement
+  		   SET	SMS_CONT = #{smsCont}
+		 WHERE	stt_cd =#{sttCd}
+	</update>
+	
+	<delete id="deleteSms" parameterType="String">
+		DELETE FROM statement
+		 WHERE	stt_cd =#{sttCd}
+	</delete>
 </mapper>

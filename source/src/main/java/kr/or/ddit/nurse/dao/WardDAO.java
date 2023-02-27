@@ -7,7 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.or.ddit.commons.vo.HospitalizationVO;
 import kr.or.ddit.commons.vo.IntakeOutputVO;
 import kr.or.ddit.commons.vo.IntakeVO;
+import kr.or.ddit.commons.vo.OutputVO;
 import kr.or.ddit.commons.vo.VitalVO;
+import kr.or.ddit.nurse.vo.DietCategoryVO;
+import kr.or.ddit.nurse.vo.DietRecordVO;
 import kr.or.ddit.nurse.vo.IntakeCategoryVO;
 import kr.or.ddit.nurse.vo.NrecVO;
 import kr.or.ddit.nurse.vo.OutputCategoryVO;
@@ -51,7 +54,16 @@ public interface WardDAO {
 
 	public int insertIntake(IntakeVO intake);
 
+	public int insertOutput(OutputVO output);
+	
 	public List<IntakeCategoryVO> selectIntakeCategory();
 
 	public List<OutputCategoryVO> selectOutputCategory();
+
+	public List<DietCategoryVO> selectDietCategory();
+
+	public int insertDiet(DietRecordVO diet);
+
+	public List<DietRecordVO> selectDietList(int hsptNo);
+
 }

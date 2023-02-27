@@ -5,12 +5,15 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.ddit.commons.vo.DivisionTreatVO;
+import kr.or.ddit.commons.vo.FilmAtchDetailVO;
+import kr.or.ddit.commons.vo.AtchFileDetailVO;
 import kr.or.ddit.commons.vo.DiagHistoryVO;
 import kr.or.ddit.commons.vo.DiseaseVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
 import kr.or.ddit.commons.vo.FilmOrderVO;
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.PrescriptionVO;
+import kr.or.ddit.commons.vo.ReceiveVO;
 import kr.or.ddit.commons.vo.ReceptionVO;
 import kr.or.ddit.commons.vo.SymptomVO;
 import kr.or.ddit.commons.vo.TrmChartVO;
@@ -58,27 +61,20 @@ public interface DoctorDAO {
 	 * @return 촬영 검사 목록 
 	 */
 	public List<FilmCateVO> selectRadiList();
-
-	/**
-	 * 그룹오더 리스트 전체 가져오기
-	 * @return 그룹오더 리스트
-	 */
-	public List<GroupOrderVO> selectGOList();
-	
-	
+		
 	/**
 	 * 환자 현재 진료 차트
 	 * @param rcpNo 접수번호
 	 * @return 환자의 진료차트
 	 */
-	public TrmChartVO selectTrmChart(int rcpNo);
+	public TrmChartVO selectTrmChart(String rcpNo);
 	
 	/**
 	 * 환자의 진료 차트 기록 리스트
 	 * @param paNo 환자 번호
 	 * @return 환자 진료 차트 기록 리스트
 	 */
-	public List<TrmChartVO> selectTrmChartList(int paNo);
+	public List<TrmChartVO> selectTrmChartList(String paNo);
 	
 	/**
 	 * 내 진료실에 대기실 환자 리스트
@@ -92,7 +88,7 @@ public interface DoctorDAO {
 	 * @param paNo 환자번호
 	 * @return 환자 정보
 	 */
-	public PatientVO selectPaInfo(int paNo);	
+	public PatientVO selectPaInfo(String paNo);	
 	
 	/**
 	 * 진료 차트 작성
@@ -151,6 +147,13 @@ public interface DoctorDAO {
 	public int updateTrmChart(TrmChartVO trmChartVO);
 	
 	/**
+	 * 진료 완료 여부
+	 * @param rcpNo 접수번호
+	 * @return
+	 */
+	public WaitStatusVO selectWSComplete(String rcpNo);
+	
+	/**
 	 * 진료 차트 수정 시 내역들 전체 삭제
 	 * @param trmCd
 	 * @return
@@ -159,4 +162,10 @@ public interface DoctorDAO {
 	public int deleteSymHist(String trmCd);
 	public int deletePreHist(String trmCd);
 	public int deleteFilmOrder(String trmCd);
+	
+	/**
+	 * 촬영 결과 보기
+	 * @return
+	 */
+	public List<FilmAtchDetailVO> selectFilmResult();
 }

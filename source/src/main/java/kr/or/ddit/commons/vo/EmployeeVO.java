@@ -4,9 +4,13 @@ import java.util.List;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @EqualsAndHashCode(of="empNo")
 @Data
+@NoArgsConstructor
+@ToString(exclude= {"empPw", "empReg1"})
 public class EmployeeVO {
 	private Integer empNo;
 	private String empNm;
@@ -23,6 +27,8 @@ public class EmployeeVO {
 	private String jobCd;
 	private String posiCd;
 	private String majorCd;
+	
+	private String posiName;
 	
 	private List<VitalVO> vitalList;
 }

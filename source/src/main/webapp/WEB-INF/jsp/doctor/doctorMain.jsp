@@ -3,31 +3,23 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <title>doctor-Main</title>
+<head>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+</head>
 <style type="text/css">
-  	/* table */
-  	table {table-layout: fixed;}
-  	
-    /*tab css*/
-/* 	.tab { overflow:hidden;} */
-/* 	.tabnav{font-size:0;} */
-/* 	.tabnav li{display: inline-block; text-align:center; border-right:1px solid #ddd;} */
-/* 	.tabnav li a:before{content:""; position:absolute; left:0; top:0px; width:100%; height:3px; } */
-/* 	.tabnav li a.active:before{background:#4E73DF;} */
-/* 	.tabnav li a.active{border-bottom:1px solid #fff;} */
-/* 	.tabnav li a{ position:relative; display:block; background: #f8f8f8; color: #000; padding:0 15px; line-height:230%; text-decoration:none; font-size:16px;} */
-/* 	.tabnav li a:hover, .tabnav li a.active{background:#fff; color:#4E73DF; } */
-/* 	.tabcontent{ border-top:none; background:#fff;} */
-/* 	.tabcontentWrap{ overflow-y:auto; overflow-x:auto;  border-top:none; background:#fff;}  */
-	
-	.tab-big{height:340px;}
-	.tab-mid{height:215px;}
-	.tab-bigger{height:320px;} 
+  	  		
+	.tab-big{height: 340px;}
+	.tab-mid{height: 215px;}
+	.tab-bigger{height: 375px;} 
 	
 	/* 처방 테이블 input tag width */
 	input {width:100%;}
 	
 	/* 대기 테이블 select tag width */
-	select {width:100%;}
+/* 	select {width:100%;} */
 	
 	#modal {  /* 시퀀스 상 순서를 유지하기 위해서 */
 	    position: fixed;
@@ -39,7 +31,7 @@
 	    z-index:100;
 	}
 	.modal-window {
-	    width: 50%;
+	    width: 50vh;
 	    height: 50vh;
 	    margin: 20px auto;
 	    background-color: white;
@@ -47,34 +39,57 @@
 	    padding : 10px;
 	}
 	.modal-content{
+		line-height: 25px;
 	}
+	/* .modal-header{
+		
+	} */
+	.modal-header .modal-title{
+		margin : 10px 10px;
+	}
+	.modal-body{
+		text-align:center
+	}
+	/* .modal-footer{
+	} */
 	
 	/* tr 더블클릭 */
 	.dblclick-on{
 		background-color : antiquewhite;
 	}
-	
+		
 	#detailText{
 		min-height : 260px;
+	}
+	
+	input[type="number"]::-webkit-outer-spin-button,
+	input[type="number"]::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			appearance: none;
+	}
+
+	.chart-detail-body span{
+		display : inline-block;
 	}
 </style>
 
 <!-- modal -->
-<div id="modal" onclick="f_modalClose()">
-	<div class="modal-window modal-dialog" onclick="f_block()" >
-		<div class="modal-content">
+<div id="modal" onclick="f_modalClose()" class="card">
+	<div class="modal-window modal-dialog animate__animated animate__fadeInDownBig animate__faster" onclick="f_block()" >
+		<div class="modal-content ">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5" ></h1>
 			  	<button type="button" class="btn-close" aria-label="Close" onclick="f_modalClose()"></button>
 			</div>
 			<div class="modal-body">
-			
-			</div>	
+		
+			</div>
 			<div class="modal-footer">			
 			</div>
 		</div>
 	</div>
-</div>  
+</div>   
 
 
 <div class="wrapper">
@@ -82,7 +97,7 @@
 		<!-- ui-draggable-disabled ui-resizable-disable 가 있으나 없으나 차이가 없다 -->
 		<div class="grid-stack-item "
 			gs-x="0" gs-y="0" gs-w="4" gs-h="2" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >
+			<div class="grid-stack-item-content card-grid" >
 				<div class="tab doc-diag">
 				    <ul class="tabnav">
 				      <li><a href="#sym">증상</a></li>
@@ -91,13 +106,13 @@
 			    	<div class="tabcontentWrap tab-mid">
 					    <div class="tabcontent">
 					    	<div id="sym">
-					    		<table class="table table-bordered table-hover">
+					    		<table class="table-blue">
 									<colgroup>
 							      		<col style="width: 15%;" />
 							      		<col style="width: 40%;" />
 							      	</colgroup>
-						      		<thead>
-						      			<tr class="fixedHeader table-light">
+						      		<thead class="fixedHeader">
+						      			<tr>
 						      				<th>증상코드</th>
 											<th>증상</th>
 										</tr>
@@ -107,15 +122,15 @@
 								</table>
 					    	</div>
 					    	<div id="diag">
-					    		<table class="table table-bordered table-hover">
+					    		<table class="table-blue">
 					      			<colgroup>
 							      		<col style="width: 20%;" />
 							      		<col style="width: 40%;" />
 							      		<col style="width: 20%;" />
 							      		<col style="width: 20%;" />
 							      	</colgroup>
-						      		<thead>
-						      			<tr class="fixedHeader table-light">
+						      		<thead class="fixedHeader">
+						      			<tr>
 						      				<th>상병코드</th>
 											<th>상병명</th>
 											<th>수술여부</th>
@@ -133,7 +148,7 @@
 		</div>
 		<div class="grid-stack-item" 
 			gs-x="0" gs-y="2" gs-w="5" gs-h="3" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >
+			<div class="grid-stack-item-content card-grid" >
 				<div class="tab doc-pre">
 				    <ul class="tabnav">
 				      <li><a href="#pre">처방</a></li>
@@ -141,8 +156,8 @@
 				    </ul>
 			    	<div class="tabcontentWrap tab-bigger">
 					    <div class="tabcontent">
-					    	<div id="pre">
-					    		<table class="table table-bordered table-hover">
+					    	<div id="pre" >
+					    		<table class="table-blue">
 									<colgroup>
 								     	<col style="width: 20%;" />
 							      		<col style="width: 40%;" />
@@ -152,8 +167,8 @@
 							      		<col style="width: 10%;" />
 							      		<col style="width: 20%;" />
 								    </colgroup>
-									<thead>
-										<tr class="fixedHeader table-light">
+									<thead class="fixedHeader">
+										<tr>
 						      				<th>약품코드</th>
 											<th>약품명</th>
 											<th>일투</th>
@@ -168,20 +183,23 @@
 								</table>
 					    	</div>
 					    	<div id="film">
-					    		<table class="table table-bordered table-hover">
+					    		<table class="table-blue">
 									<colgroup>
 							      		<col style="width: 50%;" />
 							      		<col style="width: 50%;" />
 							      	</colgroup>
-									<thead>
-										<tr class="fixedHeader table-light">
+									<thead class="fixedHeader">
+										<tr >
 											<th>촬영구분</th>
-											<th>촬영명</th>
+											<th>촬영일시</th>
 										</tr>
 									</thead>
 									<tbody>
 									</tbody>
 								</table>
+								<div>
+									<button style="display:none;" class="btn_blue" id="btn_film">결과상세</button>
+								</div>
 					    	</div>
 					    </div>
 					</div>
@@ -191,17 +209,17 @@
 		
 		<div class="grid-stack-item" 
 			gs-x="4" gs-y="0" gs-w="3" gs-h="2" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card " >
-				<h4>진료내역</h4>
+			<div class="grid-stack-item-content card-grid " >
+				<h4 class="h4-title2">진료내역</h4>
 				<div class="tabcontentWrap tab-mid">
 			    	<div class="tabcontent">
-			    		<table class="table table-bordered table-hover">
+			    		<table class="table-blue">
 							<colgroup>
 					      		<col style="width: 50%;" />
 					      		<col style="width: 50%;" />
 					      	</colgroup>
-							<thead>
-								<tr class="fixedHeader table-light">
+							<thead class="fixedHeader">
+								<tr>
 									<th>진료차트번호</th>
 									<th>날짜</th>
 								</tr>
@@ -216,31 +234,31 @@
 		</div>	
 		<div class="grid-stack-item" 
 			gs-x="5" gs-y="2" gs-w="2" gs-h="3" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >
-				<h4>상세기록</h4>
-				<div class="tabcontentWrap tab-big">
+			<div class="grid-stack-item-content card-grid" >
+				<h4 class="h4-title2">상세기록</h4>
+				<div class="tabcontentWrap tab-bigger">
 					<div class="tabcontent">
-						<input type="text" id="detailText"/>
-						<input type="button" value="등록" />
+						<textarea rows="13" cols="" class="form-control" id="detailText"></textarea>
+						<input class="btn_blue" type="button" value="등록" />
 					</div>
 				</div>
 			</div>	
 		</div>	
 		<div class="grid-stack-item" 
 			gs-x="7" gs-y="0" gs-w="3" gs-h="2" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >
-				<h4>환자대기</h4>
+			<div class="grid-stack-item-content card-grid" >
+				<h4 class="h4-title2">환자대기</h4>
 				<div class="tabcontentWrap tab-mid">
 			    	<div class="tabcontent">
-						<table class="table table-bordered table-hover">
+						<table class="table-blue">
 							<colgroup>
 					      		<col style="width: 15%;" />
 					      		<col style="width: 25%;" />
 					      		<col style="width: 35%;" />
 					      		<col style="width: 25%;" />
 					      	</colgroup>
-							<thead>
-								<tr class="fixedHeader table-light">
+							<thead class="fixedHeader">
+								<tr>
 									<th>코드</th>
 									<th>환자명</th>
 									<th>병과구분</th>
@@ -253,14 +271,14 @@
 				      					<td ><a class="paDetail">${wait["paNo"] }</a></td>
 				      					<td>${wait["paName"] }</td>
 				      					<td>
-				      						<select id="divSelect">
+				      						<select class="divSelect">
 				      							<c:forEach items="${divTreat }" var="divTr">
 				      								<option value="${divTr['divCd'] }" ${divTr['divCd'] eq wait['divCd'] ? "selected" : "" }>${divTr["divNm"] }</option>
 				      							</c:forEach>
 				      						</select>
 				      					</td>
 				      					<td>
-				      						<select id="statusSelect">
+				      						<select class="statusSelect">
 				      							<c:forEach items="${waitStatus }" var="waitSt">
 				      								<option value="${waitSt['waitstCd'] }" ${waitSt['waitstCd'] eq wait['waitstCd'] ? "selected" : "" }>${waitSt["waitstNm"] }</option>
 				      							</c:forEach>
@@ -276,16 +294,19 @@
 		</div>
 		<div class="grid-stack-item" 
 			gs-x="10" gs-y="0" gs-w="2" gs-h="2" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >
-				<h4>일정</h4>
+			<div class="grid-stack-item-content card-grid" >
+				<h4 class="h4-title2">일정</h4>
 			</div>	
 		</div>	
 		<div class="grid-stack-item" 
 			gs-x="8" gs-y="2" gs-w="5" gs-h="3" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card" >
-				<h4>기초자료</h4>
-				 <div class="tab doc-basic">
-				    <ul class="tabnav">
+			<div class="grid-stack-item-content card-grid" >
+				<div style="display:flex">
+					<h4 class="h4-title2" style="width:100%">기초자료</h4>
+					<button style="display:none;" class="btn_blue" id="btn_manage">관리</button>
+				</div>
+				<div class="tab doc-basic">
+					<ul class="tabnav">
 				      <li><a href="#dise">상병</a></li>
 				      <li><a href="#medi">처방</a></li>
 				      <li><a href="#sym">증상</a></li>
@@ -295,14 +316,14 @@
 				    <div class="tabcontentWrap tab-big">
 					    <div class="tabcontent">
 					      <div id="dise">
-					      	<table class="table table-bordered table-hover">
+					      	<table class="table-blue">
 						      	<colgroup>
 						      		<col style="width: 15%;" />
 						      		<col style="width: 25%;" />
 						      		<col style="width: 50%;" />
 						      	</colgroup>
-					      		<thead>
-					      			<tr class="fixedHeader table-dark">
+					      		<thead class="fixedHeader">
+					      			<tr >
 					      				<th>상병코드</th>
 					      				<th>영문</th>
 					      				<th>한글</th>
@@ -320,7 +341,7 @@
 					      	</table>
 					      </div>
 					      <div id="medi">
-					      	<table class="table table-bordered table-hover">
+					      	<table class="table-blue">
 				      			<colgroup>
 						      		<col style="width: 18%;" />
 						      		<col style="width: 42%;" />
@@ -328,8 +349,8 @@
 						      		<col style="width: 16%;" />
 						      		<col style="width: 16%;" />
 						      	</colgroup>
-					      		<thead>
-					      			<tr class="fixedHeader table-dark">
+					      		<thead class="fixedHeader">
+					      			<tr>
 					      				<th>약품코드</th>
 										<th>약품명</th>
 										<th>투여</th>
@@ -342,13 +363,13 @@
 					      	</table>
 					      </div>
 					      <div id="sym">
-					      	<table class="table table-bordered table-hover">
+					      	<table class="table-blue">
 				      			<colgroup>
 						      		<col style="width: 15%;" />
 						      		<col style="width: 40%;" />
 						      	</colgroup>
-					      		<thead>
-					      			<tr class="fixedHeader table-dark">
+					      		<thead class="fixedHeader">
+					      			<tr>
 					      				<th>증상코드</th>
 										<th>증상</th>
 									</tr>
@@ -364,14 +385,14 @@
 					      	</table>
 					      </div>
 					      <div id="radi">
-					      	<table class="table table-bordered table-hover">
+					      	<table class="table-blue">
 				      			<colgroup>
 						      		<col style="width: 40%;" />
 						      		<col style="width: 40%;" />
 						      		<col style="width: 20%;" />
 						      	</colgroup>
-					      		<thead>
-					      			<tr class="fixedHeader table-dark">
+					      		<thead class="fixedHeader">
+					      			<tr>
 					      				<th>촬영구분코드</th>
 										<th>촬영명</th>
 										<th>담당자</th>
@@ -382,31 +403,31 @@
 					      				<tr>
 					      					<td>${film["filmCd"] }</td>
 					      					<td>${film["filmNm"] }</td>
-					      					<td>${film["empNo"] }</td>
+					      					<td>${film["empNm"] }</td>
 					      				</tr>
 					      			</c:forEach>
 					      		</tbody>
 					      	</table>
 					      </div>
 					      <div id="group">
-					      	<table class="table table-bordered table-hover">
+					      	<table class="table-blue">
 				      			<colgroup>
 						      		<col style="width: 40%;" />
 						      		<col style="width: 40%;" />
 						      	</colgroup>
-					      		<thead>
-					      			<tr class="fixedHeader table-dark">
+					      		<thead class="fixedHeader">
+					      			<tr>
 					      				<th>그룹오더코드</th>
 										<th>그룹오더명</th>
 									</tr>
 					      		</thead>
 					      		<tbody >
-					      			<c:forEach items="${goList }" var="go">
+					      			<!-- <c:forEach items="${goList }" var="go">
 					      				<tr>
 					      					<td>${go["goCd"] }</td>
 					      					<td>${go["goKo"] }</td>
 					      				</tr>
-					      			</c:forEach>
+					      			</c:forEach> -->
 					      		</tbody>
 					      	</table>
 					      </div>
@@ -416,24 +437,108 @@
 			</div>	
 		</div>	
 	</div>
+	
 </div>
 
-<form:form id="insertChartForm" modelAttribute="trmChart" method="post">
-</form:form>
 
-<%-- <form:form id="insertWaitForm" modelAttribute="waitHistory" method=""> --%>
-	
-<%-- </form:form> --%>
+<!-- 오프캔버스 -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasRightLabel">진료차트상세</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body chart-detail-body">
+    <span style="width:45%;">차트코드 <input id="off-trmCd" class="form-control" readonly disabled/></span>
+    <span style="width:45%;">진료날짜 <input id="off-trmDt" class="form-control" readonly disabled/></span>
+    <span style="width:45%;">접수번호 <input id="off-rcpNo" class="form-control" readonly disabled/></span>
+    <span style="width:45%;">의사명 <input id="off-empNm" class="form-control" readonly disabled/></span>
+    <span style="width:100%;">증상내역 
+    	<div>
+    		<table class="table-blue">
+    			<thead>
+    				<tr>
+						<th>증상코드</th>
+						<th>증상명</th>
+					</tr>
+    			</thead>
+				<tbody id="off-tbody-sym">
 
+				</tbody>
+    		</table>
+    	</div>
+    </span>
+    <span style="width:100%;">진단내역 
+    	<div>
+				<table class="table-blue">
+    			<thead>
+    				<tr>
+							<th>진단코드</th>
+							<th>진단명</th>
+							<th>수술</th>
+							<th>물리치료</th>
+						</tr>
+    			</thead>
+					<tbody id="off-tbody-diag">
 
+					</tbody>
+    		</table>
+    	</div>
+    </span>
+    <span style="width:100%;">처방내역 
+    	<div>
+				<table class="table-blue">
+    			<thead>
+    				<tr>
+							<th>처방코드</th>
+							<th>처방명</th>
+						</tr>
+    			</thead>
+					<tbody id="off-tbody-pre">
+
+					</tbody>
+    		</table >
+    	</div>
+    </span>
+	<span style="width:100%;">상세기록 <div id="off-mediRecord" class="form-control"></div></span>
+    <span>촬영내역 
+    	<div>
+				<table class="table-blue">
+    			<thead>
+    				<tr>
+							<th>촬영코드</th>
+							<th>촬영날짜</th>
+						</tr>
+    			</thead>
+					<tbody id="off-tbody-film">
+
+					</tbody>
+    		</table>
+    	</div>
+    </span>
+    <!-- <span style="width:100%;">물리치료기록 
+    	<div>
+				<table	ble class="table-blue">
+					<thead>
+						<tr>
+							<th>물리치료</th>
+						</tr>
+					</thead>
+					<tbody id="off-tbody-pt">
+
+					</tbody>
+    		</table>
+    	</div>
+    </span> -->
+  </div>
+</div>
 
 <!--  xml을 json으로 바꿔주는 라이브러리 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js"></script>
-<script src="${pageContext.request.contextPath }/resources/js/custom.js"></script>
 <script type="text/javascript">
+	// gridstack 시작
 	GridStack.init();
-		
-	let $medi = $("#medi");
+	
+	// 공공데이터 불러오기
 	let f_medicineList = function(){
 		let url = "https://apis.data.go.kr/B551182/dgamtCrtrInfoService/getDgamtList?ServiceKey=m3zTXtgIgwkhr2WboRC5nIwTq5fQN7q8T2ZteWypCKCrIdm2eM4fUcWZ5PKNFiONOv6Xmj%2FAYqckvEgAmB6oEA%3D%3D&numOfRows=30&pageNo=1&mdsCd=65"
 		let xhr = new XMLHttpRequest();
@@ -451,12 +556,10 @@
 			}
 		};
 		xhr.send();
-	}
-	
-	f_medicineList();
-	
+	}	
+	f_medicineList();	
     
-	/* make table */
+	// 처방 테이블 데이터 넣기
 	let $tbody_medi =$("#tbody_medi");
 	let f_makeTable = function(v_sel, v_data){
 		let trTags = [];
@@ -473,6 +576,16 @@
 		}
 		v_sel.append(trTags);
 	}
+	
+	// 그룹오더 관리 버튼
+	let $btnManage = $("#btn_manage").on('click',function(){
+		// url, name, setting
+		window.open("${pageContext.request.contextPath}/group/grouporder","go","top=100em,left=100em,width=1460,height=750");
+	});
+	
+	let $btnFilm = $("#btn_film").on('click',function(){
+		window.open("${pageContext.request.contextPath}/doctor/filmDetail","film","top=100em,left=100em,width=1460,height=750");
+	});
   
   /* tab 메뉴 */
 //   $(function(){
@@ -497,6 +610,12 @@
 		$basicContents.hide().filter(this.hash).fadeIn();
 		$basicNavs.removeClass('active');
 		$(this).addClass('active');
+
+		if(this.hash=='#group'){
+			$btnManage.css("display","block");
+		} else {
+			$btnManage.css("display","none");
+		}
 		return false;
 	});
 	$basicNavs.eq(0).click();
@@ -513,10 +632,17 @@
 		$preContents.hide().filter(this.hash).fadeIn();
 		$preNavs.removeClass('active');
 		$(this).addClass('active');
+		
+		if(this.hash=='#film'){
+			$btnFilm.css("display","block");
+		} else {
+			$btnFilm.css("display","none");
+		}
 		return false;
 	});
 	$preNavs.eq(0).click();
 	
+	// 진료차트 테이블 더블클릭
 	let tbody_diag = $diagContents.filter("#diag").find("tbody").on('dblclick','tr', function(){
 		$(this).remove();
 	});
@@ -530,7 +656,7 @@
 		$(this).remove();
 	});
 	
-	// input result
+	// 기초자료 데이터 클릭 이벤트
 	$('.doc-basic tbody').on('click', 'tr', function(event){
 		// console.log($td.parent("tr"));
 		// console.log($(this).parents().filter("div").attr("id"));
@@ -542,6 +668,7 @@
 			newTr.append($("<td>").html("<input type='checkbox' name='operTf' />"));
 			newTr.append($("<td>").html("<input type='checkbox' name='physiotherapyTf' />"));
 			tbody_diag.append(newTr);
+			$diagNavs.eq(1).click();
 		} else if (v_id == "medi"){
 // 			console.log($tr.data("object"));
 			let v_data = $tr.data("object");
@@ -555,36 +682,39 @@
 				, $("<td>").html(v_data["payTpNm"])
 			);
 			tbody_pre.append(newTr);
+			$preNavs.eq(0).click();
 		} else if (v_id == "sym"){
-			tbody_sym.append($tr.clone());			
+			tbody_sym.append($tr.clone());		
+			$diagNavs.eq(0).click();
 		} else if (v_id == "radi"){
 			let newTr = $tr.clone();
-			newTr.children().eq(2).remove();
+			newTr.children().eq(1).remove();
+			newTr.children().eq(1).remove();
+			newTr.append($("<td>"));
 			tbody_film.append(newTr);
+			$preNavs.eq(1).click();
 		} else if (v_id == "group"){
-			
+			let newTr = $tr.clone(true);
+			// console.log(newTr.data("object"));
+			f_applyGO(newTr.data("object"));
 		}
 	});
 	
-	/* data submit */
+	// 상세기록 텍스트
 	let $inputDetail = $("#detailText");
-	let $trmForm = $("#insertChartForm").on('submit', function(){
-		event.preventDefault();
-		
-		let data = $(this).serialize();
-		let method = this.method;
-		console.log(data, method);
-			
+	let f_submitTrmChart = () => {		
 		$.ajax({
-// 			url : this.action,
-			method : method,
-			data : data,
-// 			dataType : "application/json;charset=UTF=8",
-// 			contentType : "json",
+			method : "post",
+			data : JSON.stringify(chartObject),
+			contentType : "application/json;charset=UTF-8",
+			dataType : "text",
+			beforeSend: function(xhr) {
+		           xhr.setRequestHeader(header, token);
+		    },
 			success : function(resp) {
-				console.log(resp);
-				
-				// alert 띄울?
+				//console.log(resp);
+
+				swal({title:resp, icon:"success"});
 			},
 			error : function(jqXHR, status, error) {
 				console.log(jqXHR);
@@ -592,110 +722,108 @@
 				console.log(error);
 			}
 		});
-		return false;
-	}); 
+	}; 
+	
+	// 진료차트 object
+	let chartObject = {};
+	// 진료차트 등록 버튼
 	let $submitBtn = $("input[type=button]").on('click', function(){
+		
+		if(rcpNo == -1) { 
+			swal({title:"진료 환자를 선택해주세요", icon:"info"});
+			return false; 
+		}
+		
+		// chartObject = {};
+		
 		// diag
+		let diagArr = [];
 		$.each(tbody_diag.find("tr"), function(index, tr){
-			// console.log(index, tr);
-			let name = "diagHistoryVOList[" + index + "].";
-			$trmForm.append($("<input>").attr({
-				type:"hidden"
-				, name: name+"diseaseCd"
-				, value:$(tr).children().eq(0).html().trim()
-			})).append($("<input>").attr({
-				type:"hidden"
-				, name: name+"icdName"
-				, value:$(tr).children().eq(1).html().trim()
-			}));
+			// console.log(index, tr);		
+			let diag = {};
+			diag.diseaseCd = $(tr).children().eq(0).html().trim();
+			diag.icdName = $(tr).children().eq(1).html().trim();
+			
 			let checkboxs = $(tr).find("input:checkbox");
 			$.each(checkboxs, function(i, ck){
 				// console.log(i, ck);
 				// console.log(ck.name, $(ck).is(":checked"));
 				let isTrue = $(ck).is(":checked");
-				let newInput = $("<input>").attr("type","hidden")
-					.attr("name", name+ck.name).val(isTrue ? "Y" : "N");
-				$trmForm.append(newInput);
+				diag[ck.name] = isTrue ? "Y" : "N";
 			});
+			diagArr.push(diag);
 		});
+		chartObject.diagHistoryVOList = diagArr;
 		
 		// sym
+		let symArr = [];
 		$.each(tbody_sym.find("tr"), function(index, tr){
 			// console.log(index, tr);
-			let name = "symptomVOList[" + index + "].";
-			$trmForm.append($("<input>").attr({
-				type:"hidden"
-				, name: name+"symCd"
-				, value:$(tr).children().eq(0).html().trim()
-			})).append($("<input>").attr({
-				type:"hidden"
-				, name: name+"symDetail"
-				, value:$(tr).children().eq(1).html().trim()
-			}));
+			let sym = {};
+			sym.symCd = $(tr).children().eq(0).html().trim();
+			sym.symDetail = $(tr).children().eq(1).html().trim();
+			symArr.push(sym);
 		});
+		chartObject.symptomVOList = symArr;
 		
 		//pre
+		let preArr = [];
 		$.each(tbody_pre.find("tr"), function(index, tr){
  			//console.log(index, tr, $(tr).data("object"));
-			let name = "prescriptionVOList[" + index + "].";
-			$trmForm.append($("<input>").attr({
-				type:"hidden"
-				, name: name+"preCd"
-				, value:$(tr).children().eq(0).html().trim()
-			})).append($("<input>").attr({
-				type:"hidden"
-				, name: name+"preDetail"
-				, value:$(tr).children().eq(1).html().trim()
-			})).append($("<input>").attr({
-				type:"hidden"
-				, name: name+"preNt"
-				, value:$(tr).children().eq(2).children().val().trim()
-			})).append($("<input>").attr({
-				type:"hidden"
-				, name: name+"preTotal"
-				, value:$(tr).children().eq(3).children().val().trim()
-			})).append($("<input>").attr({
-				type:"hidden"
-				, name: name+"injcPthNm"
-				, value:$(tr).children().eq(4).html().trim()
-			})).append($("<input>").attr({
-				type:"hidden"
-				, name: name+"unit"
-				, value:$(tr).children().eq(5).html().trim()
-			})).append($("<input>").attr({
-				type:"hidden"
-				, name: name+"payTpNm"
-				, value:$(tr).children().eq(6).html().trim()
-			}));
+ 			let pre = {};
+ 			pre.preCd = $(tr).children().eq(0).html().trim();
+ 			pre.preDetail = $(tr).children().eq(1).html().trim();
+ 			pre.preNt = $(tr).children().eq(2).children().val().trim();
+ 			pre.preTotal = $(tr).children().eq(3).children().val().trim();
+ 			pre.injcPthNm = $(tr).children().eq(4).html().trim();
+ 			pre.unit = $(tr).children().eq(5).html().trim();
+ 			pre.payTpNm = $(tr).children().eq(6).html().trim();
+ 			
+ 			preArr.push(pre);
 		});
+		chartObject.prescriptionVOList = preArr;
 		
 		//film
+		let filmArr = [];
 		$.each(tbody_film.find("tr"), function(index, tr){
 			// console.log(index, tr);
-			let name = "filmOrderVOList[" + index + "].";
-			$trmForm.append($("<input>").attr({
-				type:"hidden"
-				, name: name+"filmCd"
-				, value:$(tr).children().eq(0).html().trim()
-			}));
+			let film = {
+					filmCd : $(tr).children().eq(0).html().trim()
+			};
+			filmArr.push(film);
 		});
+		chartObject.filmOrderVOList = filmArr;
 		
 		// detail
-		$trmForm.append($("<input>").attr({
-			type:"hidden"
-			, name: "mediRecord"
-			, value: $inputDetail.val()
-		}));
+		chartObject.mediRecord = $inputDetail.val()
 		
 		// 환자 접수 번호
-// 		$trmForm.append($("<input>").attr({
-// 			type:"hidden"
-// 			, name: "rcpNo"
-// 			, value: rcpNo
-// 		}));
 		
-		console.log($trmForm);
-		$trmForm.submit();
+		console.log(chartObject);
+		swal({
+			title : "진료차트 작성",
+			text : "저장하시겠습니까?",
+			icon : "info",
+			buttons : {
+				cancel : {
+					text : "아니오"
+					, value : false
+					, visible : true
+					, closeModal: true
+				}
+				, confirm : {
+					text : "네"
+					, value : true
+					, visible : true
+					, closeModal: true
+				}
+			}
+		}).then((result) => {
+			if (result){
+				//console.log(result);
+				f_submitTrmChart();
+			}
+		});
 		return false;
 	});
 	
@@ -709,11 +837,12 @@
 		$.ajax({
 			url : url,
 			method : "get",
-			contentType : "application/json;charset=UTF=8",
+			contentType : "application/json;charset=UTF-8",
+			dataType : "json",
 			success : function(resp) {
-				// console.log(resp);
+// 				console.log(resp);
 				f_modalOpen();
-				f_modalBody(resp.patientInfo);
+				f_modalBody(resp);
 			},
 			error : function(jqXHR, status, error) {
 				console.log(jqXHR);
@@ -724,6 +853,7 @@
 		return false;
 	});
 	
+	// 모달 이벤트
 	const modal = document.querySelector("#modal");
 	const modalBody = document.querySelector(".modal-body");
 	const f_modalOpen = () => {
@@ -739,6 +869,8 @@
  		modal.style.display="none"; 						
 	}
 	let $modalTitle = $('.modal-title');
+
+	// 환자 모달 body 만들기
 	let f_modalBody = (v_data) => {
 // 		console.log(v_data, v_data.size);
 // 		console.log(modalContent, $(modalContent));
@@ -757,54 +889,21 @@
 		);
 		table.addClass("table table-bordered");
 		$(modalBody).append(table);
-	}
-	
-	let f_resetList = function(){
+	}		
 		
-	}
-	
-	let f_list = (v_list, v_col) => {
-		let result = "";
-		let lastIndex = v_list.length - 1;
-		$(v_list).each(function(index){
-			result += v_list[index][v_col];
-			if(index == lastIndex){
-				return;
-			}
-			result += ", \n";
-		});
-		return result;
-	}
-	
-	let f_chartDetail = (v_data) => {
-		// console.log(v_data);
-		modalBody.innerHTML="";
-		$modalTitle.empty();
-		$modalTitle.html("진료차트상세");		
-		
-		let table = $("<table>").append(
-			$("<tr>").append($("<th>").html("진료차트코드"), $("<td>").html(v_data.trmCd))
-			, $("<tr>").append($("<th>").html("날짜"), $("<td>").html(v_data.trmDt))
-			, $("<tr>").append($("<th>").html("증상"), $("<td>").html(f_list(v_data.symptomVOList, "symCd")))
-			, $("<tr>").append($("<th>").html("진단"), $("<td>").html(f_list(v_data.diagHistoryVOList,"icdName")))
-			, $("<tr>").append($("<th>").html("처방"), $("<td>").html(f_list(v_data.prescriptionVOList,"preCd")))
-			, $("<tr>").append($("<th>").html("촬영"), $("<td>").html(f_list(v_data.filmOrderVOList,"filmCd")))
-			, $("<tr>").append($("<th>").html("기록"), $("<td>").html(v_data.mediRecord))
-		);
-		table.addClass("table table-bordered");
-		$(modalBody).append(table);
-	};
-	
 	// 진료차트 rcp 로 가져오기
 	let f_getChart = (v_rcpNo, v_function) => {
 		let url = "${pageContext.request.contextPath}/doctor/main/chart/"+v_rcpNo;
 		$.ajax({
 			url : url,
 			method : "get",
-			contentType : "application/json;charset=UTF=8",
+			//contentType : "application/json;charset=UTF-8",
+			dataType:"text",
 			success : function(resp) {
- 				// console.log(resp);
-				let data = resp.chartVO;
+ 				console.log("f_getChart : ",resp);
+ 				if(!resp) { return; }
+ 	
+				let data = JSON.parse(resp);
 				v_function(data);
 			},
 			error : function(jqXHR, status, error) {
@@ -815,34 +914,100 @@
 		});
 	}
 	
-	/* 환자의 이전 진료 차트 */
+	// 진료차트 상세
+	let $offTrmCd = $("#off-trmCd");
+	let $offTrmDt = $("#off-trmDt");
+	let $offRcpNo = $("#off-rcpNo");
+	let $offEmpNm = $("#off-empNm");
+	let $offTbodySym = $("#off-tbody-sym");
+	let $offTbodyDiag = $("#off-tbody-diag");
+	let $offTbodyPre = $("#off-tbody-pre");
+	let $offMediRecord = $("#off-mediRecord");
+	let $offTbodyFilm = $("#off-tbody-film");
+	let f_chartDetail = (v_data) => {
+
+		$offTrmCd.empty();
+		$offTrmDt.empty();
+		$offRcpNo.empty();
+		$offEmpNm.empty();
+		$offTbodySym.empty();
+		$offTbodyDiag.empty();
+		$offTbodyPre.empty(); 
+		$offMediRecord.empty();
+		$offTbodyFilm.empty();
+
+		$offTrmCd.html(v_data.trmCd);
+		$offTrmDt.html(v_data.trmDt);
+		$offRcpNo.html(v_data.rcpNo);
+		$offEmpNm.html(v_data.empNm);
+		
+		$offMediRecord.html(v_data.mediRecord);
+
+		let trTags = [];
+		$.each(v_data.symptomVOList, function(index, value){
+			let tr = $("<tr>").append(
+				$("<td>").html(value.symCd)
+				, $("<td>").html(value.symDetail)
+			);
+			trTags.push(tr);
+		});
+		$offTbodySym.append(trTags);
+
+		trTags = [];
+		$.each(v_data.diagHistroyVOList, function(index, value){
+			let tr = $("<tr>").append(
+				$("<td>").html(value.diseaseCd)
+				, $("<td>").html(value.icdName)
+				, $("<td>").html(value.operTf)
+				, $("<td>").html(value.physiotherapyTf)
+			);
+			trTags.push(tr);
+		});
+		$offTbodyDiag.append(trTags);
+
+		trTags = [];
+		$.each(v_data.prescriptionVOList, function(index, value){
+			let tr = $("<tr>").append(
+				$("<td>").html(value.preCd)
+				, $("<td>").html(value.preDetail)
+			);
+			trTags.push(tr);
+		});
+		$offTbodyPre.append(trTags);
+
+		trTags = [];
+		$.each(v_data.filmOrderVOList, function(index, value){
+			let tr = $("<tr>").append(
+				$("<td>").html(value.filmCd)
+				, $("<td>").html(value.filmDate)
+			);
+			trTags.push(tr);
+		});
+		$offTbodyFilm.append(trTags);
+	};
+
+	/* 환자의 이전 진료 차트 리스트 클릭 오프캔버스 */
 	let $chartListTable = $('#chartListTable').on('click', 'tr', function(event){
-		//console.log($(event.target).parent().data("chart"));
-// 		let v_data = $(event.target).parent().data("chart");
 		let data = $(this).data("chart");
-		//console.log(data);
-		f_modalOpen();
 		f_getChart(data.rcpNo, f_chartDetail);
 	});
+
 	
+	// 접수번호로 작성중인 차트 불러오기
 	let f_makeRecentChart = (v_data) => {
 		
-		console.log(v_data);
+		// console.log(v_data);
 		
 		tbody_diag.empty();
 		tbody_pre.empty();
 		tbody_sym.empty();
 		tbody_film.empty();
-		$inputDetail.empty();
+		$inputDetail.val("");
 		
 		if(!v_data){ return; }
 		
-		$trmForm.append($("<input>").attr({
-			type: "hidden"
-			, name: "trmCd"
-			, value: v_data.trmCd
-		}));
-		
+		chartObject.trmCd = v_data.trmCd;
+				
 		$(v_data.diagHistoryVOList).each(function(i,v){
 			// console.log(i,v);
 			if(!v.diseaseCd){ return; }
@@ -888,7 +1053,7 @@
 			tbody_film.append(
 				$("<tr>").append(
 					$("<td>").html(v.filmCd)
-					, $("<td>").html(v.filmCd)
+					, $("<td>").html(v.filmDate)
 			));
 		});
 		
@@ -901,21 +1066,25 @@
 		$.ajax({
 			url : url,
 			method : "get",
-			contentType : "application/json;charset=UTF=8",
+			contentType : "application/json;charset=UTF-8",
+			dataType : "json",
 			success : function(resp) {
-				// console.log(resp);
+				//console.log(resp);
 				$chartListTable.empty();
 				let trTags = [];
-				$.each(resp.chartList, function(index, value){
+				$.each(resp, function(index, value){
 					let tr = $("<tr>").append($("<td>").html(value.trmCd), $("<td>").html(value.trmDt));
 					tr.data("chart",value);
+// 					data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+					tr.attr("data-bs-toggle", "offcanvas")
+						.attr("data-bs-target", "#offcanvasRight")
+						.attr("aria-controls", "offcanvasRight");
 					trTags.push(tr);
 				});
 				$chartListTable.append(trTags);
 				
 				// 차트리스트가 하나 이상이면 현재 차트가 잇을수도
-				//console.log(resp.chartList.length);
-				if(resp.chartList.length > 0){
+				if(resp.length > 0){
 					f_getChart(rcpNo, f_makeRecentChart);
 				} 
 			},
@@ -927,40 +1096,47 @@
 		});
 	}	
 	
-	// 더블 클릭 햇을 시 진료기록엔 과거 진료 기록 리스트 
-	// 1. 작성된 진료차트가 잇는 경우 -> 불러오기 -> 수정
-	// 2. 진료차트가 없고 접수 번호만 잇다! -> 새로 입력
+	// rcp, chartObject 초기화
 	let rcpNo = -1;
 	let trmCd = -1;
+	// 대기 리스트에서 더블클릭
+	// 환자 이전 진료 기록 리스트 가져옴
+	// rcp로 작성중인 진료차트 있으면 가져옴
 	$waitTable.on('dblclick','tr',function(event){
 		// console.log(event.target);
-		$(this).siblings('tr').removeClass("dblclick-on");
 
 		let $tr = $(this);
+		$tr.siblings('tr').removeClass("dblclick-on");
 		rcpNo = $tr.data("rcpNo");
+		//console.log(rcpNo);
 		
 // 		$tr.toggleClass("dblclick-on");
 		$tr.addClass("dblclick-on");
-		$trmForm.empty();
-		$trmForm.append($("<input>").attr({
-				type: "hidden"
-				, name: "rcpNo"
-				, value: rcpNo
-		}));
+		
+		tbody_diag.empty();
+		tbody_pre.empty();
+		tbody_sym.empty();
+		tbody_film.empty();
+		$inputDetail.val("");
+		
+		chartObject = {
+				rcpNo : rcpNo
+		};
 		
 		f_readChartList($tr.find("a").html());
 	});
 	
 	// 대기 상태 selectbox 바꾸기
-	let $divSelect = $("#divSelect");
-	let $changeWait = $("#statusSelect").on('change',function(){
+	let $divSelect = $(".divSelect");
+	let $changeWait = $(".statusSelect").on('change',function(){
 		//console.log($divSelect.find("option:selected").val(), $divSelect.find("option:selected").text());
-		let dvCd = $divSelect.find("option:selected").val();
+// 		let dvCd = $divSelect.find("option:selected").val();
+		let dvCd = $(this).parents("tr").find(".divSelect").val();
 		let stCd = $(this).find("option:selected").val();
-		// console.log(dvCd, stCd);
+// 		console.log(dvCd, stCd);
 		// console.log($(this).parents().filter("tr").trigger("dblclick"));
 		$(this).parents().filter("tr").trigger("dblclick");
-		
+		console.log("rcpNo : ", rcpNo);
 		if(rcpNo != -1){
 			let url = "${pageContext.request.contextPath}/doctor/main/wait";
 			let data = {
@@ -968,13 +1144,18 @@
 					, "waitstCd" : stCd
 					, "divCd" : dvCd
 			}
+			//console.log("wait data",data);
 			$.ajax({
 				url : url,
 				method : "post",
-				data : data,
-				dataType : "application/json;charset=UTF=8",
+				data : JSON.stringify(data),
+				dataType : "text",	// 받는거
+				contentType : "application/json;charset=UTF-8",	//보내는거
+				beforeSend: function(xhr) {
+			           xhr.setRequestHeader(header, token);
+			    },
 				success : function(resp) {
-					console.log(resp);
+					//console.log("wait resp",resp);
 				},
 				error : function(jqXHR, status, error) {
 					console.log(jqXHR);
@@ -984,5 +1165,77 @@
 			});
 		}		
 	});
+
+	// 기초자료 그룹오더 리스트 리셋
+	let $groupBody = $("#group").find("tbody");
+	function f_reGOList(){
+		$.ajax({
+			url : "${pageContext.request.contextPath}/group/goList"
+			, dataType : "json"
+			, success : function(resp){
+				// console.log(resp);
+				$groupBody.empty();
+				let trTags = [];
+				$.each(resp, function(i, data){
+					let tr = $("<tr>").append(
+						$("<td>").html(data["goCd"])
+						, $("<td>").html(data["goKo"])
+					);
+					tr.data("object", data);
+					trTags.push(tr);
+				});
+				$groupBody.append(trTags);
+			}, error : function(jqxhr, status, error){
+				console.log(jqxhr);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	};
+	f_reGOList();
+
+	let f_applyGO = (v_data) => {		
+		if(!v_data){ return; }
+						
+		if(v_data["goDiseaseVOList"][0].icd != null){
+			$.each(v_data.goDiseaseVOList, function(i,v){
+				// console.log(i,v);
+				tbody_diag.append(
+					$("<tr>").append(
+						$("<td>").html(v.icd)
+						, $("<td>").html(v.icdName)
+						, $("<td>").html("<input type='checkbox' name='operTf' />")
+						, $("<td>").html("<input type='checkbox' name='physiotherapyTf' />")
+				));	
+			});
+		}
+		
+		if(v_data["goPrescriptionVOList"][0].preCd != null){
+			$.each(v_data.goPrescriptionVOList, function(i,v){
+				//console.log(i,v);
+				tbody_pre.append(
+					$("<tr>").append(
+						$("<td>").html(v.preCd)
+						, $("<td>").html(v.preDetail)
+						, $("<td>").html($("<input>").attr("type", "number").attr("min","1"))
+						, $("<td>").html($("<input>").attr("type", "number").attr("min","1"))
+						, $("<td>").html(v.injcPthNm)
+						, $("<td>").html(v.unit)
+						, $("<td>").html(v.payTpNm)
+				));	
+			});
+		}
+
+		if(v_data["goSymptomVOList"][0].symCd != null){
+			$.each(v_data.goSymptomVOList, function(i,v){
+				tbody_sym.append(
+					$("<tr>").append(
+						$("<td>").html(v.symCd)
+						, $("<td>").html(v.symDetail)
+				));
+			});
+		}
+	};
+	
 	
 </script>

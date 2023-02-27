@@ -14,7 +14,7 @@ public class WardVO {
 	private Integer wrRno;
 	private String trmCd;
 	
-	private Integer paNo;
+	private String paNo;
 	private String paName;
 	private String diseaseCd;
 	private String icdName;

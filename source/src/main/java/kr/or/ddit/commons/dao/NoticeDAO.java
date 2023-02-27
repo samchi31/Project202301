@@ -1,0 +1,38 @@
+package kr.or.ddit.commons.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.commons.vo.NoticeVO;
+
+/**
+ * @author 장예지
+ * @since 2023. 2. 13.
+ * @version 1.0
+ * @see javax.servlet.http.HttpServlet
+ * 
+ *      <pre>
+ * [[개정이력(Modification Information)]]
+ * 수정일                          수정자               수정내용
+ * --------     --------    ----------------------
+ * 2023. 2. 13.      장예지       최초작성
+ * Copyright (c) 2023 by DDIT All right reserved
+ *      </pre>
+ */
+@Mapper
+public interface NoticeDAO {
+	/**
+	 * 공지사항 조회
+	 * @param noticeVO
+	 * @return
+	 */
+	public List<NoticeVO> selectNoticeList (NoticeVO noticeVO);
+	
+	/**
+	 * 공지사항 Insert
+	 * @param noticeVO
+	 * @return
+	 */
+	public int insertNotice(NoticeVO noticeVO);
+}

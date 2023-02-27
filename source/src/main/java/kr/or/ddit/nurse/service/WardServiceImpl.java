@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 import kr.or.ddit.commons.vo.HospitalizationVO;
 import kr.or.ddit.commons.vo.IntakeOutputVO;
 import kr.or.ddit.commons.vo.IntakeVO;
+import kr.or.ddit.commons.vo.OutputVO;
 import kr.or.ddit.commons.vo.VitalVO;
 import kr.or.ddit.nurse.dao.WardDAO;
+import kr.or.ddit.nurse.vo.DietCategoryVO;
+import kr.or.ddit.nurse.vo.DietRecordVO;
 import kr.or.ddit.nurse.vo.IntakeCategoryVO;
 import kr.or.ddit.nurse.vo.NrecVO;
 import kr.or.ddit.nurse.vo.OutputCategoryVO;
@@ -73,6 +76,11 @@ public class WardServiceImpl implements WardService {
 	}
 
 	@Override
+	public int outputCreate(OutputVO output) {
+		return wardDAO.insertOutput(output);
+	}
+	
+	@Override
 	public List<IntakeCategoryVO> retrieveIntakeList() {
 		return wardDAO.selectIntakeCategory();
 	}
@@ -81,6 +89,22 @@ public class WardServiceImpl implements WardService {
 	public List<OutputCategoryVO> retrieveOutputList() {
 		return wardDAO.selectOutputCategory();
 	}
+
+	@Override
+	public List<DietCategoryVO> retrieveDietCateList() {
+		return wardDAO.selectDietCategory();
+	}
+
+	@Override
+	public int dietCreate(DietRecordVO diet) {
+		return wardDAO.insertDiet(diet);
+	}
+
+	@Override
+	public List<DietRecordVO> retrieveDietList(int hsptNo) {
+		return wardDAO.selectDietList(hsptNo);
+	}
+
 
 	
 

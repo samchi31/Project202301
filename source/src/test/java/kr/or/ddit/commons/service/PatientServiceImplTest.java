@@ -22,15 +22,15 @@ public class PatientServiceImplTest extends AbstractTestCase{
 	
 	@Before
 	public void setUp() throws Exception {
-		vo.setPaNo(102);
+//		vo.setPaNo(102);
 		vo.setPaName("테스트");
-		vo.setPaReg(1);
+//		vo.setPaReg(1);
 		vo.setPaHp("010");
-		vo.setPaPrn("0");
+//		vo.setPaPrn("0");
 		vo.setPaZip(1);
 		vo.setPaAdd1("집");
 		vo.setPaAdd2("집");
-		vo.setPaPiyn("1");
+//		vo.setPaPiyn("1");
 	}
 
 	@Test

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans 
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:b="http://www.springframework.org/schema/beans"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 비밀번호 암호화 -->
+	<!-- = PasswordEncoderFactories.createDelegatingPasswordEncoder() -->
+	<b:bean id="passwordEncoder" class="org.springframework.security.crypto.factory.PasswordEncoderFactories"
+		factory-method="createDelegatingPasswordEncoder" 
+	/>
+	
+	<!-- DaoAuthenticationProvider 빈 등록 -->
+	<b:bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider"
+		p:userDetailsService-ref="userDetailService"
+		p:passwordEncoder-ref="passwordEncoder"
+		p:hideUserNotFoundExceptions="false"
+	/>
+	 
+	<!-- 인증객체 관리자 -->
+	<authentication-manager id="authenticationManager">
+		<authentication-provider ref="daoAuthenticationProvider" />
+	</authentication-manager>
+	 
+	 <!-- filterchain 생성 -->
+	<http auto-config="true" use-expressions="true">
+		<form-login
+			login-page="/"
+			login-processing-url="/login"
+			username-parameter="empNo"
+			password-parameter="empPw"
+		/>
+		<logout logout-url="/logout" logout-success-url="/" invalidate-session="true"/>
+		
+		<!-- pattern="서블릿주소" -->		
+		<intercept-url pattern="/" access="permitAll"/>
+		<intercept-url pattern="/login" access="isAnonymous()"/>
+		<intercept-url pattern="/menu" access="isAuthenticated()"/>
+		
+		<intercept-url pattern="/doctor/**" access="hasAnyRole('DOC', 'HEAD')"/>
+		<intercept-url pattern="/radiology/**" access="hasAnyRole('RAD', 'HEAD')"/>
+		<intercept-url pattern="/receiption/**" access="hasAnyRole('HEAD','REC', 'HEAD')"/>
+		<intercept-url pattern="/pt/**" access="hasAnyRole('PHY', 'HEAD')"/>
+		<intercept-url pattern="/nurse/**" access="hasAnyRole('CHN','NUR', 'HEAD')"/>
+		
+		
+		<csrf disabled="false"/>
+		<!-- <csrf disabled="true"/> -->
+		
+		<remember-me services-ref="rememberMeServices" key="rememberMeKey1"/>
+	</http>
+	
+	<!-- p:createTableOnStartup="true" : 최초 서버 구동시 1회 사용함.-->
+	<b:bean id="tokenRepo" class="org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl" 
+		p:dataSource-ref="dataSource"
+	/>
+	
+	<b:bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices" 
+		c:tokenRepository-ref="tokenRepo"
+		c:userDetailsService-ref="userDetailService"
+		c:key="rememberMeKey1"
+		p:parameter="rememberMe"
+		p:cookieName="rememberCookie"
+		p:tokenValiditySeconds="#{60*60*24*7}"
+	/>
+	
+	<b:bean id="compositeLogoutHandler" class="org.springframework.security.web.authentication.logout.CompositeLogoutHandler">
+		<b:constructor-arg name="logoutHandlers">
+			<b:array>
+				<b:ref bean="rememberMeServices"/>
+				<b:bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" 
+					p:clearAuthentication="true"
+					p:invalidateHttpSession="true"
+				/>
+			</b:array>
+		</b:constructor-arg>
+	</b:bean>
+</b:beans>

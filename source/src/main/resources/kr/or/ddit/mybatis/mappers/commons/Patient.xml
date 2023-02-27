@@ -37,15 +37,12 @@
 				 SELECT 
 						  P.PA_NO         /* 환자번호 */ 
 						, P.PA_NAME
-						, P.PA_REG1
-						, P.PA_REG2
+						, P.PA_REG
 						, P.PA_HP
-						, P.PA_INYN
-						, P.PA_PRN
 						, P.PA_ZIP
 						, P.PA_ADD1
 						, P.PA_ADD2
-						, P.PA_PIYN              
+						, p.PA_SEX             
 				  FROM PATIENT P  
 				 <include refid="searchFrag" />
 			  ORDER BY ROWID DESC   
@@ -62,10 +59,10 @@
 	
 	<select id="selectPatient" parameterType="int" resultMap="patientMap">
 		SELECT
-    		PA_NO, PA_NAME, PA_REG1
-    	  , PA_REG2, PA_HP,PA_INYN
-    	  , PA_PRN, PA_ZIP, PA_ADD1
-    	  , PA_ADD2, PA_PIYN
+    		PA_NO, PA_NAME, PA_REG
+    	  , PA_HP
+		  , PA_ZIP, PA_ADD1
+    	  , PA_ADD2
 		  FROM PATIENT
 		 WHERE PA_NO = #{paNo}
 	</select>
@@ -74,27 +71,19 @@
 		INSERT INTO patient (
 		    PA_NO
 		    , PA_NAME
-		    , PA_REG1
-		    , PA_REG2
+		    , PA_REG
 		    , PA_HP
-		    , PA_INYN
-		    , PA_PRN
 		    , PA_ZIP
 		    , PA_ADD1
 		    , PA_ADD2
-		    , PA_PIYN
 		) VALUES (
 		    #{paNo,jdbcType=NUMERIC}
 			, #{paName,jdbcType=VARCHAR}
-			, #{paReg1,jdbcType=NUMERIC}
-			, #{paReg2,jdbcType=NUMERIC}
+			, #{paReg,jdbcType=NUMERIC}
 			, #{paHp,jdbcType=VARCHAR}
-			, #{paInyn,jdbcType=CHAR}
-			, #{paPrn,jdbcType=CHAR}
 			, #{paZip,jdbcType=NUMERIC}
 			, #{paAdd1,jdbcType=VARCHAR}
 			, #{paAdd2,jdbcType=VARCHAR}
-			, #{paPiyn,jdbcType=CHAR}
 		)
 	</insert>
 	
@@ -103,15 +92,11 @@
     	   SET
    	   		PA_NO = #{paNo,jdbcType=NUMERIC}
 			, PA_NAME = #{paName,jdbcType=VARCHAR}
-			, PA_REG1 = #{paReg1,jdbcType=NUMERIC}
-			, PA_REG2 = #{paReg2,jdbcType=NUMERIC}
+			, PA_REG = #{paReg,jdbcType=NUMERIC}
 			, PA_HP = #{paHp,jdbcType=VARCHAR}
-			, PA_INYN = #{paInyn,jdbcType=CHAR}
-			, PA_PRN = #{paPrn,jdbcType=CHAR}
 			, PA_ZIP = #{paZip,jdbcType=NUMERIC}
 			, PA_ADD1 = #{paAdd1,jdbcType=VARCHAR}
 			, PA_ADD2 = #{paAdd2,jdbcType=VARCHAR}
-			, PA_PIYN = #{paPiyn,jdbcType=CHAR}
     	 WHERE PA_NO = #{paNo}
 	</update>
 	

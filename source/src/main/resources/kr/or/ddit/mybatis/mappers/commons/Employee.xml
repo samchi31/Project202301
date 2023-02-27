@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.dao.MemberDAO">
+
+	<select id="selectMember" parameterType="int" resultType="EmployeeVO">
+		select 	a.*, b. posi_name
+		from 	employee a left outer join position b on (a.posi_cd = b.posi_cd)
+		where 	a.emp_no = #{empNo}
+	</select>
+</mapper>

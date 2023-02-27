@@ -14,10 +14,10 @@ import lombok.ToString;
 public class GroupOrderVO {
 	private String goCd;
 	private String goKo;
-	private String field;
-	private String trmCd;
 	
 	private List<GODiseaseVO> goDiseaseVOList;
 	private List<GOPrescriptionVO> goPrescriptionVOList;
-	private List<GOSymptomVO> goSymptomVO;
+	private List<GOSymptomVO> goSymptomVOList;
+	
+	private String prevGoCd;
 }

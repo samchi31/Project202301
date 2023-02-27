@@ -21,6 +21,7 @@ import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
 import kr.or.ddit.commons.vo.WaitStatusVO;
 import kr.or.ddit.doctor.dao.DoctorDAO;
+import kr.or.ddit.doctor.dao.GroupOrderMapper;
 import kr.or.ddit.doctor.vo.GroupOrderVO;
 
 @Service
@@ -28,6 +29,9 @@ public class DoctorServiceImpl implements DoctorService{
 
 	@Inject
 	DoctorDAO dao;
+	
+	@Inject
+	GroupOrderMapper goMapper;
 	
 	@Override
 	public List<DiseaseVO> retrieveDisList() {
@@ -46,11 +50,11 @@ public class DoctorServiceImpl implements DoctorService{
 
 	@Override
 	public List<GroupOrderVO> retrieveGOList() {
-		return dao.selectGOList();
+		return goMapper.selectGOList();
 	}
 
 	@Override
-	public TrmChartVO retrieveTrmChart(int rcpNo) {
+	public TrmChartVO retrieveTrmChart(String rcpNo) {
 		/* 
 		 * 환자번호에 해당하는 접수번호를 얻고
 		 * 접수번호로 해당하는 진료차트 번호 조회
@@ -60,7 +64,7 @@ public class DoctorServiceImpl implements DoctorService{
 	}
 
 	@Override
-	public List<TrmChartVO> retrieveTrmChartList(int paNo) {
+	public List<TrmChartVO> retrieveTrmChartList(String paNo) {
 		/*
 		 * 접수 번호에 해당하는 진료차트 전체 조회
 		 */
@@ -79,7 +83,7 @@ public class DoctorServiceImpl implements DoctorService{
 	}
 
 	@Override
-	public PatientVO retrievePaInfo(int paNo) {
+	public PatientVO retrievePaInfo(String paNo) {
 		return dao.selectPaInfo(paNo);
 	}
 
@@ -112,7 +116,7 @@ public class DoctorServiceImpl implements DoctorService{
 		 */
 		
 		int rowcnt = 0;
-		if(trmChartVO.getDiagHistoryVOList() != null) {
+		if(trmChartVO.getDiagHistoryVOList() != null && trmChartVO.getDiagHistoryVOList().size() > 0) {
 			rowcnt = dao.insertDiagList(trmChartVO);
 		}
 		
@@ -125,7 +129,7 @@ public class DoctorServiceImpl implements DoctorService{
 		 * 작성된 진료차트 코드로 증상내역 작성
 		 */
 		int rowcnt = 0;
-		if(trmChartVO.getSymptomVOList() != null) {
+		if(trmChartVO.getSymptomVOList() != null && trmChartVO.getSymptomVOList().size() > 0) {
 			rowcnt = dao.insertSymList(trmChartVO);
 		}
 		return rowcnt;
@@ -137,7 +141,7 @@ public class DoctorServiceImpl implements DoctorService{
 		 * 작성된 진료차트 코드로 처방내역 작성
 		 */
 		int rowcnt = 0;
-		if(trmChartVO.getPrescriptionVOList() != null) {
+		if(trmChartVO.getPrescriptionVOList() != null && trmChartVO.getPrescriptionVOList().size() > 0) {
 			rowcnt = dao.insertPreList(trmChartVO);
 		}
 		return rowcnt;
@@ -149,7 +153,7 @@ public class DoctorServiceImpl implements DoctorService{
 		 * 작성된 진료차트 코드로 영상촬영오더 내역 작성
 		 */
 		int rowcnt = 0;
-		if(trmChartVO.getFilmOrderVOList() != null) {
+		if(trmChartVO.getFilmOrderVOList() != null && trmChartVO.getFilmOrderVOList().size() > 0) {
 			rowcnt = dao.insertRadiList(trmChartVO);
 		}
 		return rowcnt;
@@ -178,6 +182,13 @@ public class DoctorServiceImpl implements DoctorService{
 		// trmCd에 해당하는 진료차트 상세기록 수정
 		// trmCd에 해당하는 진단, 처방, 증상, 촬영오더내역 삭제
 		// 기존 trmCd로 새로 진단, 처방, 증상, 촬영오더내역 입력
+		
+		// 수납완료된 진료차트인 경우 작성 안됨 kkk 
+		WaitStatusVO ws = dao.selectWSComplete(trmChartVO.getRcpNo());
+		if(ws.getWaitstCd().equals("WS003")) {
+			return 0;
+		}
+		
 		
 		int rowcnt = dao.updateTrmChart(trmChartVO);
 		

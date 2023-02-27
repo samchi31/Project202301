@@ -29,7 +29,7 @@ td{
 	margin: 10px;
 }
 .ward-wrapper{
-	height: 53.25rem;
+	height: 51.5rem;
 }
 
 .patient-info{
@@ -112,6 +112,10 @@ td{
 	height: 2.5rem;
 }
 
+.patient-info-in{
+	width:100%;
+}
+
 /*tab css*/
 	.tab{ margin:10px; overflow:hidden;}
 	.tabnav{font-size:0;}
@@ -127,7 +131,6 @@ td{
 </style>
 
 <script>
-
 /* 현재 입원중인 환자목록을 띄워줌 */
 let wardPatientList = function(){
 	$.ajax({
@@ -167,8 +170,6 @@ wardPatientList();
 
 /* 현재 입원중인 환자의 상세정보 출력  */
 function wardPatientDetail(hsptNo){
-	
-	
 	let data = {
 			hsptNo : hsptNo
 	}
@@ -183,6 +184,12 @@ function wardPatientDetail(hsptNo){
 		method : "post",
 		data : JSON.stringify(data),
 		contentType: "application/json;charset=utf-8",
+		beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+    	},
+		beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+    	},
 		dataType : "json",
 		success : function(result) {
 			$('#hsptNo').val(result.hsptNo);
@@ -216,6 +223,7 @@ function wardPatientDetail(hsptNo){
 			nrec_list(hsptNo);
 			vital_list(hsptNo);
 			io_list(hsptNo, v_paName);
+			diet_list(hsptNo);
 
 		},
 		error : function(jqXHR, status, error) {
@@ -248,6 +256,9 @@ function nrec_insert(){
 			method : "post",
 			data : JSON.stringify(data),
 			contentType: "application/json;charset=utf-8",
+			beforeSend: function(xhr) {
+	            xhr.setRequestHeader(header, token);
+	    	},
 			dataType : "json",
 			success : function(result) {
 		        // 해당 환자의 간호기록 리스트 띄우기
@@ -255,10 +266,6 @@ function nrec_insert(){
 		        
 				swal("입력성공", "간호기록이 등록되었습니다.", 'success')
 				
-				// 입력태그 값 초기화
-// 				$("#nursingRecord_hsptNo").val("");
-// 				$("#nursingRecord_paNo").val("");
-// 		        $("#nursingRecord_paName").val("");
 		        $("#nursingRecord_textarea").val("");
 		        
 			},
@@ -270,6 +277,87 @@ function nrec_insert(){
 		});	
 	}
 }
+
+/* 식이 입력 */
+function diet_insert(){
+	let diet_hsptNo = document.querySelector('#diet_hsptNo');
+	let diet_paNo = document.querySelector('#diet_paNo');
+	let diet_paName = document.querySelector('#diet_paName');
+	let diet_date = document.getElementById('diet_date');
+	let diet_selectTime = document.getElementById('dietSelectTime');
+	let diet_cateSelect = document.getElementById('dietCateSelect');
+	let diet_textarea = document.getElementById('diet_textarea');
+	
+	let v_diet_hsptNo = diet_hsptNo.value;
+	let v_diet_paNo = diet_paNo.value;
+	let v_diet_paName = diet_paName.value;
+	let v_diet_date = diet_date.value;
+	let v_diet_selectTime = diet_selectTime.options[diet_selectTime.selectedIndex].value;
+	let v_diet_cateSelect = diet_cateSelect.options[diet_cateSelect.selectedIndex].value;
+	let v_diet_textarea = diet_textarea.value;
+	
+	let data = {
+		hsptNo : v_diet_hsptNo,
+		dietCateCd : v_diet_cateSelect,
+		dietDate : v_diet_date,
+		dietTime : v_diet_selectTime,
+		dietNe : v_diet_textarea
+	}
+	
+	let check = true;
+	let errorText = '';
+	
+	if(!v_diet_date){
+		errorText = '날짜를 선택해주세요.';
+		check = false;
+		$('#dietDateError').html(errorText);
+	} else if(v_diet_date){
+		$('#dietDateError').html('');
+	}
+	
+	if(v_diet_cateSelect=="choice"){
+		errorText = '항목을 선택해주세요.';
+		check = false;
+		$('#dietCateError').html(errorText);
+	} else if(v_diet_cateSelect!="choice"){
+		$('#dietCateError').html('');
+	}
+	
+	if(!v_diet_hsptNo){
+		swal("입력실패", "해당 환자의 입퇴원 번호를 클릭해주세요", 'warning')		
+		} else if(check){
+			$.ajax({
+				url : "dietInsert",
+				method : "post",
+				data : JSON.stringify(data),
+				contentType: "application/json;charset=utf-8",
+				beforeSend: function(xhr) {
+		            xhr.setRequestHeader(header, token);
+		    	},
+				dataType : "json",
+				success : function(result) {
+					if(result == 1){
+						swal("입력성공","식이 입력이 성공했습니다.", "success");
+						/* io리스트 다시 띄우기  */
+						wardPatientDetail(v_diet_hsptNo);
+						/* input창 초기화 */
+						$("#diet_date").val('');
+						$("#dietCateSelect").val('');
+						
+					}else{
+						swal("입력실패","식이 입력이 실패했습니다.", "error");
+					}
+				},
+				error : function(jqXHR, status, error) {
+					console.log(jqXHR);
+					console.log(status);
+					console.log(error);
+				}
+			});
+		}
+	
+}
+
 /* 바이탈 입력  */
 function vital_insert(){
 	let vital_hsptNo = document.querySelector('#vital_hsptNo');
@@ -348,10 +436,13 @@ function vital_insert(){
 			method : "post",
 			data : JSON.stringify(data),
 			contentType: "application/json;charset=utf-8",
+			beforeSend: function(xhr) {
+	            xhr.setRequestHeader(header, token);
+	    	},
 			dataType : "json",
 			success : function(result) {
 				swal("입력성공","바이탈 입력이 성공했습니다.", "success");
-				vital_list(hsptNo);
+				wardPatientDetail(vital_hsptNo.value);
 				
 				$("#vital_tmp").val("");
 				$("#vital_pls").val("");
@@ -369,6 +460,44 @@ function vital_insert(){
 	
 }
 
+function diet_list(hsptNo){
+	let data = {
+			hsptNo : hsptNo
+	}
+	
+	$.ajax({
+		url : "dietList",
+		method : "post",
+		data : JSON.stringify(data),
+		contentType: "application/json;charset=utf-8",
+		beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+    	},
+		dataType : "json",
+		success : function(result) {
+			let trtags = [];
+			$.each(result, function(i,v){
+				let trtag = $("<tr>").append(
+								$("<td>").html(v.hsptNo)
+								, $("<td>").html(v.paName)
+								, $("<td>").html(v.dietList[i].dietCateNm)
+								, $("<td>").html(v.dietList[i].dietDate)
+								, $("<td>").html(v.dietList[i].dietTime)
+								, $("<td>").html(v.dietList[i].dietNe)
+								, $("<td>").html(v.empNm)
+							);
+				trtags.push(trtag);	
+			});
+			$("#dietTbody").html(trtags);
+		},
+		error : function(jqXHR, status, error) {
+			console.log(jqXHR);
+			console.log(status);
+			console.log(error);
+		}
+	});
+}
+
 /* 간호기록 리스트 출력  */
 function nrec_list(hsptNo){
 	let data = {
@@ -380,6 +509,9 @@ function nrec_list(hsptNo){
 		method : "post",
 		data : JSON.stringify(data),
 		contentType: "application/json;charset=utf-8",
+		beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+    	},
 		dataType : "json",
 		success : function(result) {
 			let trTags = [];
@@ -387,9 +519,9 @@ function nrec_list(hsptNo){
                let trTag = $("<tr>")
                            .append(
                               $("<td>").html(v.nrecNo)    
-                              , $("<td>").html(v.empNm)        
                               , $("<td>").html(v.paName)     
                               , $("<td>").html(v.nrecCont)
+                              , $("<td>").html(v.empNm)        
                               , $("<td>").html(v.nrecDate)
                            );
                trTags.push(trTag)
@@ -415,6 +547,9 @@ function vital_list(hsptNo){
 		method : "post",
 		data : JSON.stringify(data),
 		contentType: "application/json;charset=utf-8",
+		beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+    	},
 		dataType : "json",
 		success : function(result) {
 			let trTags = [];
@@ -427,12 +562,12 @@ function vital_list(hsptNo){
                	let trTag = $("<tr>")
                            .append(
                               $("<td>").html(v.vtNo)    
-                              , $("<td>").html(result[0].empNm)        
                               , $("<td>").html(result[0].paName)     
                               , $("<td>").html(v.vtTmp)
                               , $("<td>").html(v.vtPls)
                               , $("<td>").html(v.vtBp)
                               , $("<td>").html(v.vtRp)
+                              , $("<td>").html(result[0].empNm)        
                               , $("<td>").html(v.vtDate)
                               , $("<td>").html(v.vtNe)
                            );
@@ -449,6 +584,7 @@ function vital_list(hsptNo){
 	
 }
 
+/* io 리스트 출력 */
 function io_list(hsptNo, paName){
 	let data = {
 			hsptNo : hsptNo
@@ -459,23 +595,46 @@ function io_list(hsptNo, paName){
 		method : "post",
 		data : JSON.stringify(data),
 		contentType: "application/json;charset=utf-8",
+		beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+    	},
 		dataType : "json",
 		success : function(result) {
-			console.log(result);
 			let trTags = [];
 			let optionTags = [];
-			let optionTag = '';
-            $.each(result, function(i, v){
-               let trTag = $("<tr>")
+			let optionTag = $("<option>").attr("value","choice").append('선택');
+			optionTags.push(optionTag);
+			
+			let intakeCapa;
+			let outputCapa;
+			let io;
+            
+			$.each(result, function(i, v){
+				intakeCapa = 0;
+				outputCapa = 0;
+				$.each(v.intakeList, function(j, intake){
+            		if(intake.intakeCapa){
+            			intakeCapa += parseInt(intake.intakeCapa);
+            		}					
+				});
+				$.each(v.outputList, function(k, output){
+            		if(output.outputCapa){
+            			outputCapa += parseInt(output.outputCapa);
+            		}					
+				});
+				
+				io = intakeCapa-outputCapa;
+				let trTag = $("<tr>")
                            .append(
                               $("<td>").html(v.hsptNo)    
                               , $("<td>").html(v.ioDate)        
                               , $("<td>").html(paName)     
-                              , $("<td>").html()
-                              , $("<td>").html()
-                              , $("<td>").html()
+                              , $("<td>").html(io)
+                              , $("<td>").html(intakeCapa)
+                              , $("<td>").html(outputCapa)
                               , $("<td>").html()
                            );
+				
                trTags.push(trTag);
                
                optionTag = $("<option>").append(v.ioDate);
@@ -495,51 +654,53 @@ function io_list(hsptNo, paName){
 </script>
 <body>
 	<div class="ward-wrapper">
-		<div class="patient-info card ward-div">
-			<h4>환자 정보</h4>
-		    	<div class="form-group">
-				    <label class="ward_title" for="hsptNo">입퇴원 번호</label>
-				    <input type="text" name="hsptNo" id="hsptNo" class="ward_input" readonly="readonly" />
-				</div>
-		    	<div class="form-group">
-				    <label class="ward_title" for="paNo">환자번호</label>
-				    <input type="text" name="paNo" id="paNo" class="ward_input" readonly="readonly" />
-				</div>
-                <div class="form-group">
-				    <label class="ward_title" for="paName">환자명</label>
-				    <input type="text" name="paName" id="paName" class="ward_input" readonly="readonly" />
-				</div>
-				<div class="form-group">
-				    <label class="ward_title" for="paReg">생년월일</label>
-				    <input type="text" name="paReg" id="paReg" class="ward_input" readonly="readonly">
-				</div>
-                <div class="form-group">
-				   	<label class="ward_title" for="empNm">담당의사</label>
-				    <input type="text" name="empNm" id="empNm" class="ward_input" readonly="readonly" />
-				</div>
-				<div class="form-group">
-				    <label class="ward_title" for="hsptInDt">입원일자</label>
-				    <input type="text" name="hsptInDt" id="hsptInDt" class="ward_input" readonly="readonly" />
-				</div>
-                <div class="form-group">
-				    <label class="ward_title" for="pwDays">재원일수</label>
-				    <input type="text" class="ward_input" name="pwDays" id="pwDays" readonly="readonly" />
-				</div>
-                <div class="form-group">
-				    <label class="ward_title" for="paHp">연락처</label>
-				    <input type="text" name="paHp" id="paHp" class="ward_input" readonly="readonly" />
-				</div>
-                <div class="form-group">
-				    <label class="ward_title" for="mediRecord">입원 메모</label>
-				    <textarea class="ward_input" id="mediRecord" readonly="readonly"></textarea>
-				</div>
+		<div class="patient-info card-grid ward-div">
+			<div class="patient-info-in">
+				<h4>환자 정보</h4>
+			    	<div class="form-group">
+					    <label class="ward_title" for="hsptNo">입퇴원 번호</label>
+					    <input type="text" name="hsptNo" id="hsptNo" class="ward_input" readonly="readonly" />
+					</div>
+			    	<div class="form-group">
+					    <label class="ward_title" for="paNo">환자번호</label>
+					    <input type="text" name="paNo" id="paNo" class="ward_input" readonly="readonly" />
+					</div>
+	                <div class="form-group">
+					    <label class="ward_title" for="paName">환자명</label>
+					    <input type="text" name="paName" id="paName" class="ward_input" readonly="readonly" />
+					</div>
+					<div class="form-group">
+					    <label class="ward_title" for="paReg">생년월일</label>
+					    <input type="text" name="paReg" id="paReg" class="ward_input" readonly="readonly">
+					</div>
+	                <div class="form-group">
+					   	<label class="ward_title" for="empNm">담당의사</label>
+					    <input type="text" name="empNm" id="empNm" class="ward_input" readonly="readonly" />
+					</div>
+					<div class="form-group">
+					    <label class="ward_title" for="hsptInDt">입원일자</label>
+					    <input type="text" name="hsptInDt" id="hsptInDt" class="ward_input" readonly="readonly" />
+					</div>
+	                <div class="form-group">
+					    <label class="ward_title" for="pwDays">재원일수</label>
+					    <input type="text" class="ward_input" name="pwDays" id="pwDays" readonly="readonly" />
+					</div>
+	                <div class="form-group">
+					    <label class="ward_title" for="paHp">연락처</label>
+					    <input type="text" name="paHp" id="paHp" class="ward_input" readonly="readonly" />
+					</div>
+	                <div class="form-group">
+					    <label class="ward_title" for="mediRecord">입원 메모</label>
+					    <textarea class="ward_input" id="mediRecord" readonly="readonly"></textarea>
+					</div>
+			</div>
 		</div>
-		<div class="patient-manage card ward-div">
+		<div class="patient-manage card-grid ward-div">
 			<h4>환자관리</h4>
 			<div id="patient-manage-in">
-				<table class="table table-bordered table-hover">
-					<thead>
-						<tr class="table-primary">
+				<table class="table-blue">
+					<thead class="fixedHeader">
+						<tr>
 							<th>입퇴원번호</th>
 							<th>병실</th>
 							<th>병상</th>
@@ -553,7 +714,7 @@ function io_list(hsptNo, paName){
 			</div>
 		</div>
 		<div class="ward-order-container ward-div">
-			<div class="ward-order-item1 card ward-div">
+			<div class="ward-order-item1 card-grid ward-div">
 				<div id="ward-order-top">
 					<h4 id='ward-order-title'>병동order</h4>
 					<input style="display:none;" class="btn_blue" id="io-register" data-bs-target="#layerpop" type="button" value="IO생성">		
@@ -567,11 +728,25 @@ function io_list(hsptNo, paName){
 				    </ul>
 				    <div class="tabcontentWrap">
 					    <div class="tabcontent">
-					      <div id="diet"></div>
+					      <div id="diet">
+							<table class="table-blue">
+									<thead class="fixedHeader">
+										<tr>
+											<th>번호</th>
+											<th>환자명</th>
+											<th>항목명</th>
+											<th>날짜</th>
+											<th>시간</th>
+											<th>비고</th>
+											<th>작성자</th>
+									</thead>
+									<tbody id='dietTbody'></tbody>
+							</table>
+					      </div>
 					      <div id="io">
-					      	<table class="table table-bordered table-hover">
-					      		<thead>
-					      			<tr class="table-primary">
+					      	<table class="table-blue">
+					      		<thead class="fixedHeader">
+					      			<tr>
 					      				<th>입퇴원번호</th>
 					      				<th>날짜</th>
 					      				<th>환자명</th>
@@ -584,16 +759,16 @@ function io_list(hsptNo, paName){
 					      	</table>
 					      </div>
 					      <div id="vital">
-					      	<table class="table table-bordered table-hover">
-					      		<thead>
-					      			<tr class="table-primary">
+					      	<table class="table-blue">
+					      		<thead class="fixedHeader">
+					      			<tr>
 					      				<th>번호</th>
-					      				<th>작성자</th>
 					      				<th>환자명</th>
 					      				<th>체온</th>
 					      				<th>맥박</th>
 					      				<th>혈압</th>
 					      				<th>호흡수</th>
+					      				<th>작성자</th>
 					      				<th>날짜</th>
 					      				<th>비고</th>
 					      			</tr>
@@ -602,13 +777,13 @@ function io_list(hsptNo, paName){
 					      	</table>
 					      </div>
 					      <div id="nursingrecord">
-					      	<table class="table table-bordered table-hover">
-					      		<thead>
-					      			<tr class="table-primary">
+					      	<table class="table-blue">
+					      		<thead class="fixedHeader">
+					      			<tr>
 					      				<th>번호</th>
-					      				<th>작성자</th>
 					      				<th>환자명</th>
 					      				<th>내용</th>
+					      				<th>작성자</th>
 					      				<th>날짜</th>
 					      			</tr>
 					      		</thead>
@@ -619,9 +794,60 @@ function io_list(hsptNo, paName){
 					</div>
 				  </div>	
 			</div>
-			<div class="ward-order-item2 card ward-div">
+			<div class="ward-order-item2 card-grid ward-div">
 				<div class="tap_input" id="diet-in">
-					<h4>식이</h4>
+					<h4>식이 입력</h4>
+					<table>
+						<tr>
+							<td>입퇴원번호</td>
+							<td>
+								<input style="float:left" class="input_hsptNo" id="diet_hsptNo" type="text" value="" readonly="readonly">
+							</td>
+						</tr>
+						<tr>
+							<td>환자번호</td>
+							<td><input style="float:left" class="input_paNo" id="diet_paNo" type="text" value="" readonly="readonly"></td>
+						</tr>
+						<tr>
+							<td>환자명</td>
+							<td>
+								<input style="float:left" class="input_paName" id="diet_paName" type="text" value="" readonly="readonly">
+							</td>
+						</tr>
+						<tr>
+							<td>날짜</td>
+							<td>
+								<input type="date" id="diet_date">
+								<p class='errMsg' id='dietDateError'></p>
+							</td>
+						</tr>
+						<tr>
+							<td>시간</td>
+							<td>
+								<select id="dietSelectTime"></select>
+								<p class='errMsg' id='dietTimeError'></p>
+							</td>
+						</tr>
+						<tr>
+							<td>항목</td>
+							<td>
+								<select id="dietCateSelect" >
+									<option value="choice">선택</option>
+									<c:forEach items="${dietCateList}" var="dietCate">
+										<option value="${dietCate.dietCateCd}">${dietCate.dietCateNm}</option>
+									</c:forEach>
+								</select>
+								<p class='errMsg' id='dietCateError'></p>
+							</td>
+						</tr>
+						<tr>
+							<td>비고</td>
+							<td><textarea id="diet_textarea"></textarea></td>
+						</tr>
+						<tr>
+							<td><input class="btn_blue" id="diet-register" type="button" value="등록" onclick="diet_insert()"></td>
+						</tr>
+					</table>
 				</div>
 				<div class="tap_input" id="io-in">
 					<h4>IO 입력</h4>
@@ -646,34 +872,36 @@ function io_list(hsptNo, paName){
 							<td>날짜</td>
 							<td>
 								<select id="ioDateSelect">
-									<option>선택</option>
+									<option value="choice">선택</option>
 								</select>
+								<p class='errMsg' id='ioDateSelectError'></p>
 							</td>
 						</tr>
 						<tr>
 							<td>항목</td>
 							<td>
 								<select id="ioCateSelect" onchange="f_ioselectDetail(this.value)">
-									<option>선택</option>
+									<option value="choice">선택</option>
 									<option value="intake">Intake</option>
 									<option value="output">Output</option>
 								</select>
+								<p class='errMsg' id='ioCateError'></p>
 							</td>
 						</tr>
 						<tr>
 							<td>항목상세</td>
 							<td>
 								<select id="ioSelectDetail">
-									<c:forEach items="${intakeList}" var="intake">
-										<option>${intake.intakeCateNm}</option>
-									</c:forEach>
+									<option value="choice">선택</option>
 								</select>
+								<p class='errMsg' id='ioDetailError'></p>
 							</td>
 						</tr>
 						<tr>
 							<td>용량</td>
 							<td>
 								<input style="float:left" id="io_capa" type="text" value="">
+								<p class='errMsg' id='ioCapaError'></p>
 							</td>
 						</tr>
 						<tr>
@@ -860,6 +1088,9 @@ function insertIo(){
 			method : "post",
 			data : JSON.stringify(data),
 			contentType: "application/json;charset=utf-8",
+			beforeSend: function(xhr) {
+	            xhr.setRequestHeader(header, token);
+	    	},
 			dataType : "json",
 			success : function(result) {
 				if(result == 1){
@@ -871,6 +1102,9 @@ function insertIo(){
 						method : "post",
 						data : JSON.stringify(data),
 						contentType: "application/json;charset=utf-8",
+						beforeSend: function(xhr) {
+				            xhr.setRequestHeader(header, token);
+				    	},
 						dataType : "json",
 						success : function(result) {
 							if(result==1){
@@ -917,7 +1151,42 @@ function io_detail_insert(){
 	
 	let data = {};
 	
-	if(v_io_CateSelect == 'intake'){
+	let check = true;
+	let errorText = '';
+	
+	/* IO입력값 유효성 검사 */
+	if(v_io_Date=='choice'){
+		errorText = '날짜를 선택해주세요.';
+		check = false;
+		$('#ioDateSelectError').html(errorText);
+	}else if(v_io_Date!=='choice'){
+		$('#ioDateSelectError').html('');
+	}
+	
+	if(v_io_CateSelect=='choice'){
+		errorText = '항목을 선택해주세요.';
+		check = false;
+		$('#ioCateError').html(errorText);
+	}else if(v_io_CateSelect!=='choice'){
+		$('#ioCateError').html('');
+	}
+	
+	if(!v_io_capa){
+		errorText = '용량을 입력해주세요.';
+		check = false;
+		$('#ioCapaError').html(errorText);
+	}else if(isNaN(v_io_capa)){
+		errorText = '숫자를 입력해주세요.';
+		check = false;
+		$('#ioCapaError').html(errorText);
+	}else if(v_io_capa && !isNaN(v_io_capa)){
+		$('#ioCapaError').html('');
+	}
+	
+	
+	if(!v_io_hsptNo){
+		swal("입력실패", "해당 환자의 입퇴원 번호를 클릭해주세요", 'warning')
+	} else if(check && v_io_CateSelect == 'intake'){
 		data = {
 				hsptNo : v_io_hsptNo,
 				ioDate : v_io_Date,
@@ -931,11 +1200,21 @@ function io_detail_insert(){
 			method : "post",
 			data : JSON.stringify(data),
 			contentType: "application/json;charset=utf-8",
+			beforeSend: function(xhr) {
+	            xhr.setRequestHeader(header, token);
+	    	},
 			dataType : "json",
 			success : function(result) {
 				if(result == 1){
 					swal("입력성공","Intake 입력이 성공했습니다.", "success");
+					/* io리스트 다시 띄우기  */
 					wardPatientDetail(v_io_hsptNo);
+					/* input창 초기화 */
+					$("#ioCateSelect").val("choice").prop("selected", true);
+					$('#ioSelectDetail').html('');
+					$('#ioSelectDetail').append($('<option>').attr("value","choice").html('선택'));
+					io_capa.value = '';
+					io_textarea.value =''; 
 				}else{
 					swal("입력실패","Intake 입력이 실패했습니다.", "error");
 				}
@@ -946,7 +1225,7 @@ function io_detail_insert(){
 				console.log(error);
 			}
 		});
-	} else if(v_io_CateSelect == 'output'){
+	} else if(check && v_io_CateSelect == 'output'){
 		data = {
 				hsptNo : v_io_hsptNo,
 				ioDate : v_io_Date,
@@ -956,12 +1235,27 @@ function io_detail_insert(){
 		}
 		
 		$.ajax({
-			url : "",
-			method : "",
-			data : {},
-			dataType : "",
-			success : function(resp) {
-
+			url : "outputCreate",
+			method : "post",
+			data : JSON.stringify(data),
+			contentType: "application/json;charset=utf-8",
+			beforeSend: function(xhr) {
+	            xhr.setRequestHeader(header, token);
+	    	},
+			dataType : "json",
+			success : function(result) {
+				if(result == 1){
+					swal("입력성공","output 입력이 성공했습니다.", "success");
+					/* io리스트 다시 띄우기  */
+					wardPatientDetail(v_io_hsptNo);
+					/* input창 초기화 */
+					$("#ioCateSelect").val("choice").prop("selected", true);
+					$('#ioSelectDetail').html('');
+					io_capa.value = '';
+					io_textarea.value =''; 
+				}else{
+					swal("입력실패","output 입력이 실패했습니다.", "error");
+				}
 			},
 			error : function(jqXHR, status, error) {
 				console.log(jqXHR);
@@ -970,35 +1264,23 @@ function io_detail_insert(){
 			}
 		});
 	}
-	
-	
 }
 
 function f_ioselectDetail(val){
-	let optionTags = [];
 	let optionTag = '';
 	let ioSelectDetail = $('#ioSelectDetail');
-	if(val=='intake'){  
+	if(val=='intake'){
+		<c:forEach items="${intakeList}" var="intake">
+			optionTag += "<option value=\"${intake.intakeCateCd}\">${intake.intakeCateNm}</option>";
+		</c:forEach>
 		
-// 		optionTag1 = $("<option>").html('선택');
-// 		optionTag2 = $("<option>").html('경구').attr("value","I01");
-// 		optionTag3 = $("<option>").html('정맥').attr("value","I02");
-//     	optionTags.push(optionTag1);
-//     	optionTags.push(optionTag2);
-//     	optionTags.push(optionTag3);
-    
 	}else if(val=='output'){
-		optionTag1 = $("<option>").html('선택');
-		optionTag2 = $("<option>").html('소변').attr("value","O01");
-		optionTag3 = $("<option>").html('대변').attr("value","O02");
-		optionTag4 = $("<option>").html('토물').attr("value","O03");
-    	optionTags.push(optionTag1);
-    	optionTags.push(optionTag2);
-	    optionTags.push(optionTag3);
-	    optionTags.push(optionTag4);
+		<c:forEach items="${outputList}" var="output">
+			optionTag += "<option value=\"${output.outputCateCd}\">${output.outputCateNm}</option>";
+		</c:forEach>
 	}
 	
-	ioSelectDetail.html(optionTags);
+	ioSelectDetail.html(optionTag);
 }
 
 	/* tab 메뉴 */
@@ -1057,7 +1339,26 @@ function inputTapChange(hash){
 		break;
 	}
 }
-
+	
+$(function(){
+	var strHours = '';
+	var time = '';
+	 
+	for(var i = 0 ; i < 24; i++){
+	    if(i == 9){
+	        time = '0'+i;
+	        strHours += '<option value="'+time+'" selected>'+time+'시</option>';
+	    }else if( i < 10){
+	        time = '0'+ i;
+	        strHours += '<option value="'+time+'">'+time+'시</option>';
+	    }else{
+	        time = i;
+	        strHours += '<option value="'+time+'">'+time+'시</option>';
+	    }
+	}
+	 
+	 $("#dietSelectTime").html(strHours);
+})
 </script>
 
 

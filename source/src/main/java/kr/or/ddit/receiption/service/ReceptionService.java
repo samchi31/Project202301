@@ -6,7 +6,14 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import kr.or.ddit.commons.vo.PatientVO;
+import kr.or.ddit.commons.vo.WaitHistoryVO;
+import kr.or.ddit.receiption.vo.ReadRegistVO;
 import kr.or.ddit.receiption.vo.ReceiptionVO;
+import kr.or.ddit.receiption.vo.RegistVO;
+import kr.or.ddit.receiption.vo.SelectPatientVO;
+import kr.or.ddit.receiption.vo.SmsVO;
+import kr.or.ddit.receiption.vo.WaitListVO;
+import kr.or.ddit.receiption.vo.SelectOperationListVO;
 
 /**
  * 
@@ -27,9 +34,83 @@ import kr.or.ddit.receiption.vo.ReceiptionVO;
 
 public interface ReceptionService {
 
+	/** 환자검색
+	 * @param map
+	 * @return
+	 */
 	public List<ReceiptionVO> searchPatientList(Map<String, String> map);
 	
-	public int createReceiption(ReceiptionVO receiptionVO);
+	/**
+	 * 접수등록
+	 * @param receiptionVO
+	 * @return
+	 */
+	public int createReceiption(RegistVO registVO);
+	
+	/**대기 히스토리 등록
+	 * @param waitHistoryVO
+	 * @return
+	 */
+	public int createWaitHistory();
+	
+	/**
+	 * 새로운 환자 등록
+	 * @param patientVO
+	 * @return
+	 */
+	public int createPatient(PatientVO patientVO);
+
+	/**
+	 * 등록한 최신환자 조회
+	 * @param selectPatientVO
+	 * @return
+	 */
+	public SelectPatientVO selectPatient();
+	
+	public ReadRegistVO selectRegistVO(String paNo);
+	
+	/**
+	 * 진료실 별 접수한 대기 환자 조회
+	 * @param officeCd
+	 * @return
+	 */
+	public List<WaitListVO> retrieveWaitList(String officeCd);
+	
+	/**
+	 * 입원 가능한 환자 조회
+	 * @param operTf
+	 * @return
+	 */
+	public List<SelectOperationListVO> retrieveOperationList(String operTf);
+	
+	/**
+	 * SMS 문구 등록
+	 * @param smsCont
+	 * @return
+	 */
+	public int createSms(String smsCont);
+	
+	/**
+	 * SMS 문구 수정
+	 * @param smsVO
+	 * @return
+	 */
+	public int modifySms(SmsVO smsVO);
+	
+	
+	/**
+	 * SMS 문구 삭제
+	 * @param sttCd
+	 * @return
+	 */
+	public int removeSms(String sttCd);
+	
+	/**
+	 * SMS 문구 조회 리스트
+	 * @param smsVO
+	 * @return
+	 */
+	public List<SmsVO> retrieveSmsList();
 }
 
 

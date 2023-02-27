@@ -9,25 +9,28 @@
 		
 	</definition>
 	
-	<definition name="index" extends="parent" preparer="mainMenuPrepare">
-		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
-	</definition>
-	<definition name="doctor/*" extends="parent" >
-		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp"/>
-	</definition>
-	<definition name="doctor/*" extends="parent" preparer="doctorMenuPrepare">
+<!-- 	<definition name="index" extends="parent" preparer="mainMenuPrepare"> -->
+<!-- 		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" /> -->
+<!-- 	</definition> -->
+	<definition name="doctor/*" extends="parent" preparer="mainMenuPrepare">
 		<put-attribute name="content" value="/WEB-INF/jsp/doctor/{1}.jsp"/>
 	</definition>
-	<definition name="nurse/*" extends="parent" >
+	<definition name="nurse/*" extends="parent" preparer="mainMenuPrepare">
 		<put-attribute name="content" value="/WEB-INF/jsp/nurse/{1}.jsp"/>
 	</definition>
-	<definition name="radiology/*" extends="parent" >
+	<definition name="radiology/*" extends="parent" preparer="mainMenuPrepare">
 		<put-attribute name="content" value="/WEB-INF/jsp/radiology/{1}.jsp"/>
 	</definition>
-	<definition name="pt/*" extends="parent" >
-		<put-attribute name="content" value="/WEB-INF/jsp/pt/{1}.jsp"/>
-	</definition>
-	<definition name="receiption/*" extends="parent" >
+	
+	<definition name="receiption/*" extends="parent" preparer="mainMenuPrepare">
 		<put-attribute name="content" value="/WEB-INF/jsp/receiption/{1}.jsp"/>
 	</definition>
+	
+	<definition name="pt/*" extends="parent" preparer="mainMenuPrepare">
+		<put-attribute name="content" value="/WEB-INF/jsp/pt/{1}.jsp" />
+	</definition>
+	<definition name="notice/*" extends="parent" preparer="mainMenuPrepare">
+		<put-attribute name="content" value="/WEB-INF/jsp/notice/{1}.jsp" />
+	</definition>
+	
 </tiles-definitions>

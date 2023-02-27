@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.dao.NoticeDAO">
+
+	<!-- 공지사항 조회 -->
+	<select id="selectNoticeList" resultType="kr.or.ddit.commons.vo.NoticeVO">
+		SELECT *
+		FROM notice
+		order by NTC_CD desc
+	</select>
+	
+	<!-- 	공지사항 Insert -->
+	<insert id="insertNotice" parameterType="kr.or.ddit.commons.vo.NoticeVO">
+		INSERT INTO notice (
+	    						ntc_cd, ntc_title, ntc_cont,
+	    						ntc_endt, ntc_hit, emp_no
+		) VALUES (
+	    			(SELECT NVL(MAX(ntc_cd),0)+1  FROM NOTICE)
+	    			, #{ntcTitle,jdbcType=VARCHAR}
+	    			, #{ntcCont,jdbcType=CLOB}
+	    			, sysdate
+	    			, 0
+	    			, #{empNo,jdbcType=NUMERIC}
+		  )
+	</insert>
+</mapper>

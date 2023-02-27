@@ -15,13 +15,8 @@
 	</select>
 	
 	<select id="selectRadiList" resultType="FilmCateVO">
-		SELECT  FILM_CD, FILM_NM, EMP_NO
-		FROM    FILMCATE
-	</select>
-	
-	<select id="selectGOList" resultType="GroupOrderVO">
-		SELECT  GO_CD, GO_KO
-		FROM    GROUP_ORDER
+		SELECT  FILM_CD, FILM_NM, B.EMP_NM
+		FROM    FILMCATE A	INNER JOIN EMPLOYEE B ON (A.EMP_NO = B.EMP_NO)
 	</select>
 
 	<resultMap type="TrmChartVO" id="trmChartMap" autoMapping="true">
@@ -38,26 +33,33 @@
 		<collection property="filmOrderVOList" ofType="FilmOrderVO" autoMapping="true">
 			<id property="filmCd" column="FILM_CD"/>
 		</collection>
+		<collection property="ptDocumentList" ofType="PtDocumentVO" autoMapping="true">
+			<id property="pdNo" column="PD_NO"/>
+		</collection>
 	</resultMap>
-	<select id="selectTrmChart" parameterType="int" resultMap="trmChartMap">
+	<select id="selectTrmChart" parameterType="String" resultMap="trmChartMap">
 		WITH trmChartView AS    (
-		SELECT  A.*
-		FROM    TRM_CHART A INNER JOIN RECEPTION B ON (A.RCP_NO = B.RCP_NO)
-		WHERE   B.RCP_NO = #{rcpNo}    
+		    SELECT  A.TRM_CD, A.TRM_DT, A.MEDI_RECORD, A.EMP_NO, A.RCP_NO
+		            , C.EMP_NM
+		    FROM    TRM_CHART A INNER JOIN RECEPTION B ON (A.RCP_NO = B.RCP_NO)
+		                        INNER JOIN EMPLOYEE C ON (A.EMP_NO = C.EMP_NO)
+		    WHERE   B.RCP_NO = #{rcpNo}   
 		)
-		SELECT  T.TRM_CD AS TRM_CODE, T.MEDI_RECORD, TO_CHAR(T.TRM_DT, 'YYYY/MM/DD') AS TRM_DT, T.EMP_NO, T.RCP_NO
-		        , B.*
-		        , C.*
-		        , D.*
-		        , E.*
+		SELECT  T.TRM_CD AS TRM_CODE, T.MEDI_RECORD, TO_CHAR(T.TRM_DT, 'YYYY/MM/DD') AS TRM_DT, T.EMP_NO, T.RCP_NO, T.EMP_NM
+		        , B.DISEASE_CD, B.ICD_NAME, B.OPER_TF, B.PHYSIOTHERAPY_TF
+		        , C.SYM_CD, C.SYM_DETAIL
+		        , D.PRE_CD, D.PRE_DETAIL, D.PRE_NT, D.PRE_TOTAL, D.PRICE, D.INJC_PTH_NM, D.UNIT, D.PAY_TP_NM
+		        , E.FILM_CD, E.FILM_DATE
+		        , F.PD_NO, F.PD_DT, F.PD_CONT
 		FROM    TRMCHARTVIEW T  
 		        LEFT OUTER JOIN DIAGNOSIS_HISTORY B  ON (T.TRM_CD = B.TRM_CD)
 		        LEFT OUTER JOIN SYMPTOM_HISTORY C ON (T.TRM_CD = C.TRM_CD)
 		        LEFT OUTER JOIN PRESCRIPTION_HISTORY D ON (T.TRM_CD = D.TRM_CD)
 		        LEFT OUTER JOIN FILM_ORDER E ON (T.TRM_CD = E.TRM_CD)
+		        LEFT OUTER JOIN PT_DOCUMENT F ON (T.TRM_CD = F.TRM_CD)		        
 	</select>
 	
-	<select id="selectTrmChartList" parameterType="int" resultType="TrmChartVO">
+	<select id="selectTrmChartList" parameterType="String" resultType="TrmChartVO">
 		SELECT  TRM_CD, MEDI_RECORD, to_char(TRM_DT,'YYYY/MM/DD') as TRM_DT, EMP_NO, RCP_NO
 		FROM    V_TRM_CHART
 		WHERE   PA_NO = #{paNo}
@@ -76,7 +78,7 @@
 		AND     TO_CHAR(RCP_DATE,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
 	</select>
 	
-	<select id="selectPaInfo" parameterType="int" resultType="PatientVO">
+	<select id="selectPaInfo" parameterType="String" resultType="PatientVO">
 		SELECT  PA_NO
 		        , PA_NAME
 		        , PA_REG
@@ -105,7 +107,7 @@
 		    , #{mediRecord,jdbcType=VARCHAR}
 			, SYSDATE
 			, #{empNo,jdbcType=NUMERIC}
-			, #{rcpNo,jdbcType=NUMERIC}
+			, #{rcpNo,jdbcType=VARCHAR}
 		)
 	</insert>
 	
@@ -197,7 +199,7 @@
 		    div_cd
 		) 
 		SELECT  SEQ_WAITING_HISTORY.Nextval
-		        , #{rcpNo,jdbcType=NUMERIC}
+		        , #{rcpNo,jdbcType=VARCHAR}
 		        , SYSDATE
 		        , SNUM
 		        , #{waitstCd,jdbcType=VARCHAR}
@@ -205,7 +207,7 @@
 		FROM    (
 				SELECT nvl(max(wait_num), 0)+1 as SNUM
 		        FROM    waiting_history
-		        WHERE   rcp_no = #{rcpNo,jdbcType=NUMERIC}	)
+		        WHERE   rcp_no = #{rcpNo,jdbcType=VARCHAR}	)
 	</insert>
 
 	<select id="selectWaitStatus" resultType="WaitStatusVO">
@@ -221,6 +223,17 @@
 		SET		medi_record = #{mediRecord,jdbcType=VARCHAR}
 		WHERE	TRM_CD = #{trmCd,jdbcType=VARCHAR}
 	</update>
+	
+	<select id="selectWSComplete" parameterType="String" resultType="WaitStatusVO">
+		SELECT  *
+		FROM    (
+			        SELECT  WAITST_CD, ROWNUM, WAIT_NO
+			        FROM    WAITING_HISTORY 
+			        WHERE   RCP_NO = #{rcpNo}
+			        ORDER   BY WAIT_NO DESC
+		        )
+		WHERE   ROWNUM = 1
+	</select>
 	
 	<delete id="deleteDiagHist">
 		DELETE FROM diagnosis_history
@@ -238,5 +251,7 @@
 		DELETE FROM film_order
 		WHERE	trm_cd = #{trmCd,jdbcType=VARCHAR}
 	</delete>
+	
+	
 	
 </mapper>

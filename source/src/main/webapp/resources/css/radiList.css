@@ -1,9 +1,18 @@
 @charset "UTF-8";
 
+
+.table1{
+	margin-top: -1px;
+}
 th, td {
-	background-color: white;
-	border-radius: 5px;
 	text-align: center;
+}
+th{
+	color : white;
+}
+thead tr {
+	background-color: #3161A3;
+	color: #ffffff
 }
 h4{
 	margin-bottom : 0.90rem
@@ -17,9 +26,105 @@ h4{
    padding: 17px;
    
 }
-label{
-	margin:20px
+label {
+    margin: 20px;
+    margin-left: 1px;
 }
+label.radio-control{
+	margin-left: 5px;
+	margin-bottom: -4px;
+}
+
+/* 검색css */
+#radi-search-form {
+	float: right;
+	padding-bottom: 20px;
+	padding-right: 11px;
+}
+
+
+
+.radi-select {
+	width: 6.5rem;
+	height: 2.5rem;
+	font-size: 15px;
+}
+
+.search-form>select {
+    width: 4.7rem;
+    height: 1.6rem;
+    font-size: 13px;
+    border: 1px solid #ddd;
+}
+
+.search-form>input {
+	width: 5.96rem;
+    height: 1.6rem;
+    padding-bottom: 3px;
+    margin-left: 5px;
+    margin-right: 1px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+}
+
+.search-form>.btn-submit {
+    width: 3.25rem;
+    height: 1.58rem;
+    padding-top: 3px;
+    background-color: #004262;
+    color: white;
+    border: none;
+    /* margin: 0.188rem; */
+    /* box-shadow: 1px 1px 2px grey; */
+    font-size: 13px;
+}
+.btn-submit {
+	width: 5.25rem;
+	height: 2.5rem;
+	background-color: #16308D;
+	color: white;
+	border: none;
+	margin: 0.188rem;
+	box-shadow: 1px 1px 2px grey;
+	font-size: 14px;
+}
+
+.radi-input {
+	width: 14.25rem;
+	height: 2.5rem;
+	padding-bottom: 5px;
+	font-size: 18px;
+}
+
+.film-submit-in {
+	width: 31.938rem;
+	height: 23.438rem;
+	margin: 0.625rem;
+	padding: 1.25rem;
+	background-color: #F2F1F1;
+	border-radius: 5px;
+	border-top: 5px solid #4E73DF;
+	box-shadow: 1px 1px 5px grey;
+	overflow: auto;
+	margin-top: 30px;
+	margin-left: 40px;
+}
+
+.film-submit-table {
+	width: 37.5rem;
+	height: 15rem;
+	padding-top: 0.5rem;
+}
+
+.film-submit {
+	width: 41.438rem;
+	height: 21.875rem;
+}
+
+
+
+
+
 [type="radio"] {
   appearance: none;
   border: max(2px, 0.1em) solid gray;
@@ -74,23 +179,24 @@ label{
     padding: 7px 19px;
     font-size: 14px;
 }
-.modal-footer{
-	margin: -9px;
+/* .modal-footer{ */
+/* 	margin: -9px; */
 	
-}
+/* } */
 
-.modal-header{
-	padding-top: 4px;
-    padding-bottom: 10px;
-}
+/* .modal-header{ */
+/* 	padding-top: 4px; */
+/*     padding-bottom: 10px; */
+/* } */
 
-.modal-dialog{
-	height: 52%;
-    width: 25%;
-}
-.btn-close {
+/* .modal-dialog{ */
+/* 	height: 52%; */
+/*     width: 25%; */
+/* } */
+/* .btn-close { */
 	
-}
+/* } */
+
 button{
 	border: 0px;
 	margin-bottom: 4px;
@@ -100,11 +206,199 @@ button{
 
 
 /*오프캔버스*/
-#offcanvasscrolling{
-	width: 40%;
+#offcanvasscrolling, #offcanvasscrolling2{
+	width: 30%;
+	height: 100%;
+    margin-top: 0%;
 } 
 
+.offcanvas-body {
+    flex-grow: 1;
+    padding: var(--bs-offcanvas-padding-y) var(--bs-offcanvas-padding-x);
+    overflow-y: auto;
+	margin-top: -27px;
+	padding-top: 0px;
+	padding-bottom: 44px;
+}
+
 .offcanvas-footer{
-	margin-bottom: 50px;
-    margin-right: 17px;
+
+    padding-bottom: 3%;
+    padding-right: 4%;
+
+}
+
+.col-12 {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 29px;
+}
+
+#symptomTable{
+	margin-left: 50px;
+}
+
+
+.col-md-6 {
+    flex: 0 0 auto;
+    width: 50%;
+    height: 0px;
+}
+
+.col-md-4 {
+    flex: 0 0 auto;
+    width: 33.33333333%;
+    height: 0%;
+}
+
+textarea {
+	width: 100%;
+	height: 200px;
+	padding: 10px;
+	box-sizing: border-box;
+	border: solid 1px #ced4da;
+    	/** outline-color 속성을 추가하면 
+   	focus될 때 테두리 색상을 지정할 수 있다.**/
+    outline-color: #6ab5ff;
+	border-radius: 5px;
+	font-size: 16px;
+	resize: both;
+}
+
+/*파일 업로드폼
+.filebox .upload-name {
+	display: inline-block;
+	height: 40px;
+	padding: 0 10px;
+	vertical-align: middle;
+	border: 1px solid #dddddd;
+	width: 78%;
+	color: #999999;
+}
+
+.fileboxLabel {
+	display: inline-block;
+	padding: 10px 20px;
+	color: #fff;
+	vertical-align: middle;
+	background-color: #999999;
+	cursor: pointer;
+	height: 40px;
+	width: 76px;
+	margin-left: 10px;
+}
+
+.filebox input[type="file"] {
+	position: absolute;
+	width: 0;
+	height: 0;
+	padding: 0;
+	overflow: hidden;
+	border: 0;
+}
+
+.filebox{
+	height: 0px;
+	margin: 0px;
+}
+*/
+
+/* 인풋태그 밑줄 */
+.input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #CCC;
+  color: #555;
+  box-sizing: border-box;
+  font-family: 'Arvo';
+  font-size: 18px;
+  height: 50px;
+  left: 50%;
+  margin: -25px 0 0 -100px;
+  padding: 10px 0px;
+  position: relative;
+  top: 50%;
+  width: 200px;
+
+  &:focus {
+    outline: none;    
+  }
+}
+
+input::-webkit-input-placeholder {
+  color: #AAA;
+}
+
+input:focus::-webkit-input-placeholder {
+  color: dodgerblue;
+}
+
+.input:focus+.underline {
+  transform: scale(1);
+}
+
+/* 사진출력 */
+.grid-title {
+	display: block;
+	width: 100%;
+	height: 0px;
+	/* 	background-color:red; */
+}
+
+#grid-container {
+	width: 99%;
+	height: 100%;
+	display: grid;
+	/* 	background-color: pink; */
+	padding: 10px;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
+	grid-column: 1;
+	margin-top: -23px;
+	/* 	border:1px solid red; */
+}
+
+
+[class*=grid-item] {
+/*     background-color: #F2F1F1; */
+    background-color: #ffffff;
+    /* border: 3px solid lightpink; */
+    box-shadow: 1px 1px 5px grey;
+    padding: 20px;
+    font-size: 30px;
+    text-align: center;
+    height: 193px;
+    width: 255px;
+    margin: 20px;
+    border-radius: 10px;
+}
+
+.grid-stack-instance-1 > .grid-stack-item > .grid-stack-item-content {
+    inset: 10px;
+/*     overflow: hidden; */
+}
+
+.pic{
+	overflow-y: hidden;
+}
+.p_list_con {
+    font-size: 15px;
+    background-color: white;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    margin-top: 4px;
+    margin-left: 5px;
+}
+
+
+.card-grid::-webkit-scrollbar{
+    width: 6px;
+	
+}
+.grid-stack>.grid-stack-item>.grid-stack-item-content {
+    margin: 0;
+    position: absolute;
+    width: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }

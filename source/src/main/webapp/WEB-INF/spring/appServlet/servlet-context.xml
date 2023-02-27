@@ -80,6 +80,7 @@
 	<!-- Custom view preparer -->
 	<bean id="mainMenuPrepare" class="kr.or.ddit.commons.view.prepare.MainMenuPrepare" />
 	<bean id="doctorMenuPrepare" class="kr.or.ddit.doctor.view.prepare.DoctorMenuPrepare"/>
+	<bean id="nurseMenuPrepare" class="kr.or.ddit.nurse.view.prepare.NurseMenuPrepare"/>
 	
 <!-- 	<bean id="paginationManager" class="kr.or.ddit.ui.DefaultPaginationManager"> -->
 <!-- 		<constructor-arg name="rendererMap"> -->

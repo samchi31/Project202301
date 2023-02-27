@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.doctor.dao.GroupOrderMapper">
+
+	<resultMap type="GroupOrderVO" id="groupOrderMap" autoMapping="true">
+		<id property="goCd" column="GO_CD"/>
+		<collection property="goDiseaseVOList" ofType="GODiseaseVO" autoMapping="true">
+			<id property="icd" column="ICD"/>
+		</collection>
+		<collection property="goPrescriptionVOList" ofType="GOPrescriptionVO" autoMapping="true">
+			<id property="preCd" column="PRE_CD"/>
+		</collection>
+		<collection property="goSymptomVOList" ofType="GOSymptomVO" autoMapping="true">
+			<id property="symCd" column="SYM_CD"/>
+		</collection>
+	</resultMap>
+	<select id="selectGOList" resultMap="groupOrderMap">
+		SELECT  T.go_cd, T.go_ko,
+		        B.icd, B.icd_name, B.icd_eng,
+		        C.pre_cd, C.pre_detail, C.injc_pth_nm, C.unit, C.pay_tp_nm,
+		        D.sym_cd, D.sym_detail
+		FROM    GROUP_ORDER T   LEFT OUTER JOIN DISEASE_GO B  ON (T.GO_CD = B.GO_CD)
+		                        LEFT OUTER JOIN PRESCRIPTION_GO C ON (T.GO_CD = C.GO_CD)
+		                        LEFT OUTER JOIN SYMPTOM_GO D ON (T.GO_CD = D.GO_CD)
+	</select>
+	
+	<select id="selectGO" parameterType="string" resultMap="groupOrderMap">
+		SELECT  T.go_cd, T.go_ko,
+		        B.icd, B.icd_name, B.icd_eng,
+		        C.pre_cd, C.pre_detail, C.injc_pth_nm, C.unit, C.pay_tp_nm,
+		        D.sym_cd, D.sym_detail
+		FROM    GROUP_ORDER T   LEFT OUTER JOIN DISEASE_GO B  ON (T.GO_CD = B.GO_CD)
+		                        LEFT OUTER JOIN PRESCRIPTION_GO C ON (T.GO_CD = C.GO_CD)
+		                        LEFT OUTER JOIN SYMPTOM_GO D ON (T.GO_CD = D.GO_CD)
+		WHERE	T.go_cd = #{goCd}
+	</select>
+	
+	<insert id="insertGO" parameterType="GroupOrderVO">
+		INSERT INTO group_order (
+		    go_cd,
+		    go_ko
+		) VALUES (
+		    #{goCd,jdbcType=VARCHAR}
+			, #{goKo,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertGODisList">
+		INSERT ALL
+		<foreach collection="goDiseaseVOList" item="goDisease" >
+			INTO disease_go (
+			    icd,
+			    go_cd,
+			    icd_name,
+			    icd_eng
+			) VALUES (
+			    #{goDisease.icd,jdbcType=VARCHAR}
+				, #{goCd,jdbcType=VARCHAR}
+				, #{goDisease.icdName,jdbcType=VARCHAR}
+				, #{goDisease.icdEng,jdbcType=VARCHAR}
+			)
+		</foreach>
+		SELECT	* FROM DUAL
+	</insert>
+	<insert id="insertGOPreList">
+		INSERT ALL
+		<foreach collection="goPrescriptionVOList" item="goPre" >
+			INTO prescription_go (
+			    pre_cd,
+			    go_cd,
+			    pre_detail,
+			    injc_pth_nm,
+			    unit,
+			    pay_tp_nm
+			) VALUES (
+				  #{goPre.preCd,jdbcType=VARCHAR}
+				, #{goCd,jdbcType=VARCHAR}
+			    , #{goPre.preDetail,jdbcType=VARCHAR}
+				, #{goPre.injcPthNm,jdbcType=VARCHAR}
+				, #{goPre.unit,jdbcType=VARCHAR}
+				, #{goPre.payTpNm,jdbcType=VARCHAR}
+			)
+		</foreach>
+		SELECT	* FROM DUAL
+	</insert>
+	<insert id="insertGOSymList">
+		INSERT ALL
+		<foreach collection="goSymptomVOList" item="goSym" >
+			INTO symptom_go (
+			    go_cd,
+			    sym_cd,
+			    sym_detail
+			) VALUES (
+			    #{goCd,jdbcType=VARCHAR}
+				, #{goSym.symCd,jdbcType=VARCHAR}
+				, #{goSym.symDetail,jdbcType=VARCHAR}
+			)
+		</foreach>
+		SELECT	* FROM DUAL
+	</insert>
+	
+	<update id="updateGO" parameterType="GroupOrderVO">
+	 	UPDATE  group_order
+		SET     go_cd = #{goCd,jdbcType=VARCHAR}
+				, go_ko = #{goKo,jdbcType=VARCHAR}
+		WHERE	go_cd = #{prevGoCd,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteGO" parameterType="String">
+	 	DELETE	FROM group_order
+	 	WHERE	go_cd = #{goCd,jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="deleteGODisList" parameterType="String">
+		DELETE	FROM disease_go
+	 	WHERE	go_cd = #{goCd,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteGOPreList" parameterType="String">
+		DELETE	FROM prescription_go
+	 	WHERE	go_cd = #{goCd,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteGOSymList" parameterType="String">
+		DELETE	FROM symptom_go
+	 	WHERE	go_cd = #{goCd,jdbcType=VARCHAR}
+	</delete>
+</mapper>

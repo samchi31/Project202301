@@ -2,6 +2,7 @@ package kr.or.ddit.commons.vo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * @author 작성자명
@@ -20,9 +21,10 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(of="rcpNo")
+@ToString
 public class ReceptionVO {
-   private Integer rcpNo;
-   private Integer paNo;
+   private String rcpNo;
+   private String paNo;
    private String rcpDate;
    private String officeCd;
    

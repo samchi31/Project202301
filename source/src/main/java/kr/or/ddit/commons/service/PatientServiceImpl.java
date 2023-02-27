@@ -58,7 +58,7 @@ public class PatientServiceImpl implements PatientService {
 		int rowcnt = patientDAO.deletePatient(patient.getPaNo());
 		ServiceResult result = rowcnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;
 	
-	return result;
+		return result;
 	}
 
 }

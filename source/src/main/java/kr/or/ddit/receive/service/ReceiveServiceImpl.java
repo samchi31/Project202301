@@ -1,28 +1,44 @@
 package kr.or.ddit.receive.service;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
+import kr.or.ddit.commons.vo.ReceiveDetailVO;
 import kr.or.ddit.commons.vo.ReceiveVO;
+import kr.or.ddit.doctor.dao.DoctorDAO;
+import kr.or.ddit.doctor.service.DoctorService;
 import kr.or.ddit.receive.dao.ReceiveDAO;
 
 @Service
-public class ReceiveServiceImpl implements ReceiveServicve {
+public class ReceiveServiceImpl implements ReceiveService {
 	
 	@Inject
 	private ReceiveDAO dao;
-	
+		
 	@Override
-	public int createReceive(ReceiveVO receive) {
-		int rowcnt = dao.insertReceive(receive);
+	public int createReceive(ReceiveDetailVO receiveDetailVO, String trmCd) {
+		
+		int rowcnt = 0;
+		rowcnt = createReceiveDetail(receiveDetailVO);
+		
+		ReceiveVO receive = new ReceiveVO();
+		receive.setRecNo(receiveDetailVO.getRecNo());
+		receive.setTrmCd(trmCd);
+		receive.setRecApcd("792420120038219");
+		
+		rowcnt += dao.insertReceive(receive);
+				
+		
 		return rowcnt;
 	}
-
+	
 	@Override
-	public void retrieveReceiveList(ReceiveVO receive) {
+	public List<ReceiveVO> retrieveReceiveList() {
 		// TODO Auto-generated method stub
-
+		return null;
 	}
 
 	@Override
@@ -43,4 +59,8 @@ public class ReceiveServiceImpl implements ReceiveServicve {
 		return 0;
 	}
 
+	@Override
+	public int createReceiveDetail(ReceiveDetailVO receiveDetailVO) {
+		return dao.insertReceiveDetail(receiveDetailVO);
+	}
 }

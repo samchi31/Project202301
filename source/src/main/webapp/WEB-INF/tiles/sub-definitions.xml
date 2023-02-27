@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd" >
+<tiles-definitions>	
+	<definition name="sub/groupOrder" template="/WEB-INF/jsp/subTemplate.jsp" >
+		<put-attribute name="preScript" value="/includee/preScript.jsp" />  	
+		<put-attribute name="content" value="/WEB-INF/jsp/sub/groupOrder.jsp" />
+	</definition>
+	
+	<definition name="sub/doctorFilm" template="/WEB-INF/jsp/subTemplate.jsp" >
+		<put-attribute name="preScript" value="/includee/preScript.jsp" />  	
+		<put-attribute name="content" value="/WEB-INF/jsp/sub/doctorFilm.jsp" />
+	</definition>
+	
+	<definition name="index" template="/WEB-INF/jsp/subTemplate.jsp" >
+		<put-attribute name="preScript" value="/includee/preScript.jsp" />  	
+		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
+	</definition>
+	
+</tiles-definitions>

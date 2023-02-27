@@ -1,206 +1,286 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.nurse.dao.WardDAO">
-	<select id="selectWardPatientList" resultType="kr.or.ddit.nurse.vo.WardVO">
-		SELECT 
-		    A.HSPT_NO, A.WR_RNO, A.BED_NO, A.PA_NAME, A.HSPT_YN, A.TRM_CD
-		    , B.DISEASE_CD, B.ICD_NAME
-		 FROM V_HOSP A
-	     LEFT OUTER JOIN DIAGNOSIS_HISTORY B
-		   ON A.TRM_CD = B.TRM_CD
-		  AND A.DISEASE_CD = B.DISEASE_CD
-		WHERE HSPT_YN='Y'
-	</select>
-	
-	<select id="selectWardPatien" resultType="WardVO" parameterType="int">
-		SELECT 
-		    A.HSPT_NO, A.EMP_NM, TO_CHAR(A.HSPT_IN_DT, 'YYYY-MM-DD') AS HSPT_IN_DT, A.MEDI_RECORD
-		    , B.PA_NO, B.PA_NAME, B.PA_REG, B.PA_HP 
-		FROM V_HOSP_DIA A
-		INNER JOIN PATIENT B
-			ON A.PA_NO =B.PA_NO
-		WHERE HSPT_NO = #{hsptNo}
-	</select>
-	
-	<insert id="insertNrec" parameterType="kr.or.ddit.nurse.vo.NrecVO">
-		INSERT INTO NURSING_RECORD (
-		    NREC_NO
-		    , NREC_CONT
-		    , NREC_DATE
-		    , EMP_NO
-		    , PA_NO
-		    , HSPT_NO
-		) VALUES (
-		    SEQ_NREC.NEXTVAL
-		    , #{nrecCont}
-		    , TO_CHAR(SYSDATE, 'YYYY-MM-DD')
-		    , 6
-		    , #{paNo}
-		    , #{hsptNo}
-		)
-	</insert>
-	
-<!-- 	<resultMap type="EmployeeVO" id="empMap" autoMapping="true"> -->
-<!-- 		<id property="empNo" column="EMP_NO"/> -->
-<!-- 		<collection property="vitalList" ofType="kr.or.ddit.commons.vo.VitalVO" autoMapping="true"/> -->
-<!-- 	</resultMap> -->
-	
-	<insert id="insertVital" parameterType="kr.or.ddit.commons.vo.VitalVO">
-		INSERT INTO vital (
-		    vt_no,
-		    vt_date,
-		    vt_tmp,
-		    vt_pls,
-		    vt_bp,
-		    vt_rp,
-		    vt_ne,
-		    emp_no,
-		    hspt_no
-		) VALUES (
-		    SEQ_VITAL.NEXTVAL
-		    , TO_CHAR(SYSDATE, 'YYYY-MM-DD')
-		    , #{vtTmp,jdbcType=NUMERIC}
-		    , #{vtPls,jdbcType=NUMERIC}
-		    , #{vtBp,jdbcType=NUMERIC}
-		    , #{vtRp,jdbcType=NUMERIC}
-		    , #{vtNe,jdbcType=VARCHAR}
-		    , 6
-		    , #{hsptNo,jdbcType=NUMERIC}
-		)
-	</insert>
-	
-	<select id="selectNrecList" resultType="kr.or.ddit.nurse.vo.NrecVO" parameterType="int">
-		SELECT
-		    A.NREC_NO ,A.NREC_CONT ,TO_CHAR(A.NREC_DATE, 'YYYY-MM-DD') AS NREC_DATE ,A.EMP_NO ,A.PA_NO ,A.HSPT_NO
-		    , B.PA_NAME
-		    , C.EMP_NM
-		FROM NURSING_RECORD A
-		INNER JOIN PATIENT B
-			ON A.PA_NO = B.PA_NO
-		INNER JOIN EMPLOYEE C
-			ON A.EMP_NO = C.EMP_NO
-		WHERE A.HSPT_NO = #{hsptNo}
-		ORDER BY 1
-	</select>
-	
-<!-- 	<resultMap type="PatientVO" id="PatientMap" autoMapping="true"> -->
-<!-- 		<id property="paNo" column="PA_NO"/> -->
-<!-- 			<collection property="receptionList" ofType="ReceptionVO" autoMapping="true"> -->
-<!-- 				<association property="trmChart" javaType="TrmChartVO"> -->
-<!-- 					<collection property="diagHistoryVOList" ofType="DiagHistoryVO" autoMapping="true"> -->
-<!-- 						<association property="hospitalization" javaType="kr.or.ddit.commons.vo.HospitalizationVO"> -->
-<!-- 							<collection property="vitalList" ofType="kr.or.ddit.commons.vo.VitalVO" autoMapping="true"/> -->
-<!-- 						</association> -->
-<!-- 					</collection> -->
-<!-- 				</association> -->
-<!-- 			</collection> -->
-<!-- 	</resultMap> -->
+   <select id="selectWardPatientList" resultType="kr.or.ddit.nurse.vo.WardVO">
+      SELECT 
+          A.HSPT_NO, A.WR_RNO, A.BED_NO, A.PA_NAME, A.HSPT_YN, A.TRM_CD
+          , B.DISEASE_CD, B.ICD_NAME
+       FROM V_HOSP A
+        LEFT OUTER JOIN DIAGNOSIS_HISTORY B
+         ON A.TRM_CD = B.TRM_CD
+        AND A.DISEASE_CD = B.DISEASE_CD
+      WHERE HSPT_YN='Y'
+   </select>
+   
+   <select id="selectWardPatien" resultType="WardVO" parameterType="int">
+      SELECT 
+          A.HSPT_NO, A.EMP_NM, TO_CHAR(A.HSPT_IN_DT, 'YYYY-MM-DD') AS HSPT_IN_DT, A.MEDI_RECORD
+          , B.PA_NO, B.PA_NAME, B.PA_REG, B.PA_HP 
+      FROM V_HOSP_DIA A
+      INNER JOIN PATIENT B
+         ON A.PA_NO =B.PA_NO
+      WHERE HSPT_NO = #{hsptNo}
+   </select>
+   
+   <insert id="insertNrec" parameterType="kr.or.ddit.nurse.vo.NrecVO">
+      INSERT INTO NURSING_RECORD (
+          NREC_NO
+          , NREC_CONT
+          , NREC_DATE
+          , EMP_NO
+          , PA_NO
+          , HSPT_NO
+      ) VALUES (
+         'NR'||LPAD(SEQ_NREC.NEXTVAL, 4,'0')
+          , #{nrecCont}
+          , TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+          , 6
+          , #{paNo}
+          , #{hsptNo}
+      )
+   </insert>
+   
+<!--    <resultMap type="EmployeeVO" id="empMap" autoMapping="true"> -->
+<!--       <id property="empNo" column="EMP_NO"/> -->
+<!--       <collection property="vitalList" ofType="kr.or.ddit.commons.vo.VitalVO" autoMapping="true"/> -->
+<!--    </resultMap> -->
+   
+   <insert id="insertVital" parameterType="kr.or.ddit.commons.vo.VitalVO">
+      INSERT INTO vital (
+          vt_no,
+          vt_date,
+          vt_tmp,
+          vt_pls,
+          vt_bp,
+          vt_rp,
+          vt_ne,
+          emp_no,
+          hspt_no
+      ) VALUES (
+         'VI'||LPAD(SEQ_VITAL.NEXTVAL, 4,'0')
+          , TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+          , #{vtTmp,jdbcType=NUMERIC}
+          , #{vtPls,jdbcType=NUMERIC}
+          , #{vtBp,jdbcType=NUMERIC}
+          , #{vtRp,jdbcType=NUMERIC}
+          , #{vtNe,jdbcType=VARCHAR}
+          , 6
+          , #{hsptNo,jdbcType=NUMERIC}
+      )
+   </insert>
+   
+   <select id="selectNrecList" resultType="kr.or.ddit.nurse.vo.NrecVO" parameterType="int">
+      SELECT
+          A.NREC_NO ,A.NREC_CONT ,TO_CHAR(A.NREC_DATE, 'YYYY-MM-DD') AS NREC_DATE ,A.EMP_NO ,A.PA_NO ,A.HSPT_NO
+          , B.PA_NAME
+          , C.EMP_NM
+      FROM NURSING_RECORD A
+      INNER JOIN PATIENT B
+         ON A.PA_NO = B.PA_NO
+      INNER JOIN EMPLOYEE C
+         ON A.EMP_NO = C.EMP_NO
+      WHERE A.HSPT_NO = #{hsptNo}
+      ORDER BY 1
+   </select>
+   
+<!--    <resultMap type="PatientVO" id="PatientMap" autoMapping="true"> -->
+<!--       <id property="paNo" column="PA_NO"/> -->
+<!--          <collection property="receptionList" ofType="ReceptionVO" autoMapping="true"> -->
+<!--             <association property="trmChart" javaType="TrmChartVO"> -->
+<!--                <collection property="diagHistoryVOList" ofType="DiagHistoryVO" autoMapping="true"> -->
+<!--                   <association property="hospitalization" javaType="kr.or.ddit.commons.vo.HospitalizationVO"> -->
+<!--                      <collection property="vitalList" ofType="kr.or.ddit.commons.vo.VitalVO" autoMapping="true"/> -->
+<!--                   </association> -->
+<!--                </collection> -->
+<!--             </association> -->
+<!--          </collection> -->
+<!--    </resultMap> -->
 
-	<resultMap type="kr.or.ddit.commons.vo.HospitalizationVO" id="hospitalizationMap" autoMapping="true">
-		<id property="hsptNo" column="HSPT_NO"/>
-		<collection property="vitalList" ofType="kr.or.ddit.commons.vo.VitalVO" autoMapping="true"/>
-	</resultMap>
-	
-	<select id="selectVitalList" resultMap="hospitalizationMap" parameterType="int">
-		SELECT 
-		    A.EMP_NM, A.PA_NAME, A.HSPT_NO 
-		    , B.VT_NO, B.VT_TMP, B.VT_PLS, B.VT_BP, B.VT_RP, B.VT_NE, TO_CHAR(B.VT_DATE, 'YYYY-MM-DD') AS VT_DATE
-		FROM V_HOSP A
-		INNER JOIN VITAL B
-			ON A.HSPT_NO = B.HSPT_NO
-		WHERE A.HSPT_NO = #{hsptNo}
-		ORDER BY B.VT_NO
-	</select>
-	
-	<select id="countIoList" resultType="int" parameterType="kr.or.ddit.commons.vo.IntakeOutputVO">
-		SELECT COUNT(*)
-		FROM INTAKE_OUTPUT
-		WHERE HSPT_NO = #{hsptNo}
-		  AND IO_DATE = #{ioDate}
-	</select>
-	
-	<insert id="createIO" parameterType="kr.or.ddit.commons.vo.IntakeOutputVO">
-		INSERT INTO INTAKE_OUTPUT (
-		    IO_TOTAL
-		    , HSPT_NO
-		    , IO_DATE
-		) VALUES (
-		    0
-		    , #{hsptNo}
-		    , #{ioDate}
-		)
-	</insert>
-	
-	<resultMap type="kr.or.ddit.commons.vo.IntakeOutputVO" id="IntakeOutputMap" autoMapping="true">
-		<id property="hsptNo" column="HSPT_NO"/>
-		<id property="ioDate" column="IO_DATE"/>
-		<collection property="intakeList" ofType="kr.or.ddit.commons.vo.IntakeVO" autoMapping="true"></collection>
-		<collection property="outputList" ofType="kr.or.ddit.commons.vo.OutputVO" autoMapping="true"></collection>
-	</resultMap>
-	
-	<select id="selectIoList" parameterType="kr.or.ddit.commons.vo.IntakeOutputVO" resultMap="IntakeOutputMap">
-		SELECT A.HSPT_NO , TO_CHAR(A.IO_DATE, 'YYYY-MM-DD') AS IO_DATE, A.IO_TOTAL 
-		    , B.INTAKE_NO, B.EMP_NO, B.INTAKE_CAPA, B.INTAKE_CATE_CD, B.INTAKE_NE
-		    , C.OUTPUT_NO, C.EMP_NO, C.OUTPUT_CAPA, C.OUTPUT_CATE_CD, C.OUTPUT_NE
-		    , D.INTAKE_CATE_NM
-		    , E.OUTPUT_CATE_NM
-		FROM INTAKE_OUTPUT A
-		LEFT OUTER JOIN INTAKE B
-			ON A.HSPT_NO = B.HSPT_NO AND A.IO_DATE = B.IO_DATE
-		LEFT OUTER JOIN OUTPUT C
-			ON A.HSPT_NO = C.HSPT_NO AND A.IO_DATE = C.IO_DATE
-		LEFT OUTER JOIN INTAKE_CATEGORY D
-			ON B.INTAKE_CATE_CD = D.INTAKE_CATE_CD
-		LEFT OUTER JOIN OUTPUT_CATEGORY E
-			ON C.OUTPUT_CATE_CD = E.OUTPUT_CATE_CD
-		WHERE A.HSPT_NO = #{hsptNo}
-		ORDER BY IO_DATE
-	</select>
-	
-	<!-- intake 입력 -->
-	<insert id="insertIntake" parameterType="IntakeVO">
-	/* kr.or.ddit.commons.dao.WardDAO.insertIntake */
-	
-	INSERT INTO INTAKE (
-	     INTAKE_NO
-	   , INTAKE_CAPA
-	   , INTAKE_NE
-	   , INTAKE_CATE_CD
-	   , EMP_NO
-	   , IO_DATE
-	   , HSPT_NO
-	) VALUES (
-	    'IN'||LPAD(SEQ_INTAKE.NEXTVAL, 4,'0')
-	   , #{intakeCapa,jdbcType=VARCHAR}
-	   , #{intakeNe,jdbcType=VARCHAR}
-	   , #{intakeCateCd,jdbcType=VARCHAR}
-	   , 6
-	   , #{ioDate,jdbcType=DATE}
-	   , #{hsptNo,jdbcType=NUMERIC}
-	)
-	</insert>
-	
-	<!-- intake 카테고리 조회 -->
-	<select id="selectIntakeCategory" resultType="kr.or.ddit.nurse.vo.IntakeCategoryVO">
-	/* WardDAO.selectIntakeCategory */
-	
-		SELECT
-		    intake_cate_cd
-		    ,intake_cate_nm
-		FROM
-		    intake_category
-	</select>
-	
-	<!-- output 카테고리 조회  -->
-	<select id="selectOutputCategory" resultType="kr.or.ddit.nurse.vo.OutputCategoryVO">
-	/* WardDAO.selectOutputCategory */
-	
-		SELECT
-		    output_cate_cd,
-		    output_cate_nm
-		FROM
-		    output_category
-	</select>
-	
-	
+   <resultMap type="kr.or.ddit.commons.vo.HospitalizationVO" id="hospitalizationMap" autoMapping="true">
+      <id property="hsptNo" column="HSPT_NO"/>
+      <collection property="vitalList" ofType="kr.or.ddit.commons.vo.VitalVO" autoMapping="true"/>
+   </resultMap>
+   
+   <select id="selectVitalList" resultMap="hospitalizationMap" parameterType="int">
+      SELECT 
+          A.EMP_NM, A.PA_NAME, A.HSPT_NO 
+          , B.VT_NO, B.VT_TMP, B.VT_PLS, B.VT_BP, B.VT_RP, B.VT_NE, TO_CHAR(B.VT_DATE, 'YYYY-MM-DD') AS VT_DATE
+      FROM V_HOSP A
+      INNER JOIN VITAL B
+         ON A.HSPT_NO = B.HSPT_NO
+      WHERE A.HSPT_NO = #{hsptNo}
+      ORDER BY B.VT_NO
+   </select>
+   
+   <select id="countIoList" resultType="int" parameterType="kr.or.ddit.commons.vo.IntakeOutputVO">
+      SELECT COUNT(*)
+      FROM INTAKE_OUTPUT
+      WHERE HSPT_NO = #{hsptNo}
+        AND IO_DATE = #{ioDate}
+   </select>
+   
+   <insert id="createIO" parameterType="kr.or.ddit.commons.vo.IntakeOutputVO">
+      INSERT INTO INTAKE_OUTPUT (
+          IO_TOTAL
+          , HSPT_NO
+          , IO_DATE
+      ) VALUES (
+          0
+          , #{hsptNo}
+          , #{ioDate}
+      )
+   </insert>
+   
+   <resultMap type="kr.or.ddit.commons.vo.IntakeOutputVO" id="IntakeOutputMap" autoMapping="true">
+      <id property="hsptNo" column="HSPT_NO"/>
+      <id property="ioDate" column="IO_DATE"/>
+      <collection property="intakeList" ofType="kr.or.ddit.commons.vo.IntakeVO" autoMapping="true"></collection>
+      <collection property="outputList" ofType="kr.or.ddit.commons.vo.OutputVO" autoMapping="true"></collection>
+   </resultMap>
+   
+   <select id="selectIoList" parameterType="kr.or.ddit.commons.vo.IntakeOutputVO" resultMap="IntakeOutputMap">
+      SELECT A.HSPT_NO , TO_CHAR(A.IO_DATE, 'YYYY-MM-DD') AS IO_DATE, A.IO_TOTAL 
+          , B.INTAKE_NO, B.EMP_NO, B.INTAKE_CAPA, B.INTAKE_CATE_CD, B.INTAKE_NE
+          , C.OUTPUT_NO, C.EMP_NO, C.OUTPUT_CAPA, C.OUTPUT_CATE_CD, C.OUTPUT_NE
+          , D.INTAKE_CATE_NM
+          , E.OUTPUT_CATE_NM
+      FROM INTAKE_OUTPUT A
+      LEFT OUTER JOIN INTAKE B
+         ON A.HSPT_NO = B.HSPT_NO AND A.IO_DATE = B.IO_DATE
+      LEFT OUTER JOIN OUTPUT C
+         ON A.HSPT_NO = C.HSPT_NO AND A.IO_DATE = C.IO_DATE
+      LEFT OUTER JOIN INTAKE_CATEGORY D
+         ON B.INTAKE_CATE_CD = D.INTAKE_CATE_CD
+      LEFT OUTER JOIN OUTPUT_CATEGORY E
+         ON C.OUTPUT_CATE_CD = E.OUTPUT_CATE_CD
+      WHERE A.HSPT_NO = #{hsptNo}
+      ORDER BY IO_DATE
+   </select>
+   
+   <resultMap type="HospitalizationVO" id="dietRecordMap" autoMapping="true">
+      <id property="hsptNo" column="HSPT_NO"/>
+      <collection property="dietList" ofType="kr.or.ddit.nurse.vo.DietRecordVO" autoMapping="true"></collection>
+   </resultMap>
+   
+   <select id="selectDietList" parameterType="kr.or.ddit.nurse.vo.DietRecordVO" resultMap="dietRecordMap">
+      SELECT 
+            B.DIET_NO
+         , A.PA_NAME
+         , C.DIET_CATE_NM
+         , A.EMP_NM
+         , A.HSPT_NO
+         , TO_CHAR(B.DIET_DATE, 'YYYY-MM-DD') AS DIET_DATE
+         , B.DIET_TIME
+         , B.DIET_NE
+      FROM V_HOSP A
+      INNER JOIN DIET_RECORD B
+      ON A.HSPT_NO = B.HSPT_NO
+      INNER JOIN DIET_CATEGORY C
+      ON B.DIET_CATE_CD = C.DIET_CATE_CD
+      WHERE A.HSPT_NO = #{hsptNo}
+   </select>
+   
+   <!-- intake 입력 -->
+   <insert id="insertIntake" parameterType="IntakeVO">
+   /* kr.or.ddit.commons.dao.WardDAO.insertIntake */
+   
+   INSERT INTO INTAKE (
+        INTAKE_NO
+      , INTAKE_CAPA
+      , INTAKE_NE
+      , INTAKE_CATE_CD
+      , EMP_NO
+      , IO_DATE
+      , HSPT_NO
+   ) VALUES (
+       'IN'||LPAD(SEQ_INTAKE.NEXTVAL, 4,'0')
+      , #{intakeCapa,jdbcType=VARCHAR}
+      , #{intakeNe,jdbcType=VARCHAR}
+      , #{intakeCateCd,jdbcType=VARCHAR}
+      , 6
+      , #{ioDate,jdbcType=DATE}
+      , #{hsptNo,jdbcType=NUMERIC}
+   )
+   </insert>
+   
+   <!-- output 입력 -->
+   <insert id="insertOutput" parameterType="OutputVO">
+   /* kr.or.ddit.commons.dao.WardDAO.insertOutput */
+      
+      INSERT INTO output (
+          output_no
+          , output_capa
+          , output_ne
+          , output_cate_cd
+          , emp_no
+          , io_date
+          , hspt_no
+      ) VALUES (
+          'OUT'||LPAD(SEQ_INTAKE.NEXTVAL, 4,'0')
+         , #{outputCapa,jdbcType=VARCHAR}
+         , #{outputNe,jdbcType=VARCHAR}
+         , #{outputCateCd,jdbcType=VARCHAR}
+         , 6
+         , #{ioDate,jdbcType=DATE}
+         , #{hsptNo,jdbcType=NUMERIC}
+      )
+   </insert>
+   
+   <insert id="insertDiet" parameterType="kr.or.ddit.nurse.vo.DietRecordVO">
+   /* kr.or.ddit.commons.dao.WardDAO.insertDiet */
+   
+      INSERT INTO diet_record (
+          diet_no,
+          diet_date,
+          diet_ne,
+          diet_cate_cd,
+          emp_no,
+          hspt_no,
+          diet_time
+      ) VALUES (
+           'DI'||LPAD(SEQ_DIET.NEXTVAL,4,'0')
+         , #{dietDate,jdbcType=DATE}
+         , #{dietNe,jdbcType=VARCHAR}
+         , #{dietCateCd,jdbcType=VARCHAR}
+         , 6
+         , #{hsptNo,jdbcType=NUMERIC}
+         , #{dietTime,jdbcType=DATE}
+      )
+   
+   </insert>
+   
+   <!-- intake 카테고리 조회 -->
+   <select id="selectIntakeCategory" resultType="kr.or.ddit.nurse.vo.IntakeCategoryVO">
+   /* WardDAO.selectIntakeCategory */
+   
+      SELECT
+          intake_cate_cd
+          ,intake_cate_nm
+      FROM
+          intake_category
+   </select>
+   
+   <!-- output 카테고리 조회  -->
+   <select id="selectOutputCategory" resultType="kr.or.ddit.nurse.vo.OutputCategoryVO">
+   /* WardDAO.selectOutputCategory */
+   
+      SELECT
+          output_cate_cd,
+          output_cate_nm
+      FROM
+          output_category
+   </select>
+   
+   <!-- diet 카테고리 조회 -->
+   <select id="selectDietCategory" resultType="kr.or.ddit.nurse.vo.DietCategoryVO">
+   /* WardDAO.selectDietCategory */
+   
+      SELECT
+          diet_cate_cd,
+          diet_cate_nm
+      FROM
+          diet_category
+   </select>
+   
+   
 </mapper>

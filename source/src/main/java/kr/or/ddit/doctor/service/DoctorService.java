@@ -65,14 +65,14 @@ public interface DoctorService {
 	 * @param rcpNo
 	 * @return
 	 */
-	public TrmChartVO retrieveTrmChart(int rcpNo);
+	public TrmChartVO retrieveTrmChart(String rcpNo);
 	
 	/**
 	 * 환자의 과거 진료 차트 기록 리스트
 	 * @param paNo
 	 * @return
 	 */
-	public List<TrmChartVO> retrieveTrmChartList(int paNo);
+	public List<TrmChartVO> retrieveTrmChartList(String paNo);
 	
 	/**
 	 * 내 진료실에 해당하는 대기실 환자 리스트
@@ -86,7 +86,7 @@ public interface DoctorService {
 	 * @param paNo 환자 번호
 	 * @return
 	 */
-	public PatientVO retrievePaInfo(int paNo);
+	public PatientVO retrievePaInfo(String paNo);
 	
 	/**
 	 * 진료 차트 작성

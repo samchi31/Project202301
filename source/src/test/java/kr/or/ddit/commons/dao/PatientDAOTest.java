@@ -20,7 +20,7 @@ public class PatientDAOTest extends AbstractTestCase{
 	@Before
 	public void setUp() throws Exception {
 		PatientVO pavo = new PatientVO();
-		pavo.setPaNo(1);
+//		pavo.setPaNo(1);
 		pavo.setPaName("테스트");
 	}
 	

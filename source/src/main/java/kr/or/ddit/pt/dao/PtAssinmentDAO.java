@@ -7,9 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.PtAssinmentVO;
+import kr.or.ddit.commons.vo.PtDocumentVO;
 import kr.or.ddit.commons.vo.ReceptionVO;
+import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
-import kr.or.ddit.enumpkg.ServiceResult;
 
 /**
  * @author 장예지
@@ -25,63 +26,103 @@ import kr.or.ddit.enumpkg.ServiceResult;
  * Copyright (c) 2023 by DDIT All right reserved
  *      </pre>
  */
+
 @Mapper
 public interface PtAssinmentDAO {
 
 	/**
 	 * 물리치료실 대기 환자 목록 조회
-	 * 
 	 * @param ptAssinmentVO
-	 * @return
+	 * @return PtAssinmentVO
 	 */
-	public List<PtAssinmentVO> selectPtAssinmentList(PtAssinmentVO ptAssinmentVO);
+	public List<PtAssinmentVO> selectPtRoomList(PtAssinmentVO ptAssinmentVO);
 
 	/**
 	 * 물리치료실 bed 상태
-	 * 
-	 * @param ptAssinmentVO
+	 * @param 
+	 * @return PtAssinmentVO
+	 */
+	public List<PtAssinmentVO> selectPtBedList();
+	
+	/**
+	 * 치료일지 select
 	 * @return
 	 */
-	public List<PtAssinmentVO> ptBedList();
-
+	public List<PtAssinmentVO> selectPtDocument();
+	
 	/**
-	 * 물리치료실 bed에 환자 배정
-	 * 
+	 * 물리치료실 bed에 환자 배정(수정)
+	 * @param PtAssinmentVO
+	 * @return int
+	 */
+	public int updatePtBedFull(PtAssinmentVO ptAssinmentVO);
+	
+	/**
+	 * 대기히스토리 추가(대기중->치료중) Insert
+	 * @param rcpNo
+	 */
+	public int insertCureListChange(String rcpNo);
+	
+	
+	/**
+	 * 물리치료실 bed 치료완료처리 update
 	 * @param
 	 * @return
 	 */
-	public int ptBedFull(PtAssinmentVO ptAssinmentVO);
-
+	public int updatePtBedEmpty(PtAssinmentVO ptAssinmentVO);
+	
 	/**
-	 * 물리치료실 bed 치료완료처리
-	 * 
-	 * @param
-	 * @return
+	 * 대기히스토리 추가(치료중->치료완료) insert
+	 * @param waitHistoryVO
 	 */
-	public int ptBedEmpty(PtAssinmentVO ptAssinmentVO);
-
+	public int insertCompletionChange(String rcpNo);
+	
 	/**
-	 * 환자조회
-	 * 
+	 * 처음 화면에 들어가면 환자 조회에서 
+	 * 병원 내부 환자 List 출력됨
+	 * 환자 List
 	 * @param map
 	 * @return
 	 */
 	public List<PatientVO> selectPatientList(Map<String, String> map);
-
+	
 	/**
-	 * 대기히스토리 추가(대기중->치료중)
-	 * 
-	 * @param waitHistoryVO
+	 * 환자 조회(검색)
+	 * @param map
+	 * @return
 	 */
-	public int cureListChangeInsert(WaitHistoryVO waitHistoryVO);
-
+	public List<PatientVO> searchPatients(Map<String, String> map);
+	
 	/**
-	 * 대기히스토리 추가(대기중->치료중)
-	 * 
-	 * @param waitHistoryVO
+	 * 환자 치료일지 검색(검색)
+	 * @param map
+	 * @return
 	 */
-	public int completionChangeInsert(WaitHistoryVO waitHistoryVO);
+	public List<PtAssinmentVO> searchAgoDocu(Map<String, String> map);
 
-	public ReceptionVO selectPatient(int rcpNo);
-
+	
+	public ReceptionVO selectPatient(String rcpNo);
+	
+	
+	/**
+	 * 물리치료기록서 조회
+	 * @param ptDocumentVO
+	 * @return
+	 */
+	public List<PtDocumentVO> selectPtDocumentAgo();
+	
+	/**
+	 * 환자 차트 조회
+	 * @param map
+	 * @return TrmChartVO
+	 */
+	public List<TrmChartVO> selectptChart(TrmChartVO trmChartVO);
+	
+	/**
+	 * 환자 치료일지 작성
+	 * @param ptAssinmentVO
+	 * @return
+	 */
+	public int insertCureWrite(PtAssinmentVO ptAssinmentVO);
+	
 }

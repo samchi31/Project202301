@@ -16,4 +16,5 @@ public class FilmCateVO {
 	
 	private String paName;
 	private String trmDt;
+	private String empNm;
 }

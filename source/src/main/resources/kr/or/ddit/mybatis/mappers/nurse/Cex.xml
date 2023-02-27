@@ -4,9 +4,14 @@
 
 	<select id="selectPatientList" resultType="PatientVO" parameterType="hashMap">
 		
-		SELECT PA_NO, PA_NAME, PA_REG
-		    , PA_HP, PA_PRN , PA_ZIP
-		    , PA_ADD1, PA_ADD2, PA_PIYN
+		SELECT PA_NO
+			, PA_NAME
+			, PA_REG
+		    , PA_HP 
+		    , PA_ZIP
+		    , PA_ADD1
+		    , PA_ADD2
+		    , PA_PIYN
 		    , PA_SEX              
 		  FROM PATIENT   
 		<where>

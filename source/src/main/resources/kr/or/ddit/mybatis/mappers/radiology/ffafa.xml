@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.radiology.dao.FilmRecordDAO">
+	<sql id="searchFrag">
+		<where>
+			<if test="simpleCondition neq null and @org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'no'">
+						INSTR(PA_NO, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'name'">
+						INSTR(PA_NAME, #{simpleCondition.searchWord}) > 0
+					</when>
+					<otherwise>
+						INSTR(PA_NO, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(PA_NAME, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>
+			</if>
+		 </where>
+	</sql>
+	
+	<select id="selectTotalRecord" resultType="int" parameterType="pagingVO">
+		SELECT 
+			COUNT(*)
+		FROM 
+			FILMCATE A
+			, TRM_CHART B
+			, FILM_ORDER C
+			, RECEPTION D
+			, PATIENT E
+		WHERE 
+			A.FILM_CD = C.FILM_CD
+			AND C.TRM_CD = B.TRM_CD
+			AND B.RCP_NO = D.RCP_NO
+			AND D.PA_NO = E.PA_NO
+<!-- 		<include refid="searchFrag"/> -->
+	</select>
+	
+	<select id="selectFilmList" resultType="WaitHistoryVO" parameterType="hashMap">
+		WITH WAITVIEW 
+		AS (
+		    SELECT  
+		    	RCP_NO
+		    	, MAX(WAIT_NUM) AS WAIT_NUM
+		    FROM    
+		    	V_WAIT_HIST
+		    GROUP BY 
+		    	RCP_NO 
+		    )
+		SELECT  A.RCP_NO, A.WAIT_NUM, A.PA_NO, A.PA_NAME, A.DIV_CD, A.DIV_NM, A.WAITST_CD, A.WAITST_NM, TO_CHAR(A.WAIT_DT, 'YYYY-MM-DD') AS WAIT_DT
+		FROM    V_WAIT_HIST A   
+		INNER JOIN  WAITVIEW B 
+		ON(A.RCP_NO = B.RCP_NO AND A.WAIT_NUM = B.WAIT_NUM)
+		WHERE A.WAITST_CD = 'WS003'
+		AND A.DIV_CD BETWEEN 'DV004' AND 'DV007'
+		<if test="searchOption!=null">
+			<choose>
+				<when test="searchOption=='filmName'">
+					AND A.DIV_NM LIKE '%' || #{searchWord} || '%'
+				</when>
+				<when test="searchOption=='name'">
+					AND A.PA_NAME LIKE '%' || #{searchWord} || '%'
+				</when>
+			</choose>
+		</if>
+	</select>
+	<select id="selectfilmResultList" resultType="WaitHistoryVO" parameterType="string">
+		WITH waitView 
+		AS (
+		    SELECT  RCP_NO, MAX(WAIT_NUM) AS WAIT_NUM
+		    FROM    V_WAIT_HIST
+		    GROUP   BY  RCP_NO 
+		    )
+		SELECT 
+			C.TRM_CD
+			, A.RCP_NO
+			, A.WAIT_NUM
+			, A.PA_NO
+			, A.PA_NAME
+			, A.DIV_CD
+			, A.DIV_NM
+			, A.WAITST_CD
+			, A.WAITST_NM
+			, TO_CHAR(A.WAIT_DT, 'YYYY-MM-DD') AS WAIT_DT
+		FROM    V_WAIT_HIST A   
+		INNER JOIN  waitView B 
+		ON(A.RCP_NO = B.RCP_NO AND A.WAIT_NUM = B.WAIT_NUM)
+        INNER JOIN TRM_CHART C ON(B.RCP_NO = C.RCP_NO)
+		WHERE A.WAITST_CD = 'WS003'
+		AND A.DIV_CD BETWEEN 'DV004' AND 'DV007'
+        AND A.PA_NO = #{paNo}
+		ORDER BY 1
+	</select>
+	
+</mapper>
+

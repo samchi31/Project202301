@@ -2,20 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.pt.dao.PtAssinmentDAO">
 	
-	<!-- 대기환자 조회 -->
-	<select id="selectPtAssinmentList" resultType="kr.or.ddit.commons.vo.PtAssinmentVO">
+	<!-- 물리치료실 대기환자 조회 -->
+	<select id="selectPtRoomList" resultType="kr.or.ddit.commons.vo.PtAssinmentVO">
 		 WITH testView AS (
 		    				SELECT  RCP_NO, MAX(WAIT_NUM) AS WAIT_NUM
-		    				  FROM  WAITING_HISTORY
+		    				 FROM  WAITING_HISTORY
 		    				 GROUP  BY  RCP_NO	)
 		SELECT  A.RCP_NO, A.WAIT_NUM, A.PA_NO, A.PA_NAME, A.DIV_CD, A.DIV_NM, A.WAITST_CD, A.WAITST_NM,A.PA_REG
 		FROM    V_WAIT_HIST A   INNER JOIN  testView B ON(A.RCP_NO = B.RCP_NO AND A.WAIT_NUM = B.WAIT_NUM)
-		WHERE   DIV_CD = 'DV008'
+		WHERE   DIV_CD = 'DV003'
         AND WAITST_CD = 'WS001'
 	</select>
 	
-	<!-- bed 상황 -->
-	<select id="ptBedList" resultType="kr.or.ddit.commons.vo.PtAssinmentVO">
+	<!-- 물리치료실 bed 상태 -->
+	<select id="selectPtBedList" resultType="kr.or.ddit.commons.vo.PtAssinmentVO">
 		WITH REP_PAT AS
 			(SELECT B.RCP_NO, C.PA_NAME
 			FROM  RECEPTION B, PATIENT C
@@ -26,30 +26,111 @@
 		ORDER BY PT_BED_CD
 	</select>
 	
-	<!-- 베드 배정 -->	
-	<update id="ptBedFull" parameterType="kr.or.ddit.commons.vo.PtAssinmentVO">
+<!-- 	치료일지 출력 -->
+	<select id="selectPtDocument" resultType="kr.or.ddit.commons.vo.PtAssinmentVO">
+		SELECT T.pa_no, T.pa_name, T.pa_reg
+        	  ,T.rcp_no, T.rcp_date, T.trm_cd 
+        	  ,T.medi_record, T.trm_dt, T.pd_no ,T.pd_cont
+        	  ,LISTAGG(T.SYM_DETAIL,',') WITHIN GROUP(ORDER BY T.SYM_DETAIL) AS SYM_DETAIL
+        	  ,LISTAGG(T.sym_cd,',') WITHIN GROUP(ORDER BY T.sym_cd) AS sym_cd
+		FROM (SELECT
+		         a.pa_no, a.pa_name, a.pa_reg
+		        ,b.rcp_no ,b.rcp_date
+		        ,c.trm_cd, c.medi_record, c.trm_dt
+                ,d.SYM_DETAIL, d.SYM_CD
+                ,e.pd_cont, e.pd_no
+		      FROM RECEPTION b  
+		      INNER JOIN TRM_CHART c
+		       ON b.rcp_no = c.rcp_no
+		      INNER JOIN SYMPTOM_HISTORY d
+		       ON C.trm_cd = d.trm_cd
+		      LEFT OUTER JOIN PATIENT a
+		       ON b.pa_no = a.pa_no
+              INNER JOIN PT_DOCUMENT E
+              ON c.trm_cd = e.trm_cd
+		      order by 1
+    		)T
+		GROUP BY 
+				T.pa_no, T.pa_name, T.pa_reg
+				,T.rcp_no, T.rcp_date ,T.trm_cd
+				,T.medi_record, T.trm_dt, T.pd_cont, T.PD_NO
+		order by PD_NO desc
+	</select>
+	
+	<!-- 베드 배정 update -->	
+	<update id="updatePtBedFull" parameterType="kr.or.ddit.commons.vo.PtAssinmentVO">
 		UPDATE PHYSIOTHERAPY 
 		SET PT_BED_STATE = '1',
-			RCP_NO = #{rcpNo,jdbcType=NUMERIC}
+			RCP_NO = #{rcpNo,jdbcType=VARCHAR}
 		WHERE PT_BED_CD=#{ptBedCd,jdbcType=VARCHAR}
 	</update>
 	
-	<!-- 배드 비우기 -->
-	<update id="ptBedEmpty" parameterType="kr.or.ddit.commons.vo.PtAssinmentVO">
+	<!-- 대기히스토리 추가(대기중->치료중) -->
+	<insert id="insertCureListChange" parameterType="string">
+		INSERT INTO 
+				WAITING_HISTORY(WAIT_NO, RCP_NO, WAIT_DT, WAIT_NUM, WAITST_CD, DIV_CD)
+		VALUES(
+				( SELECT NVL(MAX(WAIT_NO),0)+1 
+                  FROM WAITING_HISTORY)
+				, #{rcpNo}
+                , SYSDATE
+				,(SELECT NVL(MAX(WAIT_NUM),0)+1 FROM WAITING_HISTORY)
+				,'WS004'
+                ,'DV003')
+	</insert>
+	
+	<!-- 배드 비우기 update-->
+	<update id="updatePtBedEmpty" parameterType="kr.or.ddit.commons.vo.PtAssinmentVO">
 		UPDATE PHYSIOTHERAPY 
 		SET PT_BED_STATE = '0',
 			RCP_NO = NULL
 		WHERE PT_BED_CD=#{ptBedCd,jdbcType=VARCHAR}
 	</update>
 	
+	<!-- 대기히스토리 추가(대기중->완료) -->
+	<insert id="insertCompletionChange" parameterType="string">
+		INSERT INTO 
+			waiting_history (
+    							wait_no,
+    							rcp_no,
+    							wait_dt,
+    							wait_num,
+    							waitst_cd,
+    							div_cd
+					) VALUES (	
+            			(SELECT NVL(MAX(WAIT_NO),0)+1 
+             			 FROM WAITING_HISTORY)
+                		,#{rcpNo}
+                		,SYSDATE
+						,(SELECT NVL(MAX(WAIT_NUM),0)+1 FROM WAITING_HISTORY)
+						,'WS003'
+						,'DV003')			
+	</insert>
+	
+	<!-- 환자조회 -->
+	<select id="selectPatient" parameterType="string" resultType="kr.or.ddit.commons.vo.ReceptionVO">
+		SELECT A.RCP_NO
+			 , A.PA_NO
+			 , B.PA_NAME "patient.paName"
+			 , B.PA_HP "patient.paHp"
+    	 FROM reception A INNER JOIN PATIENT B ON(A.PA_NO = B.PA_NO)
+    	WHERE A.RCP_NO = #{rcpNo}
+	</select>
+	
 	<!-- 환자검색 -->
-	<select id="selectPatientList" resultType="kr.or.ddit.commons.vo.PatientVO" parameterType="hashMap">
-		SELECT PA_NO, PA_NAME, PA_REG
-		    , PA_HP,  PA_ZIP
-		    , PA_ADD1, PA_ADD2, PA_PIYN
-		    , PA_SEX              
-		  FROM PATIENT   
-		<where>
+	<select id="searchPatients" resultType="kr.or.ddit.commons.vo.PatientVO" parameterType="hashMap">
+		SELECT A.PA_NO
+			 , A.PA_NAME
+			 , A.PA_REG
+		     , A.PA_HP
+		     , A.PA_ZIP
+		     , A.PA_ADD1
+		     , A.PA_ADD2
+		     , A.PA_PIYN
+		     , A.PA_SEX
+		     , B.RCP_DATE              
+		  FROM PATIENT A left outer join RECEPTION B on (A.PA_NO = B.PA_NO)
+		<trim prefix=" WHERE " prefixOverrides="AND">
 			<if test="searchOption!=null">
 				<choose>
 					<when test="searchOption=='no'">
@@ -60,62 +141,167 @@
 					</when>
 				</choose>
 			</if>
-		</where>      
+		</trim>      
 	</select>
 	
-	<select id="selectPatient" parameterType="int" resultType="kr.or.ddit.commons.vo.ReceptionVO">
-		SELECT A.RCP_NO, A.PA_NO
-		, B.PA_NAME "patient.paName"
-		, B.PA_HP "patient.paHp"
-    FROM reception A INNER JOIN PATIENT B
-         ON(A.PA_NO = B.PA_NO)
-    WHERE A.RCP_NO = #{rcpNo}
+	<!-- 환자치료일지 검색-->
+	<resultMap type="kr.or.ddit.commons.vo.PtAssinmentVO" id="ptDocuList" autoMapping="true">
+		<id property="ptasNo" column="ptasNo"/>
+		<association property="patientVO" javaType="kr.or.ddit.commons.vo.PatientVO" autoMapping="true"/>
+		<association property="receptionVO" javaType="kr.or.ddit.commons.vo.ReceiveVO" autoMapping="true"/>
+		<collection property="trmChartVO" ofType="kr.or.ddit.commons.vo.TrmChartVO" autoMapping="true"/>
+	</resultMap>
+	<select id="searchAgoDocu" resultType="kr.or.ddit.commons.vo.PtAssinmentVO" parameterType="hashMap">
+		SELECT T.pa_no ,T.pa_name ,T.pa_reg, T.pa_sex
+		      ,T.rcp_no ,T.rcp_date ,T.office_cd
+		      ,T.trm_cd ,T.medi_record ,T.trm_dt ,T.emp_no 
+		      ,LISTAGG(T.SYM_DETAIL,',') WITHIN GROUP(ORDER BY T.SYM_DETAIL) AS SYM_DETAIL
+              ,LISTAGG(T.sym_cd,',') WITHIN GROUP(ORDER BY T.sym_cd) AS sym_cd
+              ,T.PD_NO, T.PD_DT, T.TRM_CD, T.PD_CONT
+		FROM (SELECT
+		        a.pa_no, a.pa_name, a.pa_reg, a.pa_sex, 
+		        b.rcp_no, b.rcp_date, b.office_cd,
+		        c.trm_cd, c.medi_record, c.trm_dt, c.emp_no, 
+		        d.SYM_DETAIL, d.SYM_CD, 
+                e.PD_NO, e.PD_DT, e.PD_CONT
+		      FROM RECEPTION b  
+		      INNER JOIN TRM_CHART c
+		       ON b.rcp_no = c.rcp_no
+              INNER JOIN PT_DOCUMENT E
+               ON C.trm_cd = E.trm_cd
+		      INNER JOIN SYMPTOM_HISTORY d
+		       ON C.trm_cd = d.trm_cd
+		      LEFT OUTER JOIN PATIENT a
+		       ON b.pa_no = a.pa_no
+             <where>
+             	<if test="searchOptionA!=null">
+					<choose>
+						<when test="searchOptionA=='no'">
+							AND PA_NO = #{searchWordA}
+						</when>
+						<when test="searchOptionA=='name'">
+							AND PA_NAME LIKE '%' || #{searchWordA} || '%'
+						</when>
+					</choose>             	
+             	</if>
+             </where>
+    		)T
+        
+		GROUP BY T.pa_no
+		        , T.pa_name
+		        , T.pa_reg
+		        , T.pa_sex
+		        , T.rcp_no
+		        , T.rcp_date
+		        , T.office_cd
+		        , T.trm_cd
+		        , T.medi_record
+		        , T.trm_dt
+		        , T.emp_no
+                , T.PD_NO
+                , T.PD_DT
+                , T.PD_CONT  
 	</select>
 	
-	<!-- 대기히스토리 추가(대기중->치료중) -->
-	<insert id="cureListChangeInsert" parameterType="hashMap">
-		INSERT INTO 
-				WAITING_HISTORY(WAIT_NO, RCP_NO, WAIT_DT, WAIT_NUM, WAITST_CD, DIV_CD)
-		VALUES(
-				( SELECT NVL(MAX(WAIT_NO),0)+1 
-                  FROM WAITING_HISTORY)
-				, #{rcpNo}
-                , SYSDATE
-				,(SELECT NVL(MAX(WAIT_NUM),0)+1 FROM WAITING_HISTORY)
-				,'WS004'
-                ,'DV008')
+	<!-- 환자 List 출력 -->
+	<select id="selectPatientList" resultType="kr.or.ddit.commons.vo.PatientVO" parameterType="hashMap">
+		SELECT A.PA_NO
+			 , A.PA_NAME
+			 , A.PA_REG
+		     , A.PA_HP
+		     , A.PA_ZIP
+		     , A.PA_ADD1
+		     , A.PA_ADD2
+		     , A.PA_PIYN
+		     , A.PA_SEX
+		     , B.RCP_DATE              
+		  FROM PATIENT A
+		  INNER JOIN  RECEPTION B
+		       ON A.PA_NO = B.PA_NO
+	</select>
+	
+	
+	<!-- 물리치료기록서 List select  -->
+	<select id="selectPtDocumentAgo" resultType="kr.or.ddit.commons.vo.PtDocumentVO">
+		SELECT D.PD_NO, D.PD_DT
+			 , D.TRM_CD
+			 , D.PD_CONT
+			 , D.PD_PART
+			 , E.PA_NO
+			 , E.PA_NAME
+			 , E.PA_REG
+			 , E.PA_HP
+			 ,E.PA_SEX
+		FROM WAITING_HISTORY A, RECEPTION B, TRM_CHART C, PT_DOCUMENT D, PATIENT E
+		WHERE A.RCP_NO = B.RCP_NO
+		AND B.RCP_NO = C.RCP_NO
+		AND C.TRM_CD = D.TRM_CD
+		AND B.PA_NO = E.PA_NO 
+		AND DIV_CD = 'DV003'
+		AND WAITST_CD = 'WS003'
+	</select>
+	
+	
+	<!-- 물리치료실 대기현황에서 환자 번호 클릭 시 환자 진료차트 조회 -->
+	<resultMap type="kr.or.ddit.commons.vo.TrmChartVO" id="prmChartMap" autoMapping="true">
+	<id property="trmCd" column="TRM_CD"/>
+		<association property="patientVO" javaType="kr.or.ddit.commons.vo.PatientVO" autoMapping="true"/>
+		<association property="receptionVO" javaType="kr.or.ddit.commons.vo.ReceptionVO" autoMapping="true"/>
+		<collection property="symptomVOList" ofType="kr.or.ddit.commons.vo.SymptomVO" autoMapping="true"/>
+		<collection property="ptDocumentList" ofType="kr.or.ddit.commons.vo.PtDocumentVO" autoMapping="true"/>
+	</resultMap>
+	<select id="selectptChart" resultMap="prmChartMap" parameterType="kr.or.ddit.commons.vo.TrmChartVO">
+		 SELECT T.pa_no ,T.pa_name ,T.pa_reg, T.pa_sex
+		      ,T.rcp_no ,T.rcp_date ,T.office_cd
+		      ,T.trm_cd ,T.medi_record ,T.trm_dt ,T.emp_no 
+		      ,LISTAGG(T.SYM_DETAIL,',') WITHIN GROUP(ORDER BY T.SYM_DETAIL) AS SYM_DETAIL
+              ,LISTAGG(T.sym_cd,',') WITHIN GROUP(ORDER BY T.sym_cd) AS sym_cd
+              ,T.PD_NO, T.PD_DT, T.PD_CONT, T.PD_PART
+		FROM (SELECT
+		        a.pa_no, a.pa_name, a.pa_reg, a.pa_sex, 
+		        b.rcp_no, b.rcp_date, b.office_cd,
+		        c.trm_cd, c.medi_record, c.trm_dt, c.emp_no, d.SYM_DETAIL, d.SYM_CD,
+                E.PD_NO, E.PD_DT, E.PD_CONT, E.PD_PART
+		      FROM RECEPTION b  
+		      INNER JOIN TRM_CHART c
+		       ON b.rcp_no = c.rcp_no
+              LEFT OUTER JOIN PT_DOCUMENT E
+               ON C.TRM_CD = E.TRM_CD
+		      INNER JOIN SYMPTOM_HISTORY d
+		       ON C.trm_cd = d.trm_cd
+		      LEFT OUTER JOIN PATIENT a
+		       ON b.pa_no = a.pa_no
+		      where b.rcp_no =  #{rcpNo,jdbcType=VARCHAR}
+		      order by 1
+    		)T
+		GROUP BY T.pa_no
+		        , T.pa_name
+		        , T.pa_reg
+		        , T.pa_sex
+		        , T.rcp_no
+		        , T.rcp_date
+		        , T.office_cd
+		        , T.TRM_CD
+		        , T.medi_record
+		        , T.trm_dt
+		        , T.emp_no
+                , T.PD_NO
+                , T.PD_DT
+                , T.PD_CONT
+                , T.PD_PART
+                
+	</select>
+	
+	<!-- 	환자 치료일지 Insert -->
+	<insert id="insertCureWrite" parameterType="kr.or.ddit.commons.vo.PtAssinmentVO">
+		INSERT INTO PT_DOCUMENT ( pd_no, pd_dt, trm_cd,pd_cont, pd_part 
+						) VALUES (	
+	            			(SELECT NVL(MAX(pd_no),0)+1 
+	             			 FROM PT_DOCUMENT)
+	                		, SYSDATE
+							, #{trmCd,jdbcType=VARCHAR}
+							, #{pdCont,jdbcType=VARCHAR} 
+							, #{pdPart,jdbcType=VARCHAR} )
 	</insert>
-	
-	<!-- 대기히스토리 추가(대기중->완료) -->
-	<insert id="completionChangeInsert" parameterType="hashMap">
-		INSERT INTO 
-			waiting_history (
-    							wait_no,
-    							rcp_no,
-    							wait_dt,
-    							wait_num,
-    							waitst_cd,
-    							div_cd
-			) VALUES (	
-            			(SELECT NVL(MAX(WAIT_NO),0)+1 
-             			 FROM WAITING_HISTORY)
-                		,#{rcpNo}
-                		,SYSDATE
-						,(SELECT NVL(MAX(WAIT_NUM),0)+1 FROM WAITING_HISTORY)
-						,'WS007'
-						,'DV008')			
-	</insert>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 </mapper>

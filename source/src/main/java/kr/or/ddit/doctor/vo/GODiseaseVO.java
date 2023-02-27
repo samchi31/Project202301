@@ -13,5 +13,5 @@ public class GODiseaseVO {
 	private String icd;
 	private String goCd;
 	private String icdName;
-	private String operTf;
+	private String icdEng;
 }

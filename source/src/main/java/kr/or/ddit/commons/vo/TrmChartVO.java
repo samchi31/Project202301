@@ -16,11 +16,16 @@ public class TrmChartVO {
 	private String mediRecord;
 	private String trmDt;
 	private Integer empNo;
-	private Integer rcpNo;
+	private String empNm;
+	private String rcpNo;
+	private String paNo;
+	private String paName;
 	
 	private List<DiagHistoryVO> diagHistoryVOList;
 	private List<SymptomVO> symptomVOList;
 	private List<PrescriptionVO> prescriptionVOList;
 	private List<FilmOrderVO> filmOrderVOList;
-	
+	private List<PtDocumentVO> ptDocumentList; //물리치료기록서
+	private PatientVO patientVO;
+	private ReceptionVO receptionVO;
 }
