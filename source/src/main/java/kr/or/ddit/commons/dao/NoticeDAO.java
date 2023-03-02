@@ -1,10 +1,13 @@
 package kr.or.ddit.commons.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.or.ddit.commons.vo.EmployeeVO;
 import kr.or.ddit.commons.vo.NoticeVO;
+import kr.or.ddit.commons.vo.WorkingStatusVO;
 
 /**
  * @author 장예지
@@ -35,4 +38,56 @@ public interface NoticeDAO {
 	 * @return
 	 */
 	public int insertNotice(NoticeVO noticeVO);
+
+	/**
+	 * 스케쥴 조회
+	 * @return List<WorkingStatusVO>
+	 */
+	public List<WorkingStatusVO> selectScheduleList();
+
+	/**
+	 * 스케줄 등록
+	 * @param map
+	 * @return
+	 */
+	public int insertSchedule(Map<String, Object> map);
+
+	/**
+	 * 직원목록조회
+	 * @return List<EmployeeVO>
+	 */
+	public List<EmployeeVO> selectEmpList();
+
+	/**
+	 * 스케줄 디테일 조회
+	 * @param wsNo
+	 * @return WorkingStatusVO
+	 */
+	public WorkingStatusVO selectScheduleDetail(String wsNo);
+	
+	/**
+	 * 스케줄 상태 항목 조회
+	 * @return List<WorkingStatusVO>
+	 */
+	public List<WorkingStatusVO> selectWsOption();
+
+	/**
+	 * 근무상태 변경
+	 * @return 성공/실패
+	 */
+	public int updateWs(Map<String, String> map);
+
+	/**
+	 * 근무상태 삭제
+	 * @param 성공/실패
+	 * @return
+	 */
+	public int deleteWs(Map<String, String> map);
+
+	/**
+	 * 일일 접수 환자 수 조회
+	 * @param map
+	 * @return
+	 */
+	public int selectCountReception(Map<String, String> map);
 }

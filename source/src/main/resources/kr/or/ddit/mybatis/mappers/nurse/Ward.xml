@@ -3,10 +3,15 @@
 <mapper namespace="kr.or.ddit.nurse.dao.WardDAO">
    <select id="selectWardPatientList" resultType="kr.or.ddit.nurse.vo.WardVO">
       SELECT 
-          A.HSPT_NO, A.WR_RNO, A.BED_NO, A.PA_NAME, A.HSPT_YN, A.TRM_CD
+          A.HSPT_NO
+          , A.WR_RNO
+          , A.BED_NO
+          , A.PA_NAME
+          , A.HSPT_YN
+          , A.TRM_CD
+          , A.PA_REG
           , B.DISEASE_CD, B.ICD_NAME
-       FROM V_HOSP A
-        LEFT OUTER JOIN DIAGNOSIS_HISTORY B
+       FROM V_HOSP A LEFT OUTER JOIN DIAGNOSIS_HISTORY B
          ON A.TRM_CD = B.TRM_CD
         AND A.DISEASE_CD = B.DISEASE_CD
       WHERE HSPT_YN='Y'
@@ -28,14 +33,12 @@
           , NREC_CONT
           , NREC_DATE
           , EMP_NO
-          , PA_NO
           , HSPT_NO
       ) VALUES (
          'NR'||LPAD(SEQ_NREC.NEXTVAL, 4,'0')
           , #{nrecCont}
           , TO_CHAR(SYSDATE, 'YYYY-MM-DD')
           , 6
-          , #{paNo}
           , #{hsptNo}
       )
    </insert>
@@ -71,16 +74,17 @@
    
    <select id="selectNrecList" resultType="kr.or.ddit.nurse.vo.NrecVO" parameterType="int">
       SELECT
-          A.NREC_NO ,A.NREC_CONT ,TO_CHAR(A.NREC_DATE, 'YYYY-MM-DD') AS NREC_DATE ,A.EMP_NO ,A.PA_NO ,A.HSPT_NO
-          , B.PA_NAME
-          , C.EMP_NM
-      FROM NURSING_RECORD A
-      INNER JOIN PATIENT B
-         ON A.PA_NO = B.PA_NO
-      INNER JOIN EMPLOYEE C
-         ON A.EMP_NO = C.EMP_NO
-      WHERE A.HSPT_NO = #{hsptNo}
-      ORDER BY 1
+		  A.NREC_NO 
+		  , A.NREC_CONT 
+		  , TO_CHAR(A.NREC_DATE, 'YYYY-MM-DD') AS NREC_DATE 
+		  , A.EMP_NO 
+		  , A.HSPT_NO
+		  , C.EMP_NM
+		FROM NURSING_RECORD A
+		LEFT OUTER JOIN EMPLOYEE C
+		 ON A.EMP_NO = C.EMP_NO
+		WHERE A.HSPT_NO = #{hsptNo}
+		ORDER BY 1
    </select>
    
 <!--    <resultMap type="PatientVO" id="PatientMap" autoMapping="true"> -->

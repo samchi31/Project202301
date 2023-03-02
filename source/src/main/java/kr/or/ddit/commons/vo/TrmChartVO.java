@@ -28,4 +28,5 @@ public class TrmChartVO {
 	private List<PtDocumentVO> ptDocumentList; //물리치료기록서
 	private PatientVO patientVO;
 	private ReceptionVO receptionVO;
+	private EmployeeVO employeeVO;
 }

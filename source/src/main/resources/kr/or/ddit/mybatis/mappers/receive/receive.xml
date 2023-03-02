@@ -22,6 +22,9 @@
 	
 	<insert id="insertReceive" parameterType="ReceiveVO">
 	/* 수납 정보 입력 kr.or.ddit.receive.dao.ReceiveDAO.insertReceive */
+	<selectKey order="BEFORE" keyProperty="recNo" resultType="String">
+		SELECT to_char(sysdate, 'yymmdd')||LPAD(SEQ_RECEIVE.NEXTVAL, 4, '0') FROM DUAL
+	</selectKey>
 		INSERT INTO receive (
 		    rec_no,
 		    rec_ynif,
@@ -31,7 +34,7 @@
 		    trm_cd,
 		    rec_apcd
 		) VALUES (
-		      #{recNo,jdbcType=NUMERIC}
+		      #{recNo}
 		    , #{recYnif,jdbcType=CHAR}
 			, #{recMth,jdbcType=VARCHAR}
 			, #{recTotl,jdbcType=NUMERIC}
@@ -42,9 +45,6 @@
 	</insert>
 	
 	<insert id="insertReceiveDetail" parameterType="ReceiveDetailVO">
-		<selectKey order="BEFORE" keyProperty="recNo" resultType="String">
-			SELECT to_char(sysdate, 'yymmdd')||LPAD(SEQ_RECEIVE.NEXTVAL, 4, '0') FROM DUAL
-		</selectKey>
 		INSERT INTO receive_detail (
 		    rec_no,
 		    rd_etcf,
@@ -63,7 +63,7 @@
 		    rd_mdfe,
 		    rd_operfe
 		) VALUES (
-		      #{recNo,jdbcType=NUMERIC}
+		      #{recNo,jdbcType=VARCHAR}
 			, #{rdEtcf,jdbcType=NUMERIC}
 			, #{rdTtfe,jdbcType=NUMERIC}
 			, #{rdPafe,jdbcType=NUMERIC}

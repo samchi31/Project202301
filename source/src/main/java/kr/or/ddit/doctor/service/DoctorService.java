@@ -5,6 +5,7 @@ import java.util.List;
 import kr.or.ddit.commons.vo.DiagHistoryVO;
 import kr.or.ddit.commons.vo.DiseaseVO;
 import kr.or.ddit.commons.vo.DivisionTreatVO;
+import kr.or.ddit.commons.vo.FilmAtchDetailVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.PrescriptionVO;
@@ -143,4 +144,11 @@ public interface DoctorService {
 	 */
 	public List<WaitStatusVO> retreiveWaitStatus();
 	public List<DivisionTreatVO> retreiveDvTr();
+	
+	/**
+	 * 진료차트 촬영 파일 보기
+	 * @param trmCd
+	 * @return
+	 */
+	public List<FilmAtchDetailVO> retreiveFilmResult(String trmCd);
 }

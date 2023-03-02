@@ -16,5 +16,4 @@ public class RadiologyResultVO {
 	private String trmCd;
 	private String radresDt;
 	
-	private List<FilmAttachVO> filmattatch;
 }

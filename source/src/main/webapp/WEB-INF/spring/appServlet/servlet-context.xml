@@ -72,10 +72,14 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 	
+	
 	<!-- mapping 형태로 들어오는 요청을 location으로 -->
 	<!-- 정적 자원이 일괄 관리 되는 경우 활용 -->
 	<mvc:resources location="/resources/" mapping="/resources/**" cache-period="0" />
+	<mvc:resources location="file:///D:/saveFiles/" mapping="/resourceFile/**" cache-period="0" />
+	
 	<!-- 따로 있는경우 default servlet 설정 사용 -->
+<!-- 	<mvc:default-servlet-handler/>	 -->
 	
 	<!-- Custom view preparer -->
 	<bean id="mainMenuPrepare" class="kr.or.ddit.commons.view.prepare.MainMenuPrepare" />

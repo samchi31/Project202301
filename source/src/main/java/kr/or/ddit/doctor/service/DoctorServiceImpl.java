@@ -11,6 +11,7 @@ import kr.or.ddit.commons.vo.DiagHistoryVO;
 import kr.or.ddit.commons.vo.DiseaseVO;
 import kr.or.ddit.commons.vo.DivisionTreatVO;
 import kr.or.ddit.commons.vo.EmployeeVO;
+import kr.or.ddit.commons.vo.FilmAtchDetailVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
 import kr.or.ddit.commons.vo.FilmOrderVO;
 import kr.or.ddit.commons.vo.PatientVO;
@@ -208,5 +209,10 @@ public class DoctorServiceImpl implements DoctorService{
 		rowcnt += createRadiList(trmChartVO);
 		
 		return rowcnt;
+	}
+	
+	@Override
+	public List<FilmAtchDetailVO> retreiveFilmResult(String trmCd) {
+		return dao.selectFilmResult(trmCd);
 	}
 }

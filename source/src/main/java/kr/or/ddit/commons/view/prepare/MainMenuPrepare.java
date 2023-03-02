@@ -18,10 +18,13 @@ public class MainMenuPrepare implements ViewPreparer{
 		MenuVO menu2 = new MenuVO("진료","/doctor/main");
 		MenuVO menu3 = new MenuVO("영상","/radiology/radiologyView");
 		MenuVO menu4 = new MenuVO("물리치료","/pt/ptView");
-		MenuVO menu5 = new MenuVO("병동관리","/nurse/wardMain");
+		MenuVO menu5 = new MenuVO("병동관리","/nurse/wardMainNew");
 		MenuVO menu6 = new MenuVO("수술/검사","/nurse/operationMain");
+		MenuVO menu7 = new MenuVO("공통","/notice/notice");
 		
-		List<MenuVO> menuList = Arrays.asList(menu1, menu2, menu3, menu4, menu5, menu6);
+		menu1.setMenuCode("1");
+		
+		List<MenuVO> menuList = Arrays.asList(menu1, menu2, menu3, menu4, menu5, menu6, menu7);
 		
 		Map<String, Object> scope = req.getContext(Request.REQUEST_SCOPE);
 		scope.put("menuList", menuList);

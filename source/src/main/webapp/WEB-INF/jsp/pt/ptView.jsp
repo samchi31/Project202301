@@ -6,13 +6,24 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 <link href="${pageContext.request.contextPath }/resources/css/ptStyle.css" rel="stylesheet" />
 <title>물리치료사</title>
-
+<style>
+.pTag {
+	color: #868e96;
+    font-family: 'spo';
+    margin-bottom: 0px;
+}
+h6{
+	font-size: 1rem;
+    font-family: 'Nanum Gothic', sans-serif;
+}
+</style>
 <!-- 그리드 스택  -->
 <div class="grid-stack">
 	<!-- 그리드스택 아이템 1 (물리치료실 현황/물리치료 대기실) -->
 	<div class="grid-stack-item" gs-w="4" gs-h="5">
 		<div class="grid-stack-item-content">
 			<h4 class="h4-title1">물리치료실 현황</h4>
+			<p class="pTag">치료가 완료된 Bed를 클릭하면 치료가 완료 됩니다.</p>
 			<hr>
 			<table class="table2">
 				<c:set var="cnt" value="0" />
@@ -38,6 +49,8 @@
 			</table>
 			
 			<h4 class="h4-title1">물리치료실 대기 현황</h4>
+			<p class="pTag">물리치료실에서 Bed 클릭 후 배정을 원하는 환자의 배정 버튼을 선택하면 환자 치료가 진행됩니다.</p>
+			<p class="pTag">치료일지 작성을 위해 환저번호를 클릭하면 치료일지에 환자개인정보와 차트 열람이 가능합니다.</p>
 			<hr>
 			<table class="table1 table-blue scrollshover">
 				<thead>
@@ -75,6 +88,7 @@
 		<div class="grid-stack-item-content">
 			<div>
 				<h4 class="h4-title1">치료 일지</h4>
+				<p class="pTag">치료부위를 선택 하고 치료내용을 입력한 후<br> 치료일지 작성을 완료하세요.</p>
 				<hr>
 				<form id="writeForm" name="writeForm">
 					<div class="mb-3 row">
@@ -149,6 +163,7 @@
 	<div class="grid-stack-item" gs-w="2" gs-h="5">
 		<div class="grid-stack-item-content">
 			<h4 class="h4-title1">치료 부위</h4>
+			<p class="pTag">치료 부위를 선택하면 치료 할 부위 확인이 <br>가능합니다</p>
 			<hr>
 			<h6>근육계</h6>
 			<div style="padding-bottom: 10px;" class="curePartSelect">
@@ -164,7 +179,7 @@
 				<img alt="HTML" id="human" src="${pageContext.request.contextPath}/resources/images/human.png" />
 			</div>
 			<h6>골절</h6>
-			<div style="padding-bottom: 10px;" class="curePartSelect">
+			<div style="padding-bottom: 10px; left: 1%; width: 101%;" class="curePartSelect">
 				목<input type="radio"  name="hh1" onclick="f_bonemove(this.id,1)" id = "boneNeck" data-pa-part="bone_neck">
 				갈비뼈<input type="radio" name="hh1"  onclick="f_bonemove(this.id,2)" id = "boneRip" data-pa-part=" bone_rip">
 				척추<input type="radio" name="hh1"  onclick="f_bonemove(this.id,3)" id = "boneSpaine" data-pa-part="bone_spaine">
@@ -184,6 +199,7 @@
 		<div class="grid-stack-item-content">
 			<div>
 				<h4 class="h4-title1">환자 조회</h4>
+				<p class="pTag">이름/전화번호로 환자 조회가 가능합니다.</p>
 				<hr style="margin-bottom: 0px; margin-top: 13px;">
 				<form  class="search-form" name="searchForm">
 					<select id="searchOption" class="radi-select ">
@@ -219,6 +235,8 @@
 		<div class="grid-stack-item-content">
 			<div>
 				<h4 class="h4-title1">이전 치료 일지</h4>
+				<p class="pTag">이름/환자번호로 해당하는 환자의 치료일지 열람이 가능합니다.</p>
+				<p class="pTag">내용을 선택하면 해당 환자의 치료일지 상세 내역 열람이 가능합니다.</p>
 				<hr style="margin-bottom: 0px; margin-top: 13px;">
 				<form class="search-form" name="searchBtnFormA">
 					<select id="searchDocuOptionA" class="radi-select ">
@@ -230,7 +248,7 @@
 					<input class="btn-submit" id="agoSearch" type="button" value="검색"> 
 				</form>
 			</div>
-			<div class="scroller" style="height: 311px;">
+			<div class="scroller" style="height: 290px;">
 				<table class="table1 table-blue scrollshover" style="margin-top: 0px;">
 					<thead class="fixedHeader">
 						<tr>
@@ -318,8 +336,8 @@ const partBall2 = document.querySelector("#ball2");
     function f_bonemove(ID, p_num){
         if(p_num == 1){
             //목
-            partBall2.style.left = "70%";
-            partBall2.style.top = "13%";
+            partBall2.style.left = "68%";
+            partBall2.style.top = "14%";
             partBall2.style.zIndex = 10;
             let boneNeck = $("#boneNeck").data();
             $("#pdPart").val(ID);
@@ -327,8 +345,8 @@ const partBall2 = document.querySelector("#ball2");
         }
         if(p_num == 2){
             // 갈비뼈
-            partBall2.style.left = "19%";
-            partBall2.style.top = "23%";
+            partBall2.style.left = "20%";
+            partBall2.style.top = "25%";
             partBall2.style.zIndex = 10;
             let boneRip = $("#boneRip").data();
             $("#pdPart").val(ID);
@@ -336,8 +354,8 @@ const partBall2 = document.querySelector("#ball2");
         }
         if(p_num == 3){
             //척추
-            partBall2.style.left = "71%";
-            partBall2.style.top = "31%";
+            partBall2.style.left = "69%";
+            partBall2.style.top = "33%";
             partBall2.style.zIndex = 10;
             let boneSpaine = $("#boneSpaine").data();
             return;
@@ -352,16 +370,16 @@ const partBall2 = document.querySelector("#ball2");
         }
         if(p_num == 5){
             //종아리
-            partBall2.style.left = "9%";
-            partBall2.style.top = "73%";
+            partBall2.style.left = "13%";
+            partBall2.style.top = "75%";
             partBall2.style.zIndex = 10;
             let boneCalf = $("#boneCalf").data();
             return;
         }
         if(p_num == 6){
             //발목
-            partBall2.style.left = "21%";
-            partBall2.style.top = "80%";
+            partBall2.style.left = "22%";
+            partBall2.style.top = "84%";
             partBall2.style.zIndex = 10;
             let boneAncle = $("#boneAncle").data();
             return;

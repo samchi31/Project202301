@@ -1,31 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link href="<c:url value = '/resources/css/rolling.css'/>" rel = "stylesheet" />
-
-<!-- <div class="container"> -->
-<!-- 		<div class="rollingbanner"> -->
-<!-- 			<div class="wrap"> -->
-<!-- 				<div class="roller"> -->
-<!-- 					<ul> -->
-<!-- 						<li class="kapi"> -->
-<!-- 								<strong class="name">2023 . 02 . 11 (토요일) 오늘도 고생했어유 우리 3조 ^^^^^^^^^^^^ 모두모두 꼭 업데이트 커밋하고 집에가기</strong> -->
-<!-- 						</li> -->
-<!-- 					</ul> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
+<%-- <img src="${pageContext.request.contextPath }/resources/images/Hurry UPOP70.png" style="position: relative; left: 84%; "/> --%>
 <div class="rollingbanner">
 	<div class="wrap">
 		<div class="roller">
 			<ul>
 				<li class="kapi">
-						<strong class="name">2023 . 02 . 11 (토요일) 오늘도 고생했어유 우리 3조 ^^^^^^^^^^^^ 모두모두 꼭 업데이트 커밋하고 집에가기</strong>
+						<strong class="name">2023.03.01은 시스템 점검이 있습니다. 필요한 자료는 꼭 백업하시기 바랍니다. => </strong>
 				</li>
 			</ul>
 		</div>
 	</div>
 </div>
+
 <script>
 //DOM 생성 후
 var originalID, cloneID; //인터벌 포인터
@@ -41,7 +29,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
 	//원본, 복제본 배너 위치 지정
     document.querySelector('#roller1').style.left = '0px';
-    document.querySelector('#roller2').style.left = document.querySelector('.roller ul').offsetWidth+'px';
+    document.querySelector('#roller2').style.left = document.querySelector('.roller ul').offsetWidth +'px';
 
 	//클래스 할당
     roller.classList.add('original');

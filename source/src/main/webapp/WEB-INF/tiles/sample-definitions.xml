@@ -32,5 +32,8 @@
 	<definition name="notice/*" extends="parent" preparer="mainMenuPrepare">
 		<put-attribute name="content" value="/WEB-INF/jsp/notice/{1}.jsp" />
 	</definition>
+	<definition name="commons/*" extends="parent" preparer="mainMenuPrepare">
+		<put-attribute name="content" value="/WEB-INF/jsp/commons/{1}.jsp" />
+	</definition>
 	
 </tiles-definitions>

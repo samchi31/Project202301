@@ -12,12 +12,12 @@ html, body {height: 100%; overflow: hidden;}
 .oper-pa-list {width: 30rem; height: 14rem;}
 .oper-pa-detail {width: 30rem; height: 36rem;}
 .cex-list {width: 30rem; height: 14rem;}
-.cex-barcode {width: 30rem; height: 15rem;}
-.cex-input {width: 30rem; height: 20.5rem;}
+.cex-barcode {width: 30rem; height: 14rem;}
+.cex-input {width: 30rem; height: 21.5rem;}
 .tabcontentWrap{overflow: auto;}
 .a_btn_oper{background-color: white; color: #ff3333; padding: 5px 20px; text-align: center; text-decoration: none; border: none;}
 .a_btn_oper:hover{background-color: #ff3333; color: white;}
-#barcodeImg{width: 24rem; padding-left: 1.5rem; margin: 1.5rem;}
+#barcodeImg{width: 24rem; padding-left: 1.5rem; margin: 1.3rem;}
 .cex-input-table{width: 25rem; height: 17rem; margin-left: 2rem;}
 .td-center{text-align:center;}
 #cex-input-cexNo{color: #4E73DF; font-weight:bold;}
@@ -27,11 +27,13 @@ html, body {height: 100%; overflow: hidden;}
 #serarchButton{padding-bottom: 15px; padding-top: 15px; padding-right: 19px;}
 #searchButton{padding-bottom: 15px; padding-top: 15px; padding-right: 19px;}
 .operCalendarCard{width:56.5rem; height: 50.4rem;}
-.operCalendar{width: 55rem ; height: 46.5rem;}
+.operCalendar{width: 54.5rem ; height: 46rem;}
 .cexHistoryScroller {height: 91px;}
-.operScheduleScroller{width: 28.7rem; height: 9.4rem;}
-.operCompleteScroller{width: 28.7rem; height: 9.4rem;}
-.operWaitScroller{width: 28.7rem; height: 9.4rem;}
+.operScheduleScroller{width: 28rem; height: 9.4rem;}
+.operCompleteScroller{width: 28rem; height: 9.4rem;}
+.operWaitScroller{width: 28rem; height: 9.4rem;}
+.cexScroller{width:28rem; height: 9.4rem;}
+#barcode-print-btn{display:none; margin-right: 1rem;}
 
 /* popover */
 .popoverTitleCalendar {width: 100%; height: 100%; padding: 15px 15px; font-size: 13px; border-radius: 5px 5px 0 0; color:white;}
@@ -113,11 +115,11 @@ html, body {height: 100%; overflow: hidden;}
 				      </div>
 				      <div id="operHistory">
 					  	<form id="searchButton" class="search-form" name="searchForm">
-			               <select id="searchOption" class="oper-select">
+			               <select id="operSearchOption" class="oper-select">
 			                  <option value="no">환자 번호</option>
 			                  <option value="name">환자 이름</option>
 			               </select> 
-			               <input name="searchBtn" class="cex-input" id="searchWord" type="text" value="">
+			               <input name="searchBtn" class="cex-input" id="opserSearchWord" type="text" value="">
 			               <input class="btn-submit" id="SearchOperation" type="button" value="검색">
 			            </form>
 			            <div class="scroller cexHistoryScroller"> 
@@ -140,7 +142,7 @@ html, body {height: 100%; overflow: hidden;}
 		</div>
 		<div class="oper-pa-detail oper-card card-grid">
 			<div class="oper_input" id='tab-oper-paDetail'>
-				<h4 class="h4-title2">진단상세</h4>
+				<h4 class="h4-title1">진단상세</h4>
 				 <div class="mb-3 row">
 				    <label for="inputPassword" class="col-sm-2 col-form-label">차트코드</label>
 				    <div class="col-sm-10">
@@ -200,7 +202,7 @@ html, body {height: 100%; overflow: hidden;}
 				 </div>
 			</div>
 			<div class="oper_input" id='tab-oper-datail'>
-				<h4 class="h4-title2">수술상세</h4>	
+				<h4 class="h4-title1">수술상세</h4>	
 				<div class="mb-3 row">
 				    <label for="inputOperationDetail" class="col-sm-2 col-form-label">환자명</label>
 				    <div class="col-sm-10">
@@ -268,36 +270,40 @@ html, body {height: 100%; overflow: hidden;}
 			    <div class="tabcontentWrap">
 				    <div class="tabcontent">
 				      <div id="cexWait">
-				      	<table class="table-blue">
-							<thead class="fixedHeader">
-								<tr>
-									<th>검사코드</th>
-									<th>차트코드</th>
-									<th>상병코드</th>
-									<th>환자번호</th>
-									<th>환자명</th>
-									<th>성별</th>
-									<th>생년월일</th>
-								</tr>
-							</thead>
-							<tbody id='cexWaitTbody'></tbody>
-						</table>
+				      	<div class="scroller cexScroller">
+					      	<table class="table-blue scrollshover">
+								<thead class="fixedHeader">
+									<tr>
+										<th>검사코드</th>
+										<th>차트코드</th>
+										<th>상병코드</th>
+										<th>환자번호</th>
+										<th>환자명</th>
+										<th>성별</th>
+										<th>생년월일</th>
+									</tr>
+								</thead>
+								<tbody id='cexWaitTbody'></tbody>
+							</table>
+				      	</div>
 				      </div>
 				      <div id="cexComplete">
-				      	<table class="table-blue">
-				      		<thead class="fixedHeadr">
-				      			<tr>
-				      				<th>검사코드</th>
-									<th>차트코드</th>
-									<th>상병코드</th>
-									<th>환자번호</th>
-									<th>환자명</th>
-									<th>성별</th>
-									<th>생년월일</th>
-				      			</tr>
-				      		</thead>
-				      		<tbody id="cexCompleteTbody"></tbody>
-				      	</table>
+				      	<div class="scroller cexScroller">
+					      	<table class="table-blue scrollshover">
+					      		<thead class="fixedHeadr">
+					      			<tr>
+					      				<th>검사코드</th>
+										<th>차트코드</th>
+										<th>상병코드</th>
+										<th>환자번호</th>
+										<th>환자명</th>
+										<th>성별</th>
+										<th>생년월일</th>
+					      			</tr>
+					      		</thead>
+					      		<tbody id="cexCompleteTbody"></tbody>
+					      	</table>
+				      	</div>
 				      </div>
 				      <div id="cexHistory">
 				      	<form id="serarchButton" class="search-form" name="searchForm">
@@ -309,7 +315,7 @@ html, body {height: 100%; overflow: hidden;}
 			               <input class="btn-submit" id="Search" type="button" value="검색">
 						   <input style="display:none;" type="hidden" id="paNoHidden" value=""/>
 			            </form>
-			            <div class="scroller cexHistoryScroller"> 
+			            <div class="scroller cexScroller"> 
 				            <table class="table-blue scrollshover">
 					      		<thead class="fixedHeadr">
 					      			<tr>
@@ -340,11 +346,11 @@ html, body {height: 100%; overflow: hidden;}
 				  <input class="form-check-input" type="radio" name="cexBarcode" id="cexBarcode2" value="cecUa">
 				  <label class="form-check-label" for="inlineRadio2">소변검사</label>
 				</div>
-				<input style= "display:none;" id="barcode-print-btn"class="btn_blue" type="button" value="바코드출력" onclick="return printBarcode();">	
+				<input id="barcode-print-btn"class="btn_blue" type="button" value="바코드출력" onclick="return printBarcode();">	
 				<div id="barcode-print"></div>
 			</div>
 			<div class="cex_input" id="tab-cex-detail">
-				<h4 class="h4-title2">검사결과상세</h4>
+				<h4 class="h4-title1">검사결과상세</h4>
 				<table id="cex-detail-table">
 					<tr>
 						<th>검사코드</th>
@@ -359,15 +365,22 @@ html, body {height: 100%; overflow: hidden;}
 						<td><input type="text" class="form-control-plaintext" id="cex-detail-paName" readonly="readonly" disabled></td>
 					</tr>
 				</table>
-				<table class="table-blue">
+				<table style="width:28.2rem;" class="table-blue">
+					<colgroup>
+						<col width="30%">
+						<col width="10%">
+						<col width="10%">
+						<col width="10%">
+						<col width="10%">
+						<col width="30%">
+					</colgroup>
 					<thead class="fixedHeadr">
 						<tr>
+							<th>검사날짜</th>
 							<th>혈액</th>
 							<th>심전도</th>
 							<th>소변</th>
 							<th>폐기능</th>
-							<th>검사자</th>
-							<th>검사날짜</th>
 							<th>비고</th>
 						</tr>
 					</thead>
@@ -376,7 +389,7 @@ html, body {height: 100%; overflow: hidden;}
 			</div>
 		</div>
 		<div class="cex-input oper-card card-grid">
-			<h4 class="h4-title2">검사등록</h4>
+			<h4 class="h4-title1">검사등록</h4>
 			<table class="cex-input-table">
 				<tr>
 					<td>검사코드</td>
@@ -456,7 +469,7 @@ html, body {height: 100%; overflow: hidden;}
 	<!-- 오른쪽 구역1 시작 -->
 	<div class="content-right1">
 		<div class="operCalendarCard oper-card card-grid">
-			<h4 class="h4-title2">수술일정</h4>
+			<h4 class="h4-title1">수술일정</h4>
 			<div class="operCalendar" id='calendar' data-source="${pageContext.request.contextPath}/nurse/operationMain/events"></div>		
 		</div>
 	</div>
@@ -470,7 +483,7 @@ html, body {height: 100%; overflow: hidden;}
       <!-- header -->
       <div class="modal-header">
         <!-- header title -->
-        <h4 class="modal-title h4-title2">수술정보</h4>
+        <h4 class="modal-title h4-title1">수술정보</h4>
       </div>
       <!-- body -->
       <div class="modal-body">
@@ -640,6 +653,10 @@ document.addEventListener('DOMContentLoaded', function calendarLoad() {
 		            right: 'prev,next today'
 		        },
 		        select: function(arg) { // 캘린더에서 드래그로 이벤트를 생성할 수 있다.
+		        	
+		        	let check = isOverlapping(arg);
+		        	console.log(check);
+		        	
 		        	v_selected_trmCd = $('#oper-pa-detail-trmCd').val();
 		        	v_paName = $('#oper-pa-detail-paName').val();
 		        	if(!v_selected_trmCd){
@@ -784,7 +801,7 @@ document.addEventListener('DOMContentLoaded', function calendarLoad() {
 		                html:true,
 		                delay: { "show": 500, "hide": 100 },
 		            })
-		        }
+		        }	
 		    });
 		    calendar.render();
 		    
@@ -895,8 +912,10 @@ document.addEventListener('DOMContentLoaded', function calendarLoad() {
 		    		    swal("취소되었습니다!");
 		    		  }
 		    		});
-		    });
+		    });		
+		    
 });
+
 
 /* tab 메뉴 */
 $(function(){
@@ -1055,6 +1074,13 @@ operationList();
 
 /* 수술대기 테이블 클릭이벤트 */
 $('#operWaitTbody').on('click', 'tr', function(event){
+	
+	/* 누른 tr 색변경 */
+	let $tr = $(this);
+	$tr.siblings('tr').removeClass("dblclick-on");
+	rcpNo = $tr.data("rcpNo");
+	$tr.addClass("dblclick-on");
+	
 	let v_tr = $(this);
 	let v_trmCd = v_tr.children().eq(0).text();
 	let v_diseaseCd = v_tr.children().eq(1).text();
@@ -1093,6 +1119,13 @@ $('#operWaitTbody').on('click', 'tr', function(event){
 
 /* 수술예정 테이블 클릭이벤트 */
 $('#operScheduleTbody').on('click', 'tr', function(event){
+	
+	/* 누른 tr 색변경 */
+	let $tr = $(this);
+	$tr.siblings('tr').removeClass("dblclick-on");
+	rcpNo = $tr.data("rcpNo");
+	$tr.addClass("dblclick-on");
+	
 	let v_tr = $(this);
 	let v_opNo = v_tr.children().eq(0).text();
 	
@@ -1148,6 +1181,13 @@ $('#operScheduleTbody').on('click', 'tr', function(event){
 
 /* 수술완료 테이블 클릭이벤트 */
 $('#operCompleteTbody').on('click', 'tr', function(event){
+	
+	/* 누른 tr 색변경 */
+	let $tr = $(this);
+	$tr.siblings('tr').removeClass("dblclick-on");
+	rcpNo = $tr.data("rcpNo");
+	$tr.addClass("dblclick-on");
+	
 	let v_tr = $(this);
 	let v_opNo = v_tr.children().eq(0).text();
 	
@@ -1176,8 +1216,10 @@ $('#operCompleteTbody').on('click', 'tr', function(event){
 				v_endTime = convertDateTime(result.opEndTime);				
 			}
 			
+			// 한국시간 계산용
+			const KR_TIME_DIFF = (9 * 60 * 60 * 1000);
 			if(result.opStartTime && result.opEndTime){
-				let elapseTime = result.opStartTime - result.opEndTime;
+				let elapseTime = result.opEndTime - result.opStartTime - KR_TIME_DIFF;
 				$('#oper-detail-elapseTime').val(convertTime(elapseTime));
 			}
 			
@@ -1203,6 +1245,13 @@ $('#operCompleteTbody').on('click', 'tr', function(event){
 
 /* 수술기록조회 테이블 클릭이벤트 */
 $('#operHistoryTbody').on('click', 'tr', function(event){
+	
+	/* 누른 tr 색변경 */
+	let $tr = $(this);
+	$tr.siblings('tr').removeClass("dblclick-on");
+	rcpNo = $tr.data("rcpNo");
+	$tr.addClass("dblclick-on");
+	
 	let v_tr = $(this);
 	let v_opNo = v_tr.children().eq(0).text();
 	
@@ -1323,6 +1372,13 @@ operCompleteList();
 
 /* 검사대기 테이블 클릭이벤트 */
 $('#cexWaitTbody').on('click', 'tr', function(event){
+	
+	/* 누른 tr 색변경 */
+	let $tr = $(this);
+	$tr.siblings('tr').removeClass("dblclick-on");
+	rcpNo = $tr.data("rcpNo");
+	$tr.addClass("dblclick-on");
+	
 	let v_tr = $(this);
 	let v_cexNo = v_tr.children().eq(0).text();
 	let v_barcodeRadio = $('[name=cexBarcode]:checked').val();
@@ -1340,6 +1396,13 @@ $('#cexWaitTbody').on('click', 'tr', function(event){
 
 /* 검사완료 테이블 클릭이벤트 */
 $('#cexCompleteTbody').on('click','tr',function(event){
+	
+	/* 누른 tr 색변경 */
+	let $tr = $(this);
+	$tr.siblings('tr').removeClass("dblclick-on");
+	rcpNo = $tr.data("rcpNo");
+	$tr.addClass("dblclick-on");
+	
 	let v_tr = $(this);
 	let v_cexNo = v_tr.children().eq(0).text();
 	let v_paNo = v_tr.children().eq(3).text();
@@ -1387,12 +1450,11 @@ $('#cexCompleteTbody').on('click','tr',function(event){
 			}
 			
 			let trTag = $('<tr>').append(
-								$('<td>').html(cexCbc)
+								$('<td>').html(result.cexDate)
+								, $('<td>').html(cexCbc)
 								, $('<td>').html(cexEcg)
 								, $('<td>').html(cexUa)
 								, $('<td>').html(cexPfts)
-								, $('<td>').html(result.empNm)
-								, $('<td>').html(result.cexDate)
 								, $('<td>').attr("title", result.cexNe).html(result.cexNe)
 								);
 			
@@ -1408,6 +1470,13 @@ $('#cexCompleteTbody').on('click','tr',function(event){
 
 /* 검사기록 테이블 클릭 이벤트 */
 $('#cexHistoryTbody').on('click','tr',function(event){
+	
+	/* 누른 tr 색변경 */
+	let $tr = $(this);
+	$tr.siblings('tr').removeClass("dblclick-on");
+	rcpNo = $tr.data("rcpNo");
+	$tr.addClass("dblclick-on");
+	
 	let v_tr = $(this);
 	let v_cexNo = v_tr.children().eq(0).text();
 	let v_paNo = v_tr.children().eq(3).text();
@@ -1815,12 +1884,12 @@ function cexCompleteList(){
 	});
 }
 
-//환자 검색
+//검사기록조회 검색
 $("#Search").on("click", function(){
 	let searchOption = $("#searchOption option:selected").val();
 	let searchWord = $("#searchWord").val();
 
-	if(searchWord == ''){
+	if(!searchWord){
 		swal('검색 실패!', "검색어를 입력해주세요", 'warning');
 		return false;
 	}
@@ -1871,10 +1940,10 @@ $("#Search").on("click", function(){
 
 //환자 검색
 $("#SearchOperation").on("click", function(){
-	let searchOption = $("#searchOption option:selected").val();
-	let searchWord = $("#searchWord").val();
+	let searchOption = $("#operSearchOption option:selected").val();
+	let searchWord = $("#opserSearchWord").val();
 
-	if(searchWord == ''){
+	if(!searchWord){
 		swal('검색 실패!', "검색어를 입력해주세요", 'warning');
 		return false;
 	}

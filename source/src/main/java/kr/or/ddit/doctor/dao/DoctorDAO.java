@@ -167,5 +167,5 @@ public interface DoctorDAO {
 	 * 촬영 결과 보기
 	 * @return
 	 */
-	public List<FilmAtchDetailVO> selectFilmResult();
+	public List<FilmAtchDetailVO> selectFilmResult(String trmCd);
 }

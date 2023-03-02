@@ -12,6 +12,7 @@
 html, body {
 	height: 100%;
 	overflow: hidden;
+	
 }
 
 td{
@@ -34,13 +35,13 @@ td{
 
 .patient-info{
 	width: 20rem;
-	height: 50.5rem;
+	height: 46.5rem;
 	display: flex;
 }
 .patient-manage {
 	float:left;
 	width: 50.5rem;
-	height: 50.5rem;
+	height: 46.5rem;
 	overflow: auto;
 }
 .ward-order-container {
@@ -48,14 +49,14 @@ td{
     height: 52rem;
 }
 .ward-order-item1{
-	width: 41rem;
-	height: 25rem;
+	width: 39.5rem;
+	height: 23rem;
 	margin-top: 0;
 	margin-left: 0;
 }
 .ward-order-item2{
-	width: 41rem;
-	height: 23rem;
+	width: 39.5rem;
+	height: 20.5rem;
 	margin-top: 5px;
 	margin-left: 0;
 }
@@ -91,7 +92,7 @@ td{
 
 #patient-manage-in{
 	width: 49.5rem;
-	height: 50rem;
+	height: 41rem;
 	background-color: white;
 	margin: 0.5rem;
 }
@@ -656,7 +657,7 @@ function io_list(hsptNo, paName){
 	<div class="ward-wrapper">
 		<div class="patient-info card-grid ward-div">
 			<div class="patient-info-in">
-				<h4>환자 정보</h4>
+				<h4 class="h4-title1">환자 정보</h4><hr/>
 			    	<div class="form-group">
 					    <label class="ward_title" for="hsptNo">입퇴원 번호</label>
 					    <input type="text" name="hsptNo" id="hsptNo" class="ward_input" readonly="readonly" />
@@ -696,7 +697,7 @@ function io_list(hsptNo, paName){
 			</div>
 		</div>
 		<div class="patient-manage card-grid ward-div">
-			<h4>환자관리</h4>
+			<h4 class="h4-title1">환자관리</h4><hr/>
 			<div id="patient-manage-in">
 				<table class="table-blue">
 					<thead class="fixedHeader">
@@ -716,9 +717,10 @@ function io_list(hsptNo, paName){
 		<div class="ward-order-container ward-div">
 			<div class="ward-order-item1 card-grid ward-div">
 				<div id="ward-order-top">
-					<h4 id='ward-order-title'>병동order</h4>
+					<h4 id='ward-order-title' class="h4-title1">병동order</h4>
 					<input style="display:none;" class="btn_blue" id="io-register" data-bs-target="#layerpop" type="button" value="IO생성">		
 				</div>
+				<hr style="margin-top: 1px;"/>
 				<div class="tab">
 				    <ul class="tabnav">
 				      <li><a href="#diet">식이</a></li>
@@ -796,7 +798,7 @@ function io_list(hsptNo, paName){
 			</div>
 			<div class="ward-order-item2 card-grid ward-div">
 				<div class="tap_input" id="diet-in">
-					<h4>식이 입력</h4>
+					<h4 class="h4-title1">식이 입력</h4><hr/>
 					<table>
 						<tr>
 							<td>입퇴원번호</td>
@@ -850,7 +852,7 @@ function io_list(hsptNo, paName){
 					</table>
 				</div>
 				<div class="tap_input" id="io-in">
-					<h4>IO 입력</h4>
+					<h4 class="h4-title1">IO 입력</h4>
 					<table>
 						<tr>
 							<td>입퇴원번호</td>
@@ -914,7 +916,7 @@ function io_list(hsptNo, paName){
 					</table>
 				</div>
 				<div class="tap_input" id="vital-in">
-					<h4>vital 입력</h4>
+					<h4 class="h4-title1">vital 입력</h4>
 					<table>
 						<tr>
 							<td>입퇴원번호</td>
@@ -967,7 +969,7 @@ function io_list(hsptNo, paName){
 				</div>
 				<div class="tap_input" id="nursingRecord-in">
 					<div id="nursingRecord-in-top">
-						<h4>간호기록입력</h4>
+						<h4 class="h4-title1">간호기록입력</h4>
 					</div>
 					<table>
 						<tr>
@@ -1000,7 +1002,7 @@ function io_list(hsptNo, paName){
       <!-- header -->
       <div class="modal-header">
         <!-- header title -->
-        <h4 class="modal-title">IO생성</h4>
+        <h4 class="modal-title h4-title1" >IO생성</h4>
       </div>
       <!-- body -->
       <div class="modal-body">

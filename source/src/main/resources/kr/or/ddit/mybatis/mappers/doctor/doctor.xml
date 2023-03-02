@@ -49,7 +49,7 @@
 		        , B.DISEASE_CD, B.ICD_NAME, B.OPER_TF, B.PHYSIOTHERAPY_TF
 		        , C.SYM_CD, C.SYM_DETAIL
 		        , D.PRE_CD, D.PRE_DETAIL, D.PRE_NT, D.PRE_TOTAL, D.PRICE, D.INJC_PTH_NM, D.UNIT, D.PAY_TP_NM
-		        , E.FILM_CD, E.FILM_DATE
+		        , E.FILM_CD,  TO_CHAR(E.FILM_DATE, 'YYYY/MM/DD') AS FILM_DATE
 		        , F.PD_NO, F.PD_DT, F.PD_CONT
 		FROM    TRMCHARTVIEW T  
 		        LEFT OUTER JOIN DIAGNOSIS_HISTORY B  ON (T.TRM_CD = B.TRM_CD)
@@ -253,5 +253,17 @@
 	</delete>
 	
 	
+	<resultMap type="FilmAtchVO" id="filmAtchVO" autoMapping="true">
+		<id property="trmCd" column="TRM_CD" />
+		<collection property="filmAtchDetailVOList" ofType="FilmAtchDetailVO" autoMapping="true">
+			<id property="attNo" column="ATT_NO"/>		
+		</collection>
+	</resultMap>
+	
+	<select id="selectFilmResult" parameterType="String" resultMap="filmAtchVO">
+		SELECT  A.ATT_SAVENAME, A.ATT_NO, A.ATT_STRE_COURS, A.ATT_SAVENAME, B.TRM_CD, B.FIAT_CD
+		FROM    FILM_ATCH_DETAIL A INNER JOIN  FILM_ATCH B ON (A.FIAT_CD = B.FIAT_CD)
+		WHERE   B.TRM_CD = #{trmCd}
+	</select>
 	
 </mapper>

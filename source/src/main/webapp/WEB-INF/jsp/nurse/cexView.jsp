@@ -1,7 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link href="${pageContext.request.contextPath }/resources/css/cexStyle.css" rel="stylesheet"/>
+<link href="${pageContext.request.contextPath }/resources/css/main.css" rel="stylesheet" />
 <title>cex-Main</title>
 <style>
 *, ::after, ::before{
@@ -225,7 +225,7 @@ function cexHistoryDetail(cexNo){
 		<div class="left">
 			<div class="wait-list">
 				<div class="wait-list-in">
-					<h4>대기자 목록</h4>
+					<h4 class="h4-title1">대기자 목록</h4>
 					<table class="cex-wait-table">
 						<thead>
 							<tr class="">
@@ -243,7 +243,7 @@ function cexHistoryDetail(cexNo){
 			</div>
 			<div class="cex-history">
 				<div class="cex-history-in">
-					<h4>검사기록</h4>
+					<h4 class="h4-title1">검사기록</h4>
 
 					<table class="cex-history-table">
 						<thead>
@@ -264,7 +264,7 @@ function cexHistoryDetail(cexNo){
 			<div class="patient-info">
 				<div class="patient-info-in">
 					<div class="patient-info-in-top">
-						<h4 id="cex-title">환자 조회</h4>
+						<h4 id="cex-title h4-title1" >환자 조회</h4>
 						<form id="serarchButton" class="search-form" name="searchForm">
 			               <select id="searchOption" class="cex-select">
 			                  <option value="no">환자 번호</option>
@@ -300,7 +300,7 @@ function cexHistoryDetail(cexNo){
 			<div class="cex-detail">
 				<div class="cex-detail-in">
 					<div class="cex-detail-top">
-						<h4 id="cex-title">검사내역상세</h4>			
+						<h4 id="cex-title h4-title1" >검사내역상세</h4>			
 						<input style= "display : none;" class="btn_blue" id="cex-register" data-bs-target="#layerpop" data-bs-toggle="modal" type="button" value="검사등록">	
 					</div>
 						<table class="cex-table table">
@@ -335,7 +335,7 @@ function cexHistoryDetail(cexNo){
 			<div class="cex-barcode">
 				<div class="cex-barcode-in">
 					<div class="cex-barcode-top">
-						<h4 id="cex-title"> 바코드 </h4>
+						<h4 id="cex-title h4-title1"> 바코드 </h4>
 						<input style= "float:right;" id="barcode-print-btn"class="btn_blue" type="button" value="바코드출력" onclick="return printBarcode();">	
 					</div>
 					<div id="barcode-print"></div>
@@ -351,7 +351,7 @@ function cexHistoryDetail(cexNo){
       <!-- header -->
       <div class="modal-header">
         <!-- header title -->
-        <h4 class="modal-title">검사등록</h4>
+        <h4 class="modal-title h4-title1">검사등록</h4>
       </div>
       <!-- body -->
       <div class="modal-body">

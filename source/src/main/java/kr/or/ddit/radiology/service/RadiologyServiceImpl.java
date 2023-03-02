@@ -37,7 +37,7 @@ public class RadiologyServiceImpl implements RadiologyService {
 	@Inject
 	private RadiologyDAO radiologyDAO;
 	
-	@Value("#{appInfo.expertFolder}")
+	@Value("#{appInfo.saveFiles}")
 	private File saveFiles;
 	
 	public void init() throws IOException{
@@ -162,28 +162,23 @@ public class RadiologyServiceImpl implements RadiologyService {
 		return radiologyDAO.selectXrayList(null);
 	}
 
-	@Override
-	public List<WaitHistoryVO> selectMRIList() {
-		return radiologyDAO.selectMRIList(null);
-	}
-
-	@Override
-	public List<WaitHistoryVO> selectCTList() {
-		return radiologyDAO.selectCTList(null);
-	}
-
-	@Override
-	public List<WaitHistoryVO> selectUltraList() {
-		return radiologyDAO.selectUltraList(null);
-	}
 
 
 	@Override
-	public String processAttachList(FilmAtchVO filmAtchVO) {
+	public int processAttachList(FilmAtchVO filmAtchVO) {
 		log.info("filmAtchVO : " + filmAtchVO);
 		
-		String uploadFolder 
-			= "D:\\A_TeachingMaterial\\6.JSP_Spring\\workspace\\HurryUp\\src\\main\\webapp\\resources\\saveFiles";
+//		String uploadFolder 
+//			= "D:\\A_TeachingMaterial\\6.JSP_Spring\\workspace\\HurryUp\\src\\main\\webapp\\resources\\saveFiles";
+		String uploadFolder=null;
+		try {
+			uploadFolder = saveFiles.getCanonicalPath();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if(uploadFolder==null) return 0;
+		
 		
 		//make folder 시작(경로 + 연월일) ---------------------------
 		File uploadPath = new File(uploadFolder, getFolder());
@@ -279,7 +274,7 @@ public class RadiologyServiceImpl implements RadiologyService {
 //			throw new RuntimeException(e);
 //		}
 		
-		return filmAtchVO.getFiatCd();
+		return result;
 	}
 	
 	//년/월/일 폴더 생성
@@ -321,9 +316,17 @@ public class RadiologyServiceImpl implements RadiologyService {
 	
 	// 진료차트 작성 후 film_order에 film_date update
 	@Override
-	public int updateFilmDate(Map<String, String> map){
-		int result = radiologyDAO.updateFilmDate(map);
+	public int modifyFilmDate(FilmAtchVO filmatchVO){
+		int result = processAttachList(filmatchVO);
+		result += radiologyDAO.updateFilmDate(filmatchVO);
 		
 		return result;
 	}
+	
+	@Override
+	public List<FilmAtchDetailVO> retrieveFilmAtchDetailVO(String rcpNo) {
+		List<FilmAtchDetailVO> filmAtchDetailList = radiologyDAO.selectFilmAtchDetail(rcpNo);
+		return filmAtchDetailList;
+	}
+
 }

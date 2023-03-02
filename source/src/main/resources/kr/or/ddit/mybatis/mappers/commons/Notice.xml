@@ -23,4 +23,106 @@
 	    			, #{empNo,jdbcType=NUMERIC}
 		  )
 	</insert>
+	
+	<!-- 등록된 근무상태를 모두 조회 -->
+	<select id="selectScheduleList" resultType="kr.or.ddit.commons.vo.WorkingStatusVO">
+	/* kr.or.ddit.commons.dao.NoticeDAO.selectScheduleList */
+		SELECT
+		    A.WS_NO
+		    , A.EMP_NO
+		    , A.WS_START_DT
+		    , A.WS_END_DT
+		    , A.WSD_CD
+		    , B.EMP_NM
+		    , C.WSD_NAME
+		    , C.WSD_COLOR_CD
+		FROM working_status A
+		INNER JOIN EMPLOYEE B ON A.EMP_NO = B.EMP_NO
+		LEFT OUTER JOIN WORKING_STATUS_DETAIL C ON A.WSD_CD = C.WSD_CD
+	</select>
+	
+	<!-- 근무상태 등록 -->
+	<insert id="insertSchedule" parameterType="hashMap">
+	/* kr.or.ddit.commons.dao.NoticeDAO.insertSchedule */
+		INSERT INTO working_status (
+		    ws_no
+		    , ws_start_dt
+		    , ws_end_dt
+		    , emp_no
+		    , WSD_CD
+		) VALUES (
+			('WS'||LPAD(seq_schedule.nextval, 4, '0'))
+		    , TO_DATE(#{wsStartDt,jdbcType=DATE},'YYYY/MM/DD')
+		    , TO_DATE(#{wsEndDt,jdbcType=DATE},'YYYY/MM/DD')
+		    , #{empNo,jdbcType=NUMERIC}
+		    , 'DEFAULT'
+		)
+	</insert>
+	
+	<!-- 직원목록조회 -->
+	<select id="selectEmpList" resultType="EmployeeVO">
+	/* kr.or.ddit.commons.dao.NoticeDAO.selectEmpList */
+	
+		SELECT
+		    emp_no,
+		    emp_nm
+		FROM
+		    employee	
+	</select>
+	
+	<!--  스케줄번호를 받아 그에 해당하는 스케줄 정보를 조회 -->
+	<select id="selectScheduleDetail" resultType="WorkingStatusVO">
+	/* kr.or.ddit.commons.dao.NoticeDAO.selectScheduleDetail */
+		SELECT
+		    A.ws_no
+		    , A.emp_no
+		    , A.ws_start_dt
+		    , A.wsd_cd
+		    , A.ws_end_dt
+		    , B.WSD_NAME
+		    , B.WSD_COLOR_NM
+		    , B.WSD_COLOR_CD
+		    , C.EMP_NM
+		FROM working_status A
+		LEFT OUTER JOIN WORKING_STATUS_DETAIL B ON A.WSD_CD = B.WSD_CD
+		INNER JOIN EMPLOYEE C ON A.EMP_NO = C.EMP_NO
+		WHERE WS_NO = #{wsNo}
+	</select>
+	
+	<!-- 근무상태 항목 불러오기 -->
+	<select id="selectWsOption" resultType="WorkingStatusVO">
+	/* kr.or.ddit.commons.dao.NoticeDAO.selectWsOption */
+		SELECT
+		    wsd_cd
+		    , wsd_name
+		FROM
+		    working_status_detail
+	</select>
+	
+	<!-- 근무상태 변경 -->
+	<update id="updateWs" parameterType="hashMap">
+	/* kr.or.ddit.commons.dao.NoticeDAO.updateWs*/	
+	
+		UPDATE working_status
+		   SET wsd_cd = #{wsdCd,jdbcType=VARCHAR}
+		 WHERE ws_no = #{wsNo,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 근무상태 삭제 -->
+	<delete id="deleteWs" parameterType="hashMap">
+	/* kr.or.ddit.commons.dao.NoticeDAO.deleteWs*/
+		
+		DELETE FROM working_status
+		WHERE ws_no = #{wsNo}
+	</delete>
+	
+	<!-- 일일 접수환자 수 조회 -->
+	<select id="selectCountReception" parameterType="hashMap" resultType="int">
+	/* kr.or.ddit.commons.dao.NoticeDAO.selectCountReception*/
+		SELECT
+		    count(rcp_no)
+		FROM
+		    reception
+		where RCP_DATE = #{rcpDate}
+	</select>
 </mapper>

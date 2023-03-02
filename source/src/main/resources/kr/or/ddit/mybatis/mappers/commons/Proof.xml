@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.commons.dao.ProofDAO">
+
+	<resultMap type="TrmChartVO" id="trmChartMap" autoMapping="true">
+		<id property="trmCd" column="TRM_CODE" />
+		<association property="employeeVO" javaType="EmployeeVO" autoMapping="true">
+			<id property="empNo" column="EMP_NO"/>
+		</association>
+		<association property="patientVO" javaType="PatientVO" autoMapping="true">
+			<id property="paNo" column="PA_NO"/>
+		</association>
+		<association property="receptionVO" javaType="ReceptionVO" autoMapping="true">
+			<id property="rcpNo" column="RCP_NO"/>
+		</association>
+		<collection property="diagHistoryVOList" ofType="DiagHistoryVO" autoMapping="true">
+			<id property="diseaseCd" column="DISEASE_CD"/>
+			<association property="hospitalization" javaType="HospitalizationVO" autoMapping="true"></association>
+		</collection>
+		<collection property="symptomVOList" ofType="SymptomVO" autoMapping="true">
+			<id property="symCd" column="SYM_CD"/>
+		</collection>
+		<collection property="prescriptionVOList" ofType="PrescriptionVO" autoMapping="true">
+			<id property="preCd" column="PRE_CD"/>
+		</collection>
+		<collection property="filmOrderVOList" ofType="FilmOrderVO" autoMapping="true">
+			<id property="filmCd" column="FILM_CD"/>
+		</collection>
+		<collection property="ptDocumentList" ofType="PtDocumentVO" autoMapping="true">
+			<id property="pdNo" column="PD_NO"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 대상 환자의 진료차트 리스트를 조회 -->
+	<select id="selectTrmChart" parameterType="hashMap" resultType="TrmChartVO">
+	/* kr.or.ddit.commons.dao.ProofDAO.selectTrmChart */
+		SELECT
+		    A.trm_cd
+		    , A.medi_record
+		    , TO_CHAR(A.trm_dt, 'yyyy-mm-dd hh24:mi:ss') trm_dt
+		    , A.emp_no
+		    , A.rcp_no
+		    , B.PA_NO
+		    , TO_CHAR(B.RCP_DATE, 'yyyy-mm-dd hh24:mi:ss') rcp_date
+		FROM trm_chart A
+		INNER JOIN RECEPTION B ON A.RCP_NO = B.RCP_NO
+		WHERE B.PA_NO = #{paNo}
+	</select>
+	
+	<!-- 차트코드 상세내용 조회해서 제증명 문서에 내용삽입-->
+	<select id="selectProof" parameterType="String" resultMap="trmChartMap">
+	/* kr.or.ddit.commons.dao.ProofDAO.selectProof */
+		SELECT 
+		    a.trm_cd
+		    , TO_CHAR(A.trm_dt, 'yyyy-mm-dd') trm_dt
+		    , A.MEDI_RECORD
+		    , C.PA_NAME
+		    , C.PA_REG
+		    , C.PA_SEX
+		    , C.PA_ADD1
+		    , C.PA_ADD2
+		    , C.PA_HP
+		    , D.ICD_NAME
+		    , D.DISEASE_CD
+		    , D.ICD_NAME
+		    , E.EMP_NM
+		FROM trm_chart A
+		INNER JOIN EMPLOYEE E ON A.EMP_NO = E.EMP_NO
+		INNER JOIN RECEPTION B ON A.RCP_NO = B.RCP_NO
+		INNER JOIN PATIENT C ON B.PA_NO = C.PA_NO
+		LEFT OUTER JOIN DIAGNOSIS_HISTORY D ON A.TRM_CD = D.TRM_CD
+		WHERE a.TRM_CD = #{trmCd}
+		
+	</select>
+	
+	<!-- 진료차트코드로 처방내역 조회 -->
+	<select id="selectPrescription" parameterType="String" resultType="PrescriptionVO">
+	/* kr.or.ddit.commons.dao.ProofDAO.selectPrescription */
+		
+		SELECT
+		    trm_cd
+		    , pre_cd
+		    , pre_detail
+		    , pre_nt
+		    , pre_total
+		    , price
+		    , injc_pth_nm
+		    , unit
+		    , pay_tp_nm
+		FROM prescription_history
+		WHERE TRM_CD = #{trmCd}
+	</select>
+</mapper>

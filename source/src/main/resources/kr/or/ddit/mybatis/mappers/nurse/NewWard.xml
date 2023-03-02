@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.nurse.dao.NewWardDAO">
+
+	<!-- 환자검색 -->
+	<select id="selectPatientSearch" parameterType="hashMap" resultType="WardVO">
+	/* kr.or.ddit.nurse.dao.NewWardDAO.selectPatientSearch  */
+		select
+		    E.PA_NO
+		    , E.PA_NAME
+		    , E.PA_REG
+		    , E.PA_HP
+		    , F.EMP_NM
+		    , A.HSPT_IN_DT
+		    , A.HSPT_NO
+		    , C.MEDI_RECORD
+		    , C.TRM_CD
+		    , A.WR_RNO
+		    , A.BED_NO
+		FROM HOSPITALIZATION A
+		INNER JOIN DIAGNOSIS_HISTORY B ON A.DISEASE_CD = B.DISEASE_CD AND A.TRM_CD = B.TRM_CD
+		INNER JOIN TRM_CHART C ON B.TRM_CD = C.TRM_CD
+		INNER JOIN RECEPTION D ON C.RCP_NO = D.RCP_NO
+		INNER JOIN PATIENT E ON D.PA_NO = E.PA_NO
+		INNER JOIN EMPLOYEE F ON C.EMP_NO =F.EMP_NO
+		WHERE HSPT_YN='Y'
+		<if test="searchOption neq null" >
+			<choose>
+				<when test="searchOption eq 'paName'">
+					AND PA_NAME LIKE '%' || #{searchWord} || '%'
+				</when>
+				<when test="searchOption eq 'paReg'">
+					AND PA_REG LIKE  #{searchWord} || '%'
+				</when>
+			</choose>
+		</if>   
+	</select>
+	
+	<select id="selectDiagnosisList" parameterType="hashMap" resultType="DiagHistoryVO">
+	/* kr.or.ddit.nurse.dao.NewWardDAO.selectDiagnosisList  */
+	
+		SELECT
+		    disease_cd
+		    , icd_name
+		    , trm_cd
+		    , oper_tf
+		    , physiotherapy_tf
+		FROM diagnosis_history
+		WHERE TRM_CD = #{trmCd}
+	</select>
+
+
+</mapper>

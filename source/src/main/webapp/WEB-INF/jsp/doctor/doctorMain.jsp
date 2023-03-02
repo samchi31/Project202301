@@ -8,6 +8,7 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
   />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 </head>
 <style type="text/css">
   	  		
@@ -53,13 +54,10 @@
 	/* .modal-footer{
 	} */
 	
-	/* tr 더블클릭 */
-	.dblclick-on{
-		background-color : antiquewhite;
-	}
 		
 	#detailText{
 		min-height : 260px;
+		height : 42rem;
 	}
 	
 	input[type="number"]::-webkit-outer-spin-button,
@@ -72,6 +70,8 @@
 	.chart-detail-body span{
 		display : inline-block;
 	}
+	
+	i {box-sizing: border-box ; padding : 5px; font-size : 1rem; float:right;}
 </style>
 
 <!-- modal -->
@@ -98,6 +98,7 @@
 		<div class="grid-stack-item "
 			gs-x="0" gs-y="0" gs-w="4" gs-h="2" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid" >
+				<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="기초자료에서 증상과 상병을 클릭하여 작성할 수 있습니다. 진단에서 세부 오더를 내릴 수 있습니다." style="position: absolute; right: 16px;"></i>
 				<div class="tab doc-diag">
 				    <ul class="tabnav">
 				      <li><a href="#sym">증상</a></li>
@@ -147,8 +148,9 @@
 			</div>
 		</div>
 		<div class="grid-stack-item" 
-			gs-x="0" gs-y="2" gs-w="5" gs-h="3" gs-no-resize="true" gs-no-move="true">
+			gs-x="0" gs-y="2" gs-w="4" gs-h="3" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid" >
+				<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="기초자료에서 처방과 방사선을 클릭하여 작성할 수 있습니다. 처방에서 세부 작성을 할 수 있습니다. 촬영오더에서 결과를 확인 할 수 있습니다." style="position: absolute; right: 16px;"></i>
 				<div class="tab doc-pre">
 				    <ul class="tabnav">
 				      <li><a href="#pre">처방</a></li>
@@ -208,9 +210,9 @@
 		</div>
 		
 		<div class="grid-stack-item" 
-			gs-x="4" gs-y="0" gs-w="3" gs-h="2" gs-no-resize="true" gs-no-move="true">
+			gs-x="10" gs-y="0" gs-w="2" gs-h="2" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid " >
-				<h4 class="h4-title2">진료내역</h4>
+				<h4 class="h4-title1">진료내역<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="환자의 과거 진료기록입니다. 클릭하여 상세 확인할 수 있습니다."></i></h4>
 				<div class="tabcontentWrap tab-mid">
 			    	<div class="tabcontent">
 			    		<table class="table-blue">
@@ -233,12 +235,12 @@
 			</div>	
 		</div>	
 		<div class="grid-stack-item" 
-			gs-x="5" gs-y="2" gs-w="2" gs-h="3" gs-no-resize="true" gs-no-move="true">
+			gs-x="4" gs-y="0" gs-w="3" gs-h="5" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid" >
-				<h4 class="h4-title2">상세기록</h4>
-				<div class="tabcontentWrap tab-bigger">
+				<h4 class="h4-title1">상세기록<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="환자 진료 상세기록을 작성할 수 있습니다. 등록 버튼을 눌러 오더나 진료차트를 작성을 할 수 있습니다. 환자대기 테이블에서 환자를 더블클릭하여 선택 시 진료차트를 이어서 작성할 수 있습니다."></i></h4>
+				<div class="tabcontentWrap">
 					<div class="tabcontent">
-						<textarea rows="13" cols="" class="form-control" id="detailText"></textarea>
+						<textarea rows="13" cols="" class="form-control" id="detailText" style="resize: none;"></textarea>
 						<input class="btn_blue" type="button" value="등록" />
 					</div>
 				</div>
@@ -247,7 +249,7 @@
 		<div class="grid-stack-item" 
 			gs-x="7" gs-y="0" gs-w="3" gs-h="2" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid" >
-				<h4 class="h4-title2">환자대기</h4>
+				<h4 class="h4-title1">환자대기<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="더블클릭하여 진료할 환자를 선택합니다. 병과구분과 대기상태를 변경합니다. 환자번호를 눌러 환자상세 정보를 확인합니다."></i></h4>
 				<div class="tabcontentWrap tab-mid">
 			    	<div class="tabcontent">
 						<table class="table-blue">
@@ -293,17 +295,11 @@
 			</div>	
 		</div>
 		<div class="grid-stack-item" 
-			gs-x="10" gs-y="0" gs-w="2" gs-h="2" gs-no-resize="true" gs-no-move="true">
-			<div class="grid-stack-item-content card-grid" >
-				<h4 class="h4-title2">일정</h4>
-			</div>	
-		</div>	
-		<div class="grid-stack-item" 
 			gs-x="8" gs-y="2" gs-w="5" gs-h="3" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid" >
 				<div style="display:flex">
-					<h4 class="h4-title2" style="width:100%">기초자료</h4>
-					<button style="display:none;" class="btn_blue" id="btn_manage">관리</button>
+					<h4 class="h4-title1" style="width:100%">기초자료<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="진료 시 필요한 정보입니다. 클릭하여 해당 데이터를 기록할 수 있습니다. 그룹오더에서 그룹오더를 관리할 수 있습니다."></i></h4>
+					<button style="display:none; position: absolute;right: 50px;top: 21px;" class="btn_blue" id="btn_manage">관리</button>
 				</div>
 				<div class="tab doc-basic">
 					<ul class="tabnav">
@@ -499,7 +495,7 @@
     		</table >
     	</div>
     </span>
-	<span style="width:100%;">상세기록 <div id="off-mediRecord" class="form-control"></div></span>
+	<span style="width:100%;">상세기록 <div id="off-mediRecord" class="form-control" style="height: 200px;"></div></span>
     <span>촬영내역 
     	<div>
 				<table class="table-blue">
@@ -537,6 +533,9 @@
 <script type="text/javascript">
 	// gridstack 시작
 	GridStack.init();
+	
+	const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+	const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 	
 	// 공공데이터 불러오기
 	let f_medicineList = function(){
@@ -583,8 +582,10 @@
 		window.open("${pageContext.request.contextPath}/group/grouporder","go","top=100em,left=100em,width=1460,height=750");
 	});
 	
+	var trmCd = -1;
+	// 촬영 상세 보기
 	let $btnFilm = $("#btn_film").on('click',function(){
-		window.open("${pageContext.request.contextPath}/doctor/filmDetail","film","top=100em,left=100em,width=1460,height=750");
+		let filmWindow = window.open("${pageContext.request.contextPath}/doctor/filmDetail","film","top=100em,left=100em,width=1390,height=850");
 	});
   
   /* tab 메뉴 */
@@ -624,6 +625,13 @@
 		$diagContents.hide().filter(this.hash).fadeIn();
 		$diagNavs.removeClass('active');
 		$(this).addClass('active');
+		
+		if(this.hash=="#sym"){
+			$basicNavs.eq(2).click();
+		} else {
+			$basicNavs.eq(0).click();
+		}
+		
 		return false;
 	});
 	$diagNavs.eq(0).click();
@@ -635,8 +643,10 @@
 		
 		if(this.hash=='#film'){
 			$btnFilm.css("display","block");
+			$basicNavs.eq(3).click();
 		} else {
 			$btnFilm.css("display","none");
+			$basicNavs.eq(1).click();
 		}
 		return false;
 	});
@@ -935,11 +945,13 @@
 		$offTbodyPre.empty(); 
 		$offMediRecord.empty();
 		$offTbodyFilm.empty();
+		
+		console.log("offcanvas", v_data);
 
-		$offTrmCd.html(v_data.trmCd);
-		$offTrmDt.html(v_data.trmDt);
-		$offRcpNo.html(v_data.rcpNo);
-		$offEmpNm.html(v_data.empNm);
+		$offTrmCd.val(v_data.trmCd);
+		$offTrmDt.val(v_data.trmDt);
+		$offRcpNo.val(v_data.rcpNo);
+		$offEmpNm.val(v_data.empNm);
 		
 		$offMediRecord.html(v_data.mediRecord);
 
@@ -1007,6 +1019,7 @@
 		if(!v_data){ return; }
 		
 		chartObject.trmCd = v_data.trmCd;
+		trmCd = v_data.trmCd;
 				
 		$(v_data.diagHistoryVOList).each(function(i,v){
 			// console.log(i,v);
@@ -1098,7 +1111,7 @@
 	
 	// rcp, chartObject 초기화
 	let rcpNo = -1;
-	let trmCd = -1;
+	
 	// 대기 리스트에서 더블클릭
 	// 환자 이전 진료 기록 리스트 가져옴
 	// rcp로 작성중인 진료차트 있으면 가져옴

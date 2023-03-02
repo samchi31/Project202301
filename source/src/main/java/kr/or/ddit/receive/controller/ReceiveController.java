@@ -42,6 +42,8 @@ public class ReceiveController {
 		 * 수납 요약에 기록
 		 */	
 		
+		
+		
 		return null;
 	}
 	
@@ -58,10 +60,9 @@ public class ReceiveController {
 	@PostMapping("/detail")
 	public String insertReceive(
 			@RequestBody ReceiveDetailVO receiveDetailVO
-			, @RequestBody String trmCd
 	) {
-		log.info("detali : {}", receiveDetailVO);
-		int rowcnt = receiveService.createReceiveDetail(receiveDetailVO);
+		log.info("detail : {}", receiveDetailVO);
+		int rowcnt = receiveService.createReceive(receiveDetailVO);
 		
 		String message = "";
 		if(rowcnt > 0 ) {

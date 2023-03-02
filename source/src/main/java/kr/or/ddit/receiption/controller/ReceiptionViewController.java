@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
 import kr.or.ddit.receiption.service.ReceptionService;
+import kr.or.ddit.receiption.vo.OutHospitalizationVO;
 import kr.or.ddit.receiption.vo.ReceiptionVO;
 import kr.or.ddit.receiption.vo.RegistVO;
 import kr.or.ddit.receiption.vo.SelectPatientVO;
 import kr.or.ddit.receiption.vo.SmsVO;
 import kr.or.ddit.receiption.vo.WaitListVO;
+import kr.or.ddit.receiption.vo.WardRegistVO;
 import kr.or.ddit.receiption.vo.SelectOperationListVO;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
@@ -33,6 +35,7 @@ public class ReceiptionViewController {
 	String viewName = null;
     @Inject
     ReceptionService service;
+
 	
     @ModelAttribute("receiptionVO")
     public ReceiptionVO receiptionVO() {
@@ -49,12 +52,18 @@ public class ReceiptionViewController {
     	List<WaitListVO> retrieveWaitList3 = service.retrieveWaitList("DO103");
     	List<SelectOperationListVO> operationList = service.retrieveOperationList("Y");
     	List<SmsVO> smsList = service.retrieveSmsList();
+    	List<WardRegistVO> hospitalList = service.retrieveWardRegistedList();
+    	List<OutHospitalizationVO> outHsptList = service.retrieveOutHsptList();
+
+    	
 		viewName = "receiption/receiptionView";
 		model.addAttribute("DO101List", retrieveWaitList);
 		model.addAttribute("DO102List", retrieveWaitList2);
 		model.addAttribute("DO103List", retrieveWaitList3);
 		model.addAttribute("operationList", operationList);
 		model.addAttribute("smsList", smsList);
+		model.addAttribute("hospitalList", hospitalList);
+		model.addAttribute("outHsptList", outHsptList);
 		return viewName;
 	}
  
@@ -120,6 +129,47 @@ public class ReceiptionViewController {
     	return list;
     }
     
+    @PostMapping("/wardRegist")
+    @ResponseBody
+    public int wardRegist(@RequestBody WardRegistVO wardRegistVO) {
+    	int cnt = service.createWardRegist(wardRegistVO);
+    	
+    	return cnt;
+    }
     
+    @PostMapping("/cancleHospt")
+    @ResponseBody
+    public List updateHospt(@RequestBody Map<String, Integer> map) {
+    	log.info("HSPTNO >>>>>>>>>{}", map);
+    	Integer hsptNo = map.get("hsptNo");
+    	service.removeHsptList(hsptNo);
+    	List<OutHospitalizationVO> list = service.retrieveOutHsptList();
+    	return list;
+    }
+    
+    @PostMapping("/exitHospt")
+    @ResponseBody
+    public List deleteHospt(@RequestBody Map<String, Integer> map) {
+    	log.info("hsptNo >>{}",map);
+    	Integer hsptNo = map.get("hsptNo");
+    	service.modifyCancleHspt(hsptNo);
+    	List<OutHospitalizationVO> list = service.retrieveOutHsptList();
+    	return list;
+    }
+    
+    @PostMapping("/wardList")
+    @ResponseBody
+    public List wardList() {
+    	List<OutHospitalizationVO> outHsptList = service.retrieveOutHsptList();
+    	return outHsptList;
+    }
+    
+    
+    @PostMapping("/smsInsert")
+    @ResponseBody
+    public int smsInsert(@RequestBody SmsVO smsVO) {
+    	int cnt = service.createSms(smsVO);
+    	return cnt;
+    }
 }
 

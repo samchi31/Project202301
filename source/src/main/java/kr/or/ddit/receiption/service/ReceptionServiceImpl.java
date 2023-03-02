@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
 import kr.or.ddit.receiption.dao.ReceiptionDAO;
+import kr.or.ddit.receiption.vo.OutHospitalizationVO;
 import kr.or.ddit.receiption.vo.ReadRegistVO;
 import kr.or.ddit.receiption.vo.ReceiptionVO;
 import kr.or.ddit.receiption.vo.RegistVO;
 import kr.or.ddit.receiption.vo.SelectPatientVO;
 import kr.or.ddit.receiption.vo.SmsVO;
 import kr.or.ddit.receiption.vo.WaitListVO;
+import kr.or.ddit.receiption.vo.WardRegistVO;
 import kr.or.ddit.receiption.vo.SelectOperationListVO;
 
 @Service
@@ -73,8 +75,8 @@ public class ReceptionServiceImpl implements ReceptionService {
 	}
 
 	@Override
-	public int createSms(String smsCont) {
-		int cnt = DAO.insertSms(smsCont);
+	public int createSms(SmsVO smsVO) {
+		int cnt = DAO.insertSms(smsVO);
 		return cnt;
 	}
 
@@ -85,8 +87,8 @@ public class ReceptionServiceImpl implements ReceptionService {
 	}
 
 	@Override
-	public int removeSms(String sttCd) {
-		int cnt = DAO.deleteSms(sttCd);
+	public int removeSms(SmsVO smsVO) {
+		int cnt = DAO.deleteSms(smsVO);
 		return cnt;
 	}
 
@@ -94,6 +96,36 @@ public class ReceptionServiceImpl implements ReceptionService {
 	public List<SmsVO> retrieveSmsList() {
 		List<SmsVO> list = DAO.selectSmsList();
 		return list;
+	}
+
+	@Override
+	public int createWardRegist(WardRegistVO wardRegistVO) {
+		int cnt = DAO.insertWardRegist(wardRegistVO);
+		return cnt;
+	}
+
+	@Override
+	public List<WardRegistVO> retrieveWardRegistedList() {
+		List<WardRegistVO> list = DAO.selectWardRegistedList();
+		return list;
+	}
+
+	@Override
+	public List<OutHospitalizationVO> retrieveOutHsptList() {
+		List<OutHospitalizationVO> list = DAO.selectOutHsptList();
+		return list;
+	}
+
+	@Override
+	public int modifyCancleHspt(Integer hsptNo) {
+		int cnt = DAO.updateCancleHspt(hsptNo);
+		return cnt;
+	}
+
+	@Override
+	public int removeHsptList(Integer hsptNo) {
+		int cnt = DAO.deleteHsptList(hsptNo);
+		return cnt;
 	}
 
 

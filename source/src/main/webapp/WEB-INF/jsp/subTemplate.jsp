@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
@@ -22,6 +21,11 @@
 </head>
 <body>
 	<div class="content">
+		<img src="${pageContext.request.contextPath }/resources/images/Hurry UPOP70.png" style="
+		    position: fixed;
+    		left: 70%;
+   			top: 90%;
+    		z-index: -10;"/>
 		<tiles:insertAttribute name="content" />
 	</div>
 <%-- 	<tiles:insertAttribute name="postScript" /> --%>

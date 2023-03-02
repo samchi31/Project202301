@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
+import kr.or.ddit.receiption.vo.OutHospitalizationVO;
 import kr.or.ddit.receiption.vo.ReadRegistVO;
 import kr.or.ddit.receiption.vo.ReceiptionVO;
 import kr.or.ddit.receiption.vo.RegistVO;
 import kr.or.ddit.receiption.vo.SelectPatientVO;
 import kr.or.ddit.receiption.vo.SmsVO;
 import kr.or.ddit.receiption.vo.WaitListVO;
+import kr.or.ddit.receiption.vo.WardRegistVO;
 import kr.or.ddit.receiption.vo.SelectOperationListVO;
 
 /**
@@ -88,7 +90,7 @@ public interface ReceptionService {
 	 * @param smsCont
 	 * @return
 	 */
-	public int createSms(String smsCont);
+	public int createSms(SmsVO smsVO);
 	
 	/**
 	 * SMS 문구 수정
@@ -103,7 +105,7 @@ public interface ReceptionService {
 	 * @param sttCd
 	 * @return
 	 */
-	public int removeSms(String sttCd);
+	public int removeSms(SmsVO smsVO);
 	
 	/**
 	 * SMS 문구 조회 리스트
@@ -111,6 +113,40 @@ public interface ReceptionService {
 	 * @return
 	 */
 	public List<SmsVO> retrieveSmsList();
+	
+	/**
+	 * 입원 등록
+	 * @param wardRegistVO
+	 * @return
+	 */
+	public int createWardRegist(WardRegistVO wardRegistVO);
+	
+	/**
+	 * 등록된 입원환자 리스트
+	 * @return
+	 */
+	public List<WardRegistVO> retrieveWardRegistedList();
+	
+	/**
+	 * 퇴원 가능한 환자 리스트
+	 * @return
+	 */
+	public List<OutHospitalizationVO> retrieveOutHsptList();
+	
+	/**
+	 * 퇴원처리
+	 * @param hsptNo
+	 * @return
+	 */
+	public int modifyCancleHspt(Integer hsptNo);
+	
+	
+	/**
+	 * 입원 취소
+	 * @param hsptNo
+	 * @return
+	 */
+	public int removeHsptList(Integer hsptNo);
 }
 
 

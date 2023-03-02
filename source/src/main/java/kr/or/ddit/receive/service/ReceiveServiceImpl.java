@@ -19,17 +19,20 @@ public class ReceiveServiceImpl implements ReceiveService {
 	private ReceiveDAO dao;
 		
 	@Override
-	public int createReceive(ReceiveDetailVO receiveDetailVO, String trmCd) {
+	public int createReceive(ReceiveDetailVO receiveDetailVO) {
 		
 		int rowcnt = 0;
-		rowcnt = createReceiveDetail(receiveDetailVO);
 		
 		ReceiveVO receive = new ReceiveVO();
-		receive.setRecNo(receiveDetailVO.getRecNo());
-		receive.setTrmCd(trmCd);
+//		receive.setRecNo(receiveDetailVO.getRecNo());
+		receive.setTrmCd(receiveDetailVO.getTrmCd());
+		receive.setRecTotl(receiveDetailVO.getRdTtfe());
 		receive.setRecApcd("792420120038219");
 		
 		rowcnt += dao.insertReceive(receive);
+		
+		receiveDetailVO.setRecNo(receive.getRecNo());
+		rowcnt += createReceiveDetail(receiveDetailVO);
 				
 		
 		return rowcnt;

@@ -91,6 +91,12 @@ body {
 	font-size: 12px
 }
 
+.pTag {
+	color: #868e96;
+    font-family: 'spo';
+    margin-bottom: 0px;
+}
+
 /* **************************body시작 끝****************************** */
 
 /* **************************header 끝****************************** */
@@ -98,13 +104,9 @@ body {
 	font-family: 'Nanum Gothic', sans-serif;
 	/* 	font-weight: bold; */
 	margin-top: 5px;
-	margin-bottom: 13px;
+/* 	margin-bottom: 13px; */
+	margin-bottom: 5px;
 	margin-left: 10px;
-	color: #6A6A6A;
-}
-
-.h4-title2 {
-	font-family: 'Nanum Gothic', sans-serif;
 	color: #6A6A6A;
 }
 
@@ -112,9 +114,9 @@ body {
 .card-grid {
 	background-color: #FCFFFE;
 	border-radius: 5px;
-	border-top: 5px solid #4F80FF;
+	border-top: 5px solid #4E73DF;
 	box-shadow: 1px 1px 5px grey;
-	padding: 10px;
+	padding: 15px;
 }
 /* **************************card 끝****************************** */
 
@@ -150,8 +152,8 @@ body {
 /* ************************* 검색창 시작  ****************************************/
 .search-form {
 	float: right;
-	padding-bottom: 20px;
-	padding-top: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 .search-form>select {
@@ -187,7 +189,7 @@ body {
 	padding: 1.25rem;
 	background-color: #F2F1F1;
 	border-radius: 5px;
-	border-top: 5px solid #4F80FF;
+	border-top: 5px solid #4E73DF;
 	box-shadow: 1px 1px 5px grey;
 	overflow: auto;
 	margin-top: 30px;
@@ -217,7 +219,7 @@ body {
 	border-radius: 5px;
 	border-top: 5px solid #4E73DF;
 	box-shadow: 1px 1px 5px grey;
-	padding: 20px;
+	padding: 15px;
 }
 
 .btn_blue {
@@ -306,6 +308,25 @@ body {
 	 background-color: #f8f8f8;
 }
 
+.table-blue tbody tr.dblclick-on{
+	background-color : antiquewhite;
+	opacity:0.8;
+	font-weight:bold;
+	color: #00334E;
+}	
+
+.table-blue tbody td.dblclick-on{
+	background-color : antiquewhite;
+	opacity:0.8;
+	font-weight:bold;
+	color: #00334E;
+}	
+
+.table-blue tbody tr:hover::active {
+	 background-color: rgba(0, 0, 0, 0.8);
+	 z-index:-1;
+}
+
 .table-blue td {
 	white-space: nowrap;
 	text-overflow: ellipsis;
@@ -332,7 +353,6 @@ body {
 .scroller {
     overflow-y: auto;
     overflow-x: auto;
-    height: 311px;
     width: 100%;
     position: sticky;
     visibility: hidden;
@@ -363,3 +383,7 @@ body {
   height: 0;
 }
 /* *************************************스크롤(scroller) 끝************************************ */
+.active{
+	background-color : white;
+	color : #4E73DF;
+}

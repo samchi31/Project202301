@@ -10,4 +10,5 @@ import lombok.ToString;
 public class SmsVO {
 	private String sttCd;
 	private String smsCont;
+	private String smsTitle;
 }

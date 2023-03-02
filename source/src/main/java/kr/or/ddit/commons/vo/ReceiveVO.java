@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(of="recNo")
 public class ReceiveVO {
-	private Integer recNo;
+	private String recNo;
 	private String recYnif="Y";
 	private String recMth="카드";
 	private Integer recTotl;

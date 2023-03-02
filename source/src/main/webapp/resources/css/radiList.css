@@ -1,6 +1,10 @@
 @charset "UTF-8";
 
 
+fieldset{
+	margin-left: 17px;
+}
+
 .table1{
 	margin-top: -1px;
 }
@@ -26,10 +30,10 @@ h4{
    padding: 17px;
    
 }
-label {
-    margin: 20px;
-    margin-left: 1px;
-}
+/* label { */
+/*     margin: 20px; */
+/*     margin-left: 1px; */
+/* } */
 label.radio-control{
 	margin-left: 5px;
 	margin-bottom: -4px;
@@ -184,10 +188,9 @@ label.radio-control{
 	
 /* } */
 
-/* .modal-header{ */
-/* 	padding-top: 4px; */
-/*     padding-bottom: 10px; */
-/* } */
+.modal-header{
+	margin-left: 10px;
+}
 
 /* .modal-dialog{ */
 /* 	height: 52%; */
@@ -212,6 +215,11 @@ button{
     margin-top: 0%;
 } 
 
+
+#filmCateTable{
+	margin-top: -6px;
+}
+
 .offcanvas-body {
     flex-grow: 1;
     padding: var(--bs-offcanvas-padding-y) var(--bs-offcanvas-padding-x);
@@ -219,11 +227,12 @@ button{
 	margin-top: -27px;
 	padding-top: 0px;
 	padding-bottom: 44px;
+	height: 100%;
 }
 
 .offcanvas-footer{
 
-    padding-bottom: 3%;
+    padding-bottom: 10%;
     padding-right: 4%;
 
 }
@@ -234,15 +243,16 @@ button{
     height: 29px;
 }
 
-#symptomTable{
-	margin-left: 50px;
-}
+/* #symptomTable { */
+/* 	margin-top: 56px; */
+/*     margin-left: 7px; */
+/* } */
 
 
 .col-md-6 {
     flex: 0 0 auto;
     width: 50%;
-    height: 0px;
+    height: 27px;
 }
 
 .col-md-4 {
@@ -296,6 +306,7 @@ textarea {
 	overflow: hidden;
 	border: 0;
 }
+
 
 .filebox{
 	height: 0px;
@@ -390,6 +401,10 @@ input:focus::-webkit-input-placeholder {
     margin-left: 5px;
 }
 
+/* .filmImageInput{ */
+/* 	margin-top: 40px; */
+/* } */
+
 
 .card-grid::-webkit-scrollbar{
     width: 6px;
@@ -401,4 +416,8 @@ input:focus::-webkit-input-placeholder {
     width: auto;
     overflow-x: hidden;
     overflow-y: auto;
+}
+
+#film-record-grid{
+	overflow : hidden;
 }

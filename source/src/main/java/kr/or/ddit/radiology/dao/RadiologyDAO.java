@@ -6,18 +6,14 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import kr.or.ddit.commons.vo.AttachCommonsVO;
 import kr.or.ddit.commons.vo.DiagHistoryVO;
-import kr.or.ddit.commons.vo.DivisionTreatVO;
 import kr.or.ddit.commons.vo.FilmAtchDetailVO;
 import kr.or.ddit.commons.vo.FilmAtchVO;
-import kr.or.ddit.commons.vo.FilmAttachVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
 import kr.or.ddit.commons.vo.PagingVO;
 import kr.or.ddit.commons.vo.SymptomVO;
 import kr.or.ddit.commons.vo.TrmChartVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
-import kr.or.ddit.commons.vo.WaitStatusVO;
 
 /**
  * <pre>
@@ -66,7 +62,6 @@ public interface RadiologyDAO {
 	 */
 	public List<FilmCateVO> selectMriPatient(Map<String, String> map);
 	
-	
 	/**
 	 * 촬영 결과 전송 리스트 조회
 	 * @param paNo
@@ -81,27 +76,6 @@ public interface RadiologyDAO {
 	 * @returnsize 
 	 */
 	public List<WaitHistoryVO> selectXrayList(Map<String, String> map);
-	
-	/**
-	 * MRI촬영리스트 출력
-	 * @param map
-	 * @returnsize 
-	 */
-	public List<WaitHistoryVO> selectMRIList(Map<String, String> map);
-	
-	/**
-	 * CT촬영리스트 출력
-	 * @param map
-	 * @returnsize 
-	 */
-	public List<WaitHistoryVO> selectCTList(Map<String, String> map);
-	
-	/**
-	 * 초음파촬영리스트 출력
-	 * @param map
-	 * @returnsize 
-	 */
-	public List<WaitHistoryVO> selectUltraList(Map<String, String> map);
 	
 	/**
 	 * 촬영실 대기리스트 출력
@@ -183,6 +157,8 @@ public interface RadiologyDAO {
 	 * @param map : {trmCd=TC0182, filmCd=MRI}
 	 * @returnsize
 	 */
-	public int updateFilmDate(Map<String, String> map);
+	public int updateFilmDate(FilmAtchVO filmatchVO);
+	
+	public List<FilmAtchDetailVO> selectFilmAtchDetail(String rcpNo);
 	
 }

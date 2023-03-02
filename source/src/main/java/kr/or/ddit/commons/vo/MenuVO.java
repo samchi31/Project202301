@@ -13,5 +13,6 @@ public class MenuVO {
 	private final String menuText;
 	private final String menuURL;
 	private String menuColor;
+	private String menuRole;
 }
 

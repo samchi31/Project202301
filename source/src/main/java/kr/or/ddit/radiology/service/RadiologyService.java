@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import kr.or.ddit.commons.vo.DiagHistoryVO;
+import kr.or.ddit.commons.vo.FilmAtchDetailVO;
 import kr.or.ddit.commons.vo.FilmAtchVO;
-import kr.or.ddit.commons.vo.FilmAttachVO;
 import kr.or.ddit.commons.vo.FilmCateVO;
 import kr.or.ddit.commons.vo.SymptomVO;
 import kr.or.ddit.commons.vo.TrmChartVO;
@@ -70,24 +70,6 @@ public interface RadiologyService {
 	 */
 	public List<WaitHistoryVO> selectXrayList();
 
-	/**
-	 * MRI대기실 상황
-	 * @return
-	 */
-	public List<WaitHistoryVO> selectMRIList();
-
-	/**
-	 * CT대기실 상황
-	 * @return
-	 */
-	public List<WaitHistoryVO> selectCTList();
-
-	/**
-	 * 초음파대기실 상황
-	 * @return
-	 */
-	public List<WaitHistoryVO> selectUltraList();
-
 
 	/**
 	 * 전체 촬영실 대기상태
@@ -149,14 +131,14 @@ public interface RadiologyService {
 	//map : {rcpNo=202302062, waitstCd=WS001, divCd=DV007}
 	public int modifyWaitListInsert(Map<String, String> map);
 
-	public String processAttachList(FilmAtchVO filmAtchVO);
+	public int processAttachList(FilmAtchVO filmAtchVO);
 
 
 
 
-	public int updateFilmDate(Map<String, String> map);
+	public int modifyFilmDate(FilmAtchVO filmatchvo);
 
 
-	
+	public List<FilmAtchDetailVO> retrieveFilmAtchDetailVO(String rcpNo);
 
 }

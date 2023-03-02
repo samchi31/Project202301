@@ -31,28 +31,20 @@ thead tr {
 }
 
 .active {
-	border: 3px solid #4E73DF;
+	border: #4E73DF;
 }
 
 .scroller {
 	overflow-y: auto;
 	overflow-x: auto;
-	height: 180px;
+	height: 155px;
 	width: 100%;
 	position: sticky;
 }
 
-.search-form {
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
 
 .h4-title1 {
 	margin-bottom: 5px;
-}
-
-.grid-stack-item-content {
-	padding: 15px;
 }
 
 .input-submit-button {
@@ -134,10 +126,10 @@ thead tr {
 /* 치료부위 뼈계 */
 #bone {
 	/* 	이미지 */
-	width: 295px;
-	left: -19px;
 /* 	padding-top: 15px; */
 	position: absolute;
+	width: 274px;
+    left: -9px;
 }
 
 #yg2 {
@@ -162,7 +154,12 @@ thead tr {
 	position: relative;
 	/* 	border: 1px solid black; */
 	width: 265px;
-	height: 250px;
+	height: 220px;
 }
 
-	
+.curePartSelect{
+	padding-bottom: 10px;
+    position: relative;
+    left: 4%;
+    width: 92%;
+}

@@ -25,7 +25,7 @@ public interface ReceiveService {
 	 * @param receive
 	 * @return
 	 */
-	public int createReceive(ReceiveDetailVO receiveDetailVO, String trmCd);
+	public int createReceive(ReceiveDetailVO receiveDetailVO);
 	
 	/**
 	 * 수납 리스트 조회

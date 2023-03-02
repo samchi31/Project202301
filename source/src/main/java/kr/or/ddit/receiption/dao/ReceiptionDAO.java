@@ -8,12 +8,14 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.or.ddit.commons.vo.PatientVO;
 import kr.or.ddit.commons.vo.ReceptionVO;
 import kr.or.ddit.commons.vo.WaitHistoryVO;
+import kr.or.ddit.receiption.vo.OutHospitalizationVO;
 import kr.or.ddit.receiption.vo.ReadRegistVO;
 import kr.or.ddit.receiption.vo.ReceiptionVO;
 import kr.or.ddit.receiption.vo.RegistVO;
 import kr.or.ddit.receiption.vo.SelectPatientVO;
 import kr.or.ddit.receiption.vo.SmsVO;
 import kr.or.ddit.receiption.vo.WaitListVO;
+import kr.or.ddit.receiption.vo.WardRegistVO;
 import kr.or.ddit.receiption.vo.SelectOperationListVO;
 
 @Mapper
@@ -108,7 +110,7 @@ public interface ReceiptionDAO {
 	 * @param smsCont
 	 * @return
 	 */
-	public int insertSms(String smsCont);
+	public int insertSms(SmsVO smsVO);
 	
 	/**
 	 * SMS 문구 수정
@@ -122,11 +124,44 @@ public interface ReceiptionDAO {
 	 * @param sttCd
 	 * @return
 	 */
-	public int deleteSms(String sttCd);
+	public int deleteSms(SmsVO smsVO);
 	
 	/**
 	 * SMS 문구 조회리스트
 	 * @return
 	 */
 	public List<SmsVO> selectSmsList();
+	
+	/**
+	 * 입원 등록
+	 * @param wardRegistVO
+	 * @return
+	 */
+	public int insertWardRegist(WardRegistVO wardRegistVO);
+	
+	/**
+	 * 등록된 입원 환자리스트 
+	 * @return
+	 */
+	public List<WardRegistVO> selectWardRegistedList();
+	
+	/**
+	 * 퇴원가능한 환자 리스트 
+	 * @return
+	 */
+	public List<OutHospitalizationVO> selectOutHsptList();
+	
+	/**
+	 * 퇴원 처리
+	 * @param hsptNo
+	 * @return
+	 */
+	public int updateCancleHspt(Integer hsptNo);
+	
+	/**
+	 * 입원 취소
+	 * @param hsptNo
+	 * @return
+	 */
+	public int deleteHsptList(Integer hsptNo);
 }

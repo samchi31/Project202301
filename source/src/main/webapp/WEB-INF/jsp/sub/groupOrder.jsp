@@ -4,14 +4,19 @@
 <title>doctor-go</title>
 
 <style>
-	.tab-big{height: 340px;}
-	.tab-mid{height: 215px;}
+	.tab-big{height: 235px;}
+	.tab-mid{height: 150px;}
 	.tab-bigger{height: 375px;} 
 	
 	.dblclick-on{
 		background-color : antiquewhite;
 	}
+	
+	h4{font-family: 'Nanum Gothic', sans-serif; color: #6A6A6A;}
+	h1{font-family: 'Nanum Gothic', sans-serif; color: #6A6A6A;}
+	i {box-sizing: border-box ; padding : 5px; font-size : 1rem; float:right;}
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 
 <div class="wrapper">
 	<div style="margin:0.5rem">
@@ -21,7 +26,7 @@
 		<div class="grid-stack-item "
 			gs-x="0" gs-y="0" gs-w="4" gs-h="2" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid" >
-				<h4 class="h4-title2">그룹오더목록</h4>
+				<h4 class="h4-title2">그룹오더목록<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="현재 작성된 그룹오더 목록입니다. 더블클릭하여 상세 관리 가능합니다."></i></h4>
 				<div class="tabcontentWrap tab-mid">
 			    	<div class="tabcontent">
 						<table class="table-blue">
@@ -51,7 +56,7 @@
 		<div class="grid-stack-item" 
 			gs-x="4" gs-y="0" gs-w="8" gs-h="5" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid" >
-				<h4 class="h4-title2">그룹오더정보</h4>
+				<h4 class="h4-title2">그룹오더정보<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="그룹오더를 새로 작성하거나 그룹오더목록에서 선택한 그룹오더를 수정, 삭제할 수 있습니다."></i></h4>
 				<div>
 					<div>
 						<button id="btnSave" class="btn btn-primary">저장</button>
@@ -131,7 +136,7 @@
 		<div class="grid-stack-item" 
 			gs-x="0" gs-y="3" gs-w="4" gs-h="3" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid" >
-				<h4 class="h4-title2">기초자료</h4>
+				<h4 class="h4-title2">기초자료<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="그룹오더로 등록할 자료입니다. 선택하여 그룹오더정보에 추가할 수 있습니다."></i></h4>
 				 <div class="tab doc-basic">
 				    <ul class="tabnav">
 				      <li><a href="#dise">상병</a></li>
@@ -221,6 +226,9 @@
 <!--  xml을 json으로 바꿔주는 라이브러리 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js"></script>
 <script>		
+	
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 	
 	/* make table 약품 공공데이터 테이블 만들기 */
 	let $tbody_medi =$("#tbody_medi");

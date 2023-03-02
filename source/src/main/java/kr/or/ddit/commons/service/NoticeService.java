@@ -1,8 +1,11 @@
 package kr.or.ddit.commons.service;
 
 import java.util.List;
+import java.util.Map;
 
+import kr.or.ddit.commons.vo.EmployeeVO;
 import kr.or.ddit.commons.vo.NoticeVO;
+import kr.or.ddit.commons.vo.WorkingStatusVO;
 
 /**
  * @author 장예지
@@ -15,6 +18,7 @@ import kr.or.ddit.commons.vo.NoticeVO;
  * 수정일                          수정자               수정내용
  * --------     --------    ----------------------
  * 2023. 2. 13.      장예지       최초작성
+ * 2023. 2. 25.      위대현       풀캘린더 추가
  * Copyright (c) 2023 by DDIT All right reserved
  *      </pre>
  */
@@ -31,6 +35,59 @@ public interface NoticeService {
 	 * @return
 	 */
 	public int createWriteInsert(NoticeVO noticeVO);
+
+	/**
+	 * 등록된 근무상태 모두 조회
+	 * @return
+	 */
+	public List<WorkingStatusVO> retrieveScheduleList();
+
+	/**
+	 * 스케줄 시간 등록
+	 * @param map
+	 * @return
+	 */
+	public int createschedule(Map<String, Object> map);
+
+	/**
+	 * 직원명단 조회
+	 * @return
+	 */
+	public List<EmployeeVO> retrieveEmpList();
+
+	/**
+	 * 스케줄 번호에 해당하는 스케줄 정보를 조회
+	 * @param wsNo
+	 * @return
+	 */
+	public WorkingStatusVO retrieveScheduleDetail(String wsNo);
+	
+	/**
+	 * 근무상태 리스트 조회
+	 * @return List<WorkingStatusVO>
+	 */
+	public List<WorkingStatusVO> retrieveWsOption();
+
+	/**
+	 * 근무상태 수정
+	 * @param map
+	 * @return 성공/실패
+	 */
+	public int modifyWs(Map<String, String> map);
+
+	/**
+	 * 근무상태 삭제
+	 * @param map
+	 * @return 성공/실패
+	 */
+	public int removeWs(Map<String, String> map);
+
+	/**
+	 * 일일 접수 환자 수 조회
+	 * @param map
+	 * @return
+	 */
+	public int retrieveCountReception(Map<String, String> map);
 	
 	
 }

@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(of="recNo")
 public class ReceiveDetailVO {
-	private Integer recNo;
+	private String recNo;
 	private Integer rdEtcf;	// 제증명및기타
 	private Integer rdTtfe; // 진료비 총액
 	private Integer rdPafe;	// 환자부담 총액
@@ -22,4 +22,6 @@ public class ReceiveDetailVO {
 	private Integer rdExfe;	// 영상검사료
 	private Integer rdMdfe;	// 영상진단료
 	private Integer rdOperfe;	// 수술료
+	
+	private String trmCd;
 }
