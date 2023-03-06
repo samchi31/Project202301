@@ -42,7 +42,7 @@
 		      FROM RECEPTION b  
 		      INNER JOIN TRM_CHART c
 		       ON b.rcp_no = c.rcp_no
-		      INNER JOIN SYMPTOM_HISTORY d
+		      LEFT OUTER JOIN SYMPTOM_HISTORY d
 		       ON C.trm_cd = d.trm_cd
 		      LEFT OUTER JOIN PATIENT a
 		       ON b.pa_no = a.pa_no
@@ -134,7 +134,7 @@
 			<if test="searchOption!=null">
 				<choose>
 					<when test="searchOption=='no'">
-						AND PA_NO = #{searchWord}
+						AND A.PA_NO = #{searchWord}
 					</when>
 					<when test="searchOption=='name'">
 						AND PA_NAME LIKE '%' || #{searchWord} || '%'
@@ -173,18 +173,18 @@
 		       ON C.trm_cd = d.trm_cd
 		      LEFT OUTER JOIN PATIENT a
 		       ON b.pa_no = a.pa_no
-             <where>
+		       <trim prefix=" WHERE " prefixOverrides="AND">
              	<if test="searchOptionA!=null">
 					<choose>
 						<when test="searchOptionA=='no'">
-							AND PA_NO = #{searchWordA}
+							AND A.PA_NO = #{searchWordA}
 						</when>
 						<when test="searchOptionA=='name'">
 							AND PA_NAME LIKE '%' || #{searchWordA} || '%'
 						</when>
 					</choose>             	
              	</if>
-             </where>
+             </trim>  
     		)T
         
 		GROUP BY T.pa_no
@@ -250,6 +250,7 @@
 		<collection property="symptomVOList" ofType="kr.or.ddit.commons.vo.SymptomVO" autoMapping="true"/>
 		<collection property="ptDocumentList" ofType="kr.or.ddit.commons.vo.PtDocumentVO" autoMapping="true"/>
 	</resultMap>
+
 	<select id="selectptChart" resultMap="prmChartMap" parameterType="kr.or.ddit.commons.vo.TrmChartVO">
 		 SELECT T.pa_no ,T.pa_name ,T.pa_reg, T.pa_sex
 		      ,T.rcp_no ,T.rcp_date ,T.office_cd
@@ -267,7 +268,7 @@
 		       ON b.rcp_no = c.rcp_no
               LEFT OUTER JOIN PT_DOCUMENT E
                ON C.TRM_CD = E.TRM_CD
-		      INNER JOIN SYMPTOM_HISTORY d
+		      LEFT OUTER JOIN SYMPTOM_HISTORY d
 		       ON C.trm_cd = d.trm_cd
 		      LEFT OUTER JOIN PATIENT a
 		       ON b.pa_no = a.pa_no
@@ -289,7 +290,6 @@
                 , T.PD_DT
                 , T.PD_CONT
                 , T.PD_PART
-                
 	</select>
 	
 	<!-- 	환자 치료일지 Insert -->

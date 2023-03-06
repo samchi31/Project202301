@@ -254,7 +254,7 @@
 	
 	
 	<resultMap type="FilmAtchVO" id="filmAtchVO" autoMapping="true">
-		<id property="trmCd" column="TRM_CD" />
+		<id property="fiatCd" column="FIAT_CD" />
 		<collection property="filmAtchDetailVOList" ofType="FilmAtchDetailVO" autoMapping="true">
 			<id property="attNo" column="ATT_NO"/>		
 		</collection>

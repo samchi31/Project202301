@@ -27,7 +27,22 @@ public interface NoticeService {
 	/**
 	 * 공지사항 조회
 	 */
-	public List<NoticeVO> selectNoticeList(NoticeVO noticeVO);
+	public List<NoticeVO> selectNoticeList();
+	public NoticeVO retreiveNotice(int ntcCd);
+	
+	/**
+	 * 공지사항 수정하기
+	 * @param ntcCd
+	 * @return
+	 */
+	public int modifyNotice(NoticeVO noticeVO);
+	
+	/**
+	 * 공지사항 삭제하기
+	 * @param ntcCd
+	 * @return
+	 */
+	public int removeNotice(int ntcCd);
 	
 	/**
 	 * 공지사항 Insert

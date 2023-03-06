@@ -3,7 +3,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
 <div>
-	<security:authentication property="principal.realMember" var="employeeVO"/>
+	<security:authorize access="isAuthenticated()" >	
+		<security:authentication property="principal.realMember" var="employeeVO"/>
+	</security:authorize>
    <ul class="menu">
       <li id="main_logo">
          <a href="<c:url value='/'/>" style="text-decoration: none;"><img src="<c:url value='/resources/images/mainlogo.png'/>" alt="로고"></a>

@@ -32,13 +32,11 @@
           NREC_NO
           , NREC_CONT
           , NREC_DATE
-          , EMP_NO
           , HSPT_NO
       ) VALUES (
          'NR'||LPAD(SEQ_NREC.NEXTVAL, 4,'0')
           , #{nrecCont}
           , TO_CHAR(SYSDATE, 'YYYY-MM-DD')
-          , 6
           , #{hsptNo}
       )
    </insert>
@@ -57,7 +55,6 @@
           vt_bp,
           vt_rp,
           vt_ne,
-          emp_no,
           hspt_no
       ) VALUES (
          'VI'||LPAD(SEQ_VITAL.NEXTVAL, 4,'0')
@@ -67,7 +64,6 @@
           , #{vtBp,jdbcType=NUMERIC}
           , #{vtRp,jdbcType=NUMERIC}
           , #{vtNe,jdbcType=VARCHAR}
-          , 6
           , #{hsptNo,jdbcType=NUMERIC}
       )
    </insert>
@@ -84,7 +80,7 @@
 		LEFT OUTER JOIN EMPLOYEE C
 		 ON A.EMP_NO = C.EMP_NO
 		WHERE A.HSPT_NO = #{hsptNo}
-		ORDER BY 1
+		ORDER BY 3 desc
    </select>
    
 <!--    <resultMap type="PatientVO" id="PatientMap" autoMapping="true"> -->
@@ -113,7 +109,7 @@
       INNER JOIN VITAL B
          ON A.HSPT_NO = B.HSPT_NO
       WHERE A.HSPT_NO = #{hsptNo}
-      ORDER BY B.VT_NO
+      ORDER BY VT_DATE desc
    </select>
    
    <select id="countIoList" resultType="int" parameterType="kr.or.ddit.commons.vo.IntakeOutputVO">
@@ -158,7 +154,7 @@
       LEFT OUTER JOIN OUTPUT_CATEGORY E
          ON C.OUTPUT_CATE_CD = E.OUTPUT_CATE_CD
       WHERE A.HSPT_NO = #{hsptNo}
-      ORDER BY IO_DATE
+      ORDER BY IO_DATE desc
    </select>
    
    <resultMap type="HospitalizationVO" id="dietRecordMap" autoMapping="true">
@@ -182,6 +178,7 @@
       INNER JOIN DIET_CATEGORY C
       ON B.DIET_CATE_CD = C.DIET_CATE_CD
       WHERE A.HSPT_NO = #{hsptNo}
+      order by DIET_DATE desc
    </select>
    
    <!-- intake 입력 -->
@@ -193,7 +190,6 @@
       , INTAKE_CAPA
       , INTAKE_NE
       , INTAKE_CATE_CD
-      , EMP_NO
       , IO_DATE
       , HSPT_NO
    ) VALUES (
@@ -201,7 +197,6 @@
       , #{intakeCapa,jdbcType=VARCHAR}
       , #{intakeNe,jdbcType=VARCHAR}
       , #{intakeCateCd,jdbcType=VARCHAR}
-      , 6
       , #{ioDate,jdbcType=DATE}
       , #{hsptNo,jdbcType=NUMERIC}
    )
@@ -216,7 +211,6 @@
           , output_capa
           , output_ne
           , output_cate_cd
-          , emp_no
           , io_date
           , hspt_no
       ) VALUES (
@@ -224,7 +218,6 @@
          , #{outputCapa,jdbcType=VARCHAR}
          , #{outputNe,jdbcType=VARCHAR}
          , #{outputCateCd,jdbcType=VARCHAR}
-         , 6
          , #{ioDate,jdbcType=DATE}
          , #{hsptNo,jdbcType=NUMERIC}
       )
@@ -238,7 +231,6 @@
           diet_date,
           diet_ne,
           diet_cate_cd,
-          emp_no,
           hspt_no,
           diet_time
       ) VALUES (
@@ -246,7 +238,6 @@
          , #{dietDate,jdbcType=DATE}
          , #{dietNe,jdbcType=VARCHAR}
          , #{dietCateCd,jdbcType=VARCHAR}
-         , 6
          , #{hsptNo,jdbcType=NUMERIC}
          , #{dietTime,jdbcType=DATE}
       )

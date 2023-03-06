@@ -7,10 +7,12 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,8 +36,16 @@ public class NoticeController {
 	@Inject
 	NoticeService noticeService;
 	
-	@Inject
-	NoticeDAO noticeDAO;
+	@ModelAttribute("notice")
+	public  NoticeVO noticeVO() {
+		return new NoticeVO();
+	}
+	
+	@GetMapping("/insert")
+	public String enterInsert() {
+		return "sub/noticeInsertTab";
+	}
+	
 	/**
 	 * 공지사항 일반조회
 	 * @param noticeVO
@@ -48,44 +58,102 @@ public class NoticeController {
 			Model model
 			) {
 		log.info("noticeVO : " + noticeVO);
-		List<NoticeVO> selectNoticeList = noticeService.selectNoticeList(noticeVO);
-		model.addAttribute("selectNoticeList",selectNoticeList);
 		model.addAttribute("wsOptionList",noticeService.retrieveWsOption());
-		return "notice/noticeView";
+		return "notice/noticeView";		
+	}
+	
+	/**
+	 * 공지사항 Detail
+	 * @return String
+	 */
+	@GetMapping(value = "/noticeDetail/{ntcCd}")
+	public String noticeDetail (
+			@PathVariable int ntcCd,
+			Model model) {
+		model.addAttribute("notice", noticeService.retreiveNotice(ntcCd));
+		return "sub/noticeDetail";
 		
 	}
+	/**
+	 * 공지사항 Delete
+	 * @param ntcCd
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping(value = "/noticeDelete/{ntcCd}",produces = "text/plain;charset=UTF-8" )
+	public String noticeDelete(@PathVariable int ntcCd, Model model) {
+		
+		int cnt = noticeService.removeNotice(ntcCd);
+		
+		String msg = null;
+		if(cnt > 0 ) {
+			msg = "성공";
+		} else {
+			msg = "실패";
+		}
+		
+		return msg;
+	}
+	
 	
 	//노티스 비동기 요청할 때 가져갈 수 있는 데이터..?ㅎ
 	@GetMapping(value="/notice", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public List<NoticeVO> noticeListJson(
-			@ModelAttribute("noticeService") NoticeVO noticeVO,
-			Model model
-			) {
-		log.info("noticeVO : " + noticeVO);
-		return noticeService.selectNoticeList(noticeVO);
-		
-		
+	public List<NoticeVO> noticeListJson() {
+		return noticeService.selectNoticeList();
 	}
+	
 	
 	/**
 	 * 공지사항 Insert
-	 * @param noticeVO
-	 * @param reAttributes
+	 * @param String
 	 * @return
 	 */
 	@ResponseBody
-	@PostMapping(value = "/noticeWriteInsert" ) 
-	public int noticeInsert(@RequestBody NoticeVO noticeVO , RedirectAttributes reAttributes) {
-		int list = noticeService.createWriteInsert(noticeVO);
-		log.info("나오고 있늬이 ? list {}  : ", list);
-		return list;
+	@PostMapping(value = "/noticeWriteInsert", produces = "text/plain;charset=UTF-8" ) 
+	public String noticeInsert(
+		@RequestBody NoticeVO notice
+		, @AuthenticationPrincipal(expression="realMember") EmployeeVO emp
+	) {
+		notice.setEmpNo(emp.getEmpNo());
+		log.info("insert {}", notice);
+		
+		int cnt = noticeService.createWriteInsert(notice);
+		
+		String msg = null;
+		if(cnt > 0 ) {
+			msg = "성공";
+		} else {
+			msg = "실패";
+		}
+		
+		return msg;
 	}
 	
+	/**
+	 * 공지사항 update
+	 * @return String
+	 */
+	@ResponseBody
+	@PostMapping(value = "/noticeUpdate", produces = "text/plain;charset=UTF-8")
+	public String noticeUpdata( 
+			@RequestBody NoticeVO noticeVO) {
+		
+		int rowcnt = noticeService.modifyNotice(noticeVO);
+		
+		String msg = null;
+		if(rowcnt > 0) {
+			msg = "성공";
+		} else {
+			msg = "실패";
+		}
+		
+		log.info("Update msg {}zzzzzz",msg);
+		return msg;
+		
+	}
 	
-//	public List<NoticeVO>noticeDetail
-//	
-	
+////////////////////////////////////////////////////////////////////////////	
 //	풀캘린더
 	@RequestMapping(value="/noticeView/events", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody

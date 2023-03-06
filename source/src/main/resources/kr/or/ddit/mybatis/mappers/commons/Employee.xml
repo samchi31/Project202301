@@ -7,4 +7,16 @@
 		from 	employee a left outer join position b on (a.posi_cd = b.posi_cd)
 		where 	a.emp_no = #{empNo}
 	</select>
+	
+	<update id="updateMember" parameterType="EmployeeVO">
+		update	employee
+		set		emp_nm = #{empNm}
+<!-- 	    		emp_pw = #{empPw} -->
+	    		, emp_tel = #{empTel}
+	    		, emp_mail = #{empMail}
+	    		, emp_zip = #{empZip}
+	    		, emp_add1 = #{empAdd1}
+	    		, emp_add2 = #{empAdd2}
+		where	emp_no = #{empNo}
+	</update>
 </mapper>

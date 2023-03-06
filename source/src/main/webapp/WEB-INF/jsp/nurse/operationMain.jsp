@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 <title>수술/검사</title>
 <style>
 html, body {height: 100%; overflow: hidden;}
@@ -55,12 +56,23 @@ html, body {height: 100%; overflow: hidden;}
 .popover.left .arrow:after {border-left-color: #fff;}
 .popover.bottom .arrow:after {border-bottom-color: #fff;}
 
+i {box-sizing: border-box ; padding : 5px; font-size : 1rem; float:right;}
+
+#operTolltip{position: fixed; top: 90px; left: 449px;}
+#barcodePrintTolltip{position: fixed; top: 319px; left: 678px;}
+#calendarTolltip{position: fixed; top: 90px; left: 1863px;}
+
+/* 부트스트랩 폰트사이즈 일괄수정 */
+.form-control {
+	font-size: 12px;
+}
 </style>
 
 <div class="oper-wrapper">
 	<!-- 왼쪽구역시작 -->
 	<div class="content-left">
 		<div class="oper-pa-list oper-card card-grid">
+			<i class="bi bi-info-circle" id="operTolltip" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="(1)수술대기: 수술오더를 받은 환자리스트 (2)수술예정: 수술이 예약되어 있는 환자리스트 (3)수술완료: 수술이 종료된 환자 리스트" ></i>
 			<div class="tab patient-tab">
 			    <ul class="tabnav">
 			      <li><a href="#operWait">수술대기</a></li>
@@ -182,7 +194,7 @@ html, body {height: 100%; overflow: hidden;}
 				 <div class="mb-3 row">
 				    <label for="inputPassword" class="col-sm-2 col-form-label">의무기록</label>
 				    <div class="col-sm-10">
-				      <textarea class="form-control" id="oper-pa-detail-mediRecord" readonly="readonly" disabled></textarea>  
+				      <textarea class="form-control" id="oper-pa-detail-mediRecord" readonly="readonly" disabled style="height: 90px;"></textarea>  
 				    </div>
 				 </div>
 				 <div class="mb-3 row">
@@ -216,9 +228,9 @@ html, body {height: 100%; overflow: hidden;}
 				    </div>
 				 </div>
 				 <div class="mb-3 row">
-				    <label for="inputOperationDetail" class="col-sm-2 col-form-label">상병명</label>
+				    <label for="inputOperationDetail" class="col-sm-2 col-form-label">수술명</label>
 				    <div class="col-sm-10">
-				      <input type="text" class="form-control" id="oper-detail-icdName" readonly="readonly" disabled>
+				      <input type="text" class="form-control" id="oper-detail-operNm" readonly="readonly" disabled>
 				    </div>
 				 </div>
 				 <div class="mb-3 row">
@@ -248,7 +260,7 @@ html, body {height: 100%; overflow: hidden;}
 				 <div class="mb-3 row">
 				    <label for="inputOperationDetail" class="col-sm-2 col-form-label">수술기록</label>
 				    <div class="col-sm-10">
-				      <textarea class="form-control" id="oper-detail-operationRecord"></textarea>  
+				      <textarea class="form-control" id="oper-detail-operationRecord" style="height: 107px;"></textarea>  
 				    </div>
 				 </div>
 				 <button style="float:right;" type="button" id="operationEnd" class="btn_blue">수술종료</button>	
@@ -346,7 +358,8 @@ html, body {height: 100%; overflow: hidden;}
 				  <input class="form-check-input" type="radio" name="cexBarcode" id="cexBarcode2" value="cecUa">
 				  <label class="form-check-label" for="inlineRadio2">소변검사</label>
 				</div>
-				<input id="barcode-print-btn"class="btn_blue" type="button" value="바코드출력" onclick="return printBarcode();">	
+				<input id="barcode-print-btn"class="btn_blue" type="button" value="바코드출력" onclick="return printBarcode();">
+				<i class="bi bi-info-circle" id="barcodePrintTolltip" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="상단의 검사대기 테이블에서 대상 환자를 클릭하면 해당 환자의 검사용 바코드가 표시된다. 바코드가 변경되지 않을시 해당 환자를 다시 클릭한다." ></i>	
 				<div id="barcode-print"></div>
 			</div>
 			<div class="cex_input" id="tab-cex-detail">
@@ -470,7 +483,9 @@ html, body {height: 100%; overflow: hidden;}
 	<div class="content-right1">
 		<div class="operCalendarCard oper-card card-grid">
 			<h4 class="h4-title1">수술일정</h4>
-			<div class="operCalendar" id='calendar' data-source="${pageContext.request.contextPath}/nurse/operationMain/events"></div>		
+			<div class="operCalendar" id='calendar' data-source="${pageContext.request.contextPath}/nurse/operationMain/events">
+				<i class="bi bi-info-circle" id="calendarTolltip" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="수술예약방법 (1)왼쪽의 수술대기 테이블에서 대상 환자를 클릭한다. (2)해당 날짜를 클릭한 뒤 원하는 시간에서 마우스를 드래그한다." ></i>	
+			</div>		
 		</div>
 	</div>
 	<!-- 오른쪽 구역1 끝 -->
@@ -532,7 +547,6 @@ html, body {height: 100%; overflow: hidden;}
 				<div class="col-sm-10">
 					<select class="form-select" id="operationColorSelect" onchange="fontColorChange()">
 						<option value="choice">선택</option>
-						<option value="D25565" style="color:#D25565; font-weight:bold;">빨간색</option>
                         <option value="9775fa" style="color:#9775fa; font-weight:bold;">보라색</option>
                         <option value="ffa94d" style="color:#ffa94d; font-weight:bold;">주황색</option>
                         <option value="74c0fc" style="color:#74c0fc; font-weight:bold;">파란색</option>
@@ -557,6 +571,9 @@ html, body {height: 100%; overflow: hidden;}
 <!-- *******************모달 끝************************* -->
 
 <script>
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
 /* 경과시간 계산 */
 function elapseTimer(){
 	let startTime = $('#oper-detail-startTime').val();
@@ -588,7 +605,7 @@ function elapseTimerStop(){
 	clearInterval(elapseTimer);
 }
 
-/* 밀리세컨드를 날짜로 변환해주는 함수 */
+/* 밀리세컨드를 날짜[연도/월/일(요일)]로 변환해주는 함수 */
 function convertDate(milliSecond) {
 	  const days = ['일', '월', '화', '수', '목', '금', '토'];
 	  const data = new Date(milliSecond);  //Date객체 생성
@@ -603,13 +620,11 @@ function convertDate(milliSecond) {
 
 /* 밀리세컨드를 날짜(시간포함)로 변환해주는 함수 */
 function convertDateTime(milliSecond) {
-	  const days = ['일', '월', '화', '수', '목', '금', '토'];
 	  const data = new Date(milliSecond);  //Date객체 생성
 
 	  const year = data.getFullYear();    //0000년 가져오기
 	  const month = String(data.getMonth() + 1).padStart(2,"0");  //월은 0부터 시작하니 +1하기
-	  const date = data.getDate();        //일자 가져오기
-	  const day = days[data.getDay()];    //요일 가져오기
+	  const date = String(data.getDate()).padStart(2,"0");        //일자 가져오기
 	  const hour = String(data.getHours()).padStart(2,"0");       //시간 가져오기
 	  const minute = String(data.getMinutes()).padStart(2,"0");   //분 가져오기
 	  const second = String(data.getSeconds()).padStart(2,"0");  //초 가져오기
@@ -653,10 +668,7 @@ document.addEventListener('DOMContentLoaded', function calendarLoad() {
 		            right: 'prev,next today'
 		        },
 		        select: function(arg) { // 캘린더에서 드래그로 이벤트를 생성할 수 있다.
-		        	
-		        	let check = isOverlapping(arg);
-		        	console.log(check);
-		        	
+		        	        	
 		        	v_selected_trmCd = $('#oper-pa-detail-trmCd').val();
 		        	v_paName = $('#oper-pa-detail-paName').val();
 		        	if(!v_selected_trmCd){
@@ -698,6 +710,7 @@ document.addEventListener('DOMContentLoaded', function calendarLoad() {
 		    							success : function(result) {
 		    								if(result==1){
 		    									swal("입력성공", "수술예약이 성공되었습니다.", "success");
+		    									operReservList();
 		    									calendarLoad();
 		    								}
 		    							},
@@ -779,7 +792,28 @@ document.addEventListener('DOMContentLoaded', function calendarLoad() {
 		            	let v_source = info.el.fcSeg.eventRange.def.extendedProps.source;
 		            	let v_startTime = convertDateTime(v_source.opReservStarttime);
 		            	let v_endTime = convertDateTime(v_source.opReservEndtime);
-		            	console.log(info)
+		            	let v_empNm = '';
+		            	let v_opKrNm = '';
+		            	let v_opEnNm = '';
+		            	
+		            	if(!v_source.operationJoinList[0].empNm){
+		            		v_empNm = "담당의 미배정";
+		            	}else{
+		            		v_empNm = v_source.operationJoinList[0].empNm;
+		            	}
+		            	
+		            	if(!v_source.opKrNm){
+		            		v_opKrNm = "수술 미선택";
+		            	}else{
+		            		v_opKrNm = v_source.opKrNm;
+		            	}
+		            	
+		            	if(!v_source.opEnNm){
+		            		v_opEnNm = " ";
+		            	}else{
+		            		v_opEnNm = v_source.opEnNm;
+		            	}
+		            	
 		            $(info.el).popover({
  						title: $('<div/>', {
 							"class": 'popoverTitleCalendar',
@@ -790,8 +824,8 @@ document.addEventListener('DOMContentLoaded', function calendarLoad() {
 		                content: $('<div/>' ,{
 		                	"class": 'popoverInfoCalendar'
 		                }).append('<p><strong>환자명: </strong>'+ v_source.paName +'</p>')
-		                .append('<p><strong>담당의: </strong>'+ v_source.operationJoinList[0].empNm+'</p>')
-		                .append('<p><strong>수술명: </strong>'+ v_source.opKrNm+' ('+v_source.opEnNm+')</p>')
+		                .append('<p><strong>담당의: </strong>'+ v_empNm+'</p>')
+		                .append('<p><strong>수술명: </strong>'+ v_opKrNm+' ('+v_opEnNm+')</p>')
 		                .append('<p><strong>예약시작일시: </strong>'+v_startTime+'</p>')
 		                .append('<p><strong>예약종료일시: </strong>'+v_endTime+'</p>')
 		                .append('<div class="popoverDescCalendar"><strong>설명:</strong></div>'),
@@ -898,6 +932,7 @@ document.addEventListener('DOMContentLoaded', function calendarLoad() {
 		    							swal("삭제성공", "예약 삭제에 성공했습니다", "success");
 		    							/* 캘린더 재출력 */
 		    							calendarLoad();	
+		    							operReservList();
 		    						}else{
 		    							swal("삭제실패","예약 삭제에 실패했습니다","error");			
 		    						}
@@ -1143,7 +1178,7 @@ $('#operScheduleTbody').on('click', 'tr', function(event){
     	},
 		dataType : "json",
 		success : function(result) {
-
+			console.log(result);
 			let v_startTime = '';
 			let v_endTime = '';
 			
@@ -1162,8 +1197,19 @@ $('#operScheduleTbody').on('click', 'tr', function(event){
 			$('#oper-detail-paName').data("opNo", v_opNo);
 			$('#oper-detail-paName').val(result.paName);
 			$('#oper-detail-paReg').val(result.paReg);
-			$('#oper-detail-icdName').val(result.diagHistory.icdName);
-			$('#oper-detail-empNm').val(result.operationJoinList[0].empNm);
+			
+			if(result.opKrNm){
+				let opNm = `\${result.opKrNm}(\${result.opEnNm})`;
+				$('#oper-detail-operNm').val(opNm).attr("style","color:black;");
+			}else{
+				$('#oper-detail-operNm').val("수술 선택 필요").attr("style","color:red;");
+			}
+			
+			if(result.operationJoinList[0]){
+				$('#oper-detail-empNm').val(result.operationJoinList[0].empNm).attr("style","color:black;");				
+			} else{
+				$('#oper-detail-empNm').val("담당의 배정 필요").attr("style","color:red;");
+			}
 			$('#oper-detail-startTime').val(v_startTime);
 			$('#oper-detail-endTime').val(v_endTime);
 			$('#oper-detail-operationRecord').val(result.opRecord);
@@ -1205,7 +1251,7 @@ $('#operCompleteTbody').on('click', 'tr', function(event){
     	},
 		dataType : "json",
 		success : function(result) {
-
+			console.log(result);
 			let v_startTime = '';
 			let v_endTime = '';
 			
@@ -1223,11 +1269,13 @@ $('#operCompleteTbody').on('click', 'tr', function(event){
 				$('#oper-detail-elapseTime').val(convertTime(elapseTime));
 			}
 			
+			let opNm = `\${result.opKrNm}(\${result.opEnNm})`;
+			
 			$('#oper-detail-paName').data("opNo", v_opNo);
 			$('#oper-detail-paName').val(result.paName);
 			$('#oper-detail-paReg').val(result.paReg);
-			$('#oper-detail-icdName').val(result.diagHistory.icdName);
-			$('#oper-detail-empNm').val(result.operationJoinList[0].empNm);
+			$('#oper-detail-operNm').val(opNm).attr("style","color:black;");
+			$('#oper-detail-empNm').val(result.operationJoinList[0].empNm).attr("style","color:black;");
 			$('#oper-detail-startTime').val(v_startTime);
 			$('#oper-detail-endTime').val(v_endTime);
 			$('#oper-detail-operationRecord').val(result.opRecord);
@@ -1350,7 +1398,6 @@ let operCompleteList = function(){
 			
 			$.each(result, function(i, v){
 				let operCompleteDate = convertDate(v.opEndTime);
-				console.log(v.opEndTime)
 				trTag = $('<tr>').append(
 									$('<td>').html(v.opNo)
 									, $('<td>').html(v.paName)
@@ -1711,7 +1758,11 @@ $('#cex-input-btn').on('click', function(){
 	    	},
 			dataType : "json",
 			success : function(result) {
-				console.log(result);
+				swal("등록성공","검사등록이 완료되었습니다","success");
+
+				// 입력란 초기화
+				cexNo.value = '';
+				cexNe.value = '';
 				
 				// 리스트 재출력
 				operationList();
@@ -1861,7 +1912,6 @@ function cexCompleteList(){
 			let trTags = [];
 			let trTag = '';
 			$.each(result, function(i,v){
-				console.log(v)
 				let diagList = v.receptionList[0].trmChart.diagHistoryVOList[0];
  				trTag = $('<tr>').append(
 							$('<td>').html(diagList.cex.cexNo)
@@ -1915,9 +1965,7 @@ $("#Search").on("click", function(){
 			}else{
 				let trTags=[];
 				let trTag = '';
-				console.log(result);
 				$.each(result[0].receptionList,function(i,v){
-					console.log(v)
 					trTag = $('<tr>').append(
 								$('<td>').html(v.trmChart.diagHistoryVOList[0].cex.cexNo)
 								, $('<td>').html(v.trmChart.diagHistoryVOList[0].trmCd)
@@ -1952,6 +2000,9 @@ $("#SearchOperation").on("click", function(){
 			searchOption:searchOption,
 			searchWord:searchWord
 	}
+	
+	console.log(searchOption)
+	console.log(searchWord)
 
 	$.ajax({
 		url : "operHistorySearch",

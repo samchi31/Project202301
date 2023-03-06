@@ -16,6 +16,10 @@ h6{
 	font-size: 1rem;
     font-family: 'Nanum Gothic', sans-serif;
 }
+
+table tbody button { background-color : #FFD578;}
+
+textarea {height:145px; resize:none;}
 </style>
 <!-- 그리드 스택  -->
 <div class="grid-stack">
@@ -31,7 +35,8 @@ h6{
 					<tr>
 						<c:forEach begin="0" end="2">
 							<td>
-								<button id="${ptBedList[cnt].ptBedCd }" type="button" class="bedbutton" data-rcp-no="${ptBedList[cnt].rcpNo }" onclick="f_clk(this)">
+								<button id="${ptBedList[cnt].ptBedCd }" name="ptBedCd" type="button" class="bedbutton" 
+										data-rcp-no="${ptBedList[cnt].rcpNo }" onclick="f_clk(this)">
 									<c:if test="${empty ptBedList[cnt].rcpNo}">
 										<c:url value='/resources/images/ptbedemty.png' var="imgUrl" />
 									</c:if>
@@ -123,7 +128,7 @@ h6{
 						</div>
 					</div>
 					<div class="mb-3 row">
-						<label for="inputPassword" class="col-sm-3 col-form-label">상병코드</label>
+						<label for="inputPassword" class="col-sm-3 col-form-label">증상코드</label>
 						<div class="col-sm-9">
 							<input type="text" class="form-control" id="writeChartRc" readonly="readonly" disabled>
 						</div>
@@ -239,7 +244,7 @@ h6{
 				<p class="pTag">내용을 선택하면 해당 환자의 치료일지 상세 내역 열람이 가능합니다.</p>
 				<hr style="margin-bottom: 0px; margin-top: 13px;">
 				<form class="search-form" name="searchBtnFormA">
-					<select id="searchDocuOptionA" class="radi-select ">
+					<select id="searchOptionA" class="radi-select ">
 						<option value>검색</option>
 						<option value='name'>이름</option>
 						<option value='no'>환자번호</option>
@@ -249,7 +254,7 @@ h6{
 				</form>
 			</div>
 			<div class="scroller" style="height: 290px;">
-				<table class="table1 table-blue scrollshover" style="margin-top: 0px;">
+				<table class="table1 scrollshover" style="margin-top: 0px;">
 					<thead class="fixedHeader">
 						<tr>
 							<td>환자 번호</td>
@@ -406,6 +411,7 @@ function writeInsertClick() {
 	            xhr.setRequestHeader(header, token);
 	    },
 		success : function(resp) {
+			console.log("뭐가 찍히노 :",resp);
 			Swal.fire('진료일지 작성 완료되었습니다', '  ', 'success');
 			$(".form-control").val(''); //input태그에 있던 val값 제거
 			$('#writeChartText').val(''); //textBox태그에 있던 val값 제거
@@ -414,24 +420,34 @@ function writeInsertClick() {
 			//curePartSelect안에 있는 input 태그를 찾아서 언체크드를 해라.....ball2")
 			$("#ball").remove();
 			$("#ball2").remove();
+			for(let i=0; i<resp.length; i++){
+				console.log("반복문 돌아가유")
+				let dblclick = $("#tr_"+resp[i].rcpNo).attr("class","dblclick-on");//ㅋㅋㅋ 
+				if(dblclick){
+					console.log("왔니?")
+					$("#tr_"+resp[i].rcpNo).attr("class","");
+				}
+			}
+			
 			
 // 			console.log("resp : " + JSON.stringify(resp));
-			let str = "";
-			$.each(resp,function(index,vo){
-				str = str + "<tr class='ptDocumentClass'><td>"
-						  + vo.paNo
-						  + "</td><td>"
-						  + vo.paName
-						  + "</td><td>"
-						  + vo.paReg
-						  + "</td><td>"
-						  + vo.trmCd
-						  + "</td><td><button onclick='ptNoDtClick(this)'>"
-						  + vo.pdCont
-						  + "</button></td></tr>";
-			});
-			$("#ptDocumentBody").html("");
-			$("#ptDocumentBody").html(str);
+// 			let str = "";
+// 			$.each(resp,function(index,vo){
+// 				str = str + "<tr class='ptDocumentClass'><td>"
+// 						  + vo.paNo
+// 						  + "</td><td>"
+// 						  + vo.paName
+// 						  + "</td><td>"
+// 						  + vo.paReg
+// 						  + "</td><td>"
+// 						  + vo.trmCd
+// 						  + "</td><td><button onclick='ptNoDtClick(this)'>"
+// 						  + vo.pdCont
+// 						  + "</button></td></tr>";
+// 			});
+// 			$("#ptDocumentBody").html("");
+// 			$("#ptDocumentBody").html(str);
+			f_getPtDocu();
 		},
 		erro : function(jqXHR, status, error) {
 			console.log(jqXHR);
@@ -444,8 +460,13 @@ function writeInsertClick() {
 let $writeChartCd = $('.writeChartCd');
 //물리치료실 대기현황에서 환자번호를 클릭하면 진료일지 차트에 환자 차트를 뿌려주기
 	const ptNoDtClick=(pthis)=>{
-		console.log("pthis : ",pthis);
 		let rcpNo = $(pthis).data("rcpNo");
+		//선택 시 색 넣고 빼기
+		$("#tr_"+rcpNo).siblings('tr').removeClass("dblclick-on")
+		$("#tr_"+rcpNo).addClass("dblclick-on")
+		let data = "${ptAssinmentList[0]}";
+		
+		console.log("pthis : ",pthis);
 		console.log("rcpNo : " ,rcpNo);
 		console.log("?????????????????????? : " ,rcpNo)
 		$.ajax({
@@ -458,14 +479,14 @@ let $writeChartCd = $('.writeChartCd');
 	            xhr.setRequestHeader(header, token);
 	    	},
 			success : function(list) {
-				console.log("list", list)
 				//작성 할 치료일지에 동일한 데이터 뿌려주기
+				console.log("list ::::::::::::::::::::",list);
 				$writeChartCd.val(list[0].trmCd); //진료차트
 				$('#writeChartDate').val(list[0].receptionVO.rcpDate.substring(0,10)); //진료일자출력/ substring으로 시간자르기
 				$('#writeChartPaNo').val(list[0].patientVO.paNo); //환자접수번호
 				$('#writeChartPaNm').val(list[0].patientVO.paName); //환자이름
 				$('#writeChartPaReg').val(list[0].patientVO.paReg); //생년월일
-				$('#writeChartRc').val(list[0].symptomVOList[0].symCd); //상병코드
+				$('#writeChartRc').val(list[0].symptomVOList[0].symCd); //증상코드
 				$('#writeChartRl').val(list[0].symptomVOList[0].symDetail); //증상
 				
 				$('#writeChartRoom').val(list[0].receptionVO.officeCd); //진료실
@@ -480,7 +501,8 @@ let $writeChartCd = $('.writeChartCd');
 					$("#writeChartText").val(list[0].ptDocumentList[0].pdCont).attr("disabled",true);
 					$("#writeInsert").hide();
 					f_move(this.id);//헤헤 작업중
-					
+					$("#"+pdPartValue).attr('checked','true');
+					$("#"+pdPartValue).trigger('click');
 				} else {
 					$("#writeChartText").val(list[0].ptDocumentList[0].pdCont).attr("disabled",false);
 					$("#writeInsert").show();
@@ -498,7 +520,7 @@ let $writeChartCd = $('.writeChartCd');
 $(".assignmentbutton").on("click",function(){
 	let rcpNo = $(this).data("rcpNo")
 	let paName = $(this).data("name")
-	let ptBedCd = $('.table2').find('.active').attr('id')
+	let ptBedCd = $('.table2').find('.active2').attr('id')
 	console.log(`\${rcpNo} \${paName} \${ptBedCd}`)
 	$.ajax({
 			url : "/HurryUp/pt/ptBedFull",
@@ -516,7 +538,7 @@ $(".assignmentbutton").on("click",function(){
 					let pthis = $("#" + resultMap.ptBedCd);
 					pthis.data("rcpNo",resultMap.rcpNo);				
 					$(pthis).find(".patient").html(`\${resultMap.rcpNo} \${resultMap.paName}`);
-					$(".bedbutton").removeClass('active');
+					$(".bedbutton").removeClass('active2');
 					
 					//밑에 데이타 있는 걸 빼주는 작업 //템플릿연산자
 					$(`#tr_\${resultMap.rcpNo }`).remove(); //이거는 보여지는 효과만 준 것임 DB에서 바꿔주는 걸 해야함
@@ -536,8 +558,9 @@ $(".assignmentbutton").on("click",function(){
 
 //bedbutton 클릭했을 때 효과 이벤트
 $(".bedbutton").on("click",function(){
-	$('.table2').find('button').removeClass('active')
-	$(this).addClass('active'); //toggleClass : 클래스를 넣었다가 붙였다가 하는 것
+	$('.table2').find('button').removeClass('active2')
+	$(this).addClass('active2'); //toggleClass : 클래스를 넣었다가 붙였다가 하는 것
+	console.log("zzzzzzz");
 });
 
 //치료를 완료하는 것
@@ -546,6 +569,8 @@ $(".bedbutton").on("click",function(){
 		let rcpNo = $(pthis).data("rcpNo");
 		let v_bedNo = $(pthis).attr("id");
 		$("[name=ptBedCd]").val(v_bedNo);
+		console.log("pthis : " ,pthis);
+		console.log("v_bedNo : " ,v_bedNo);
 		
 		if(rcpNo) { 
 		Swal.fire({
@@ -575,7 +600,7 @@ $(".bedbutton").on("click",function(){
                 						$(pthis).removeAttr("data-rcp-no");
                 						$(pthis).find(".patient").empty();
                 						$(pthis).find(".pthis").attr("src", "<c:url value='/resources/images/ptbedemty.png'/>");
-                						$(".bedbutton").removeClass('active');
+                						$(".bedbutton").removeClass('active2');
                 					} else {
                 						Swal.fire('베드를 비우는데 실패했습니다.', '  ', 'error');
                 					}
@@ -820,7 +845,9 @@ $(".bedbutton").on("click",function(){
 	
 	//ptDocument 기록서 get방식으로 단순 출력
 	let $ptDocumentBody= $("#ptDocumentBody");
-	let f_getPtDocu =()=> {
+	let f_getPtDocu=()=>{
+		
+		$ptDocumentBody.empty();
 		$.ajax({
 			url : "ptDocumentList",
 			method : "get",

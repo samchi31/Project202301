@@ -16,4 +16,6 @@ public class NoticeVO {
 	private String ntcEndt;
 	private Integer ntcHit;
 	private Integer empNo;
+	private String empNm;
+	
 }

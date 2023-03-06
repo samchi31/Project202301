@@ -19,6 +19,31 @@
 	width:8rem;
 }
 
+/* 부트스트랩 폰트사이즈 일괄수정 */
+.form-control:disabled {
+    font-size: 12px;}
+.form-select {
+	font-size: 12px;
+}
+.col-sm-9 {
+	font-size: 12px;
+}
+.form-control {
+	font-size: 12px;
+}
+.writeFormCss {
+	position: absolute;
+    left: 6%;
+    width: 96%;
+}
+.btn_blue {
+	position: absolute;
+    left: 71.5%;
+}
+.btn_blue2{
+	position: absolute;
+    left: 78.5%;
+}
 /* 스크롤러 */
 .patientScroller{width: 27.1rem;height: 36.6rem;}
 .symScroller{width: 14.4rem;height: 5.8rem;}
@@ -112,13 +137,13 @@
 			<div class="mb-3 row">
 				<label for="wardDocument-input" class="col-sm-3 col-form-label">비고</label>
 				<div class="col-sm-9">
-					<textarea class="form-control" id="info-mediRecord" readonly="readonly" disabled></textarea>  
+					<textarea class="form-control" id="info-mediRecord" style="height: 81px;" readonly="readonly" disabled></textarea>  
 				</div>
 			</div>
 			<div class="mb-3 row">
 				<label for="inputPassword" class="col-sm-2 col-form-label">증상</label>
 			    <div class="col-sm-10 scroller symScroller">
-			      <table class= "table-blue scrollshover">
+			      <table class= "table-blue scrollshover" >
 			      	<colgroup>
 						<col width="30%">
 						<col width="70%">
@@ -158,7 +183,7 @@
   <div class="grid-stack-item " gs-w="3" gs-h="5" gs-x="5" gs-y="0">
 	<div class="grid-stack-item-content ">
 	<h4 class="h4-title1">병동ORDER</h4>
-	<input style="display:none;" class="btn_blue" id="io-creater" data-bs-target="#layerpop" type="button" value="IO생성">
+	<input style="display:none;" class="btn_blue btn_blue2" id="io-creater"  data-bs-target="#layerpop" type="button" value="IO생성">
 	<p class="pTag">환자관리에서 선택한 환자에 해당하는 기록들이 조회됩니다.</p>
 	<hr>
 	<div class="tab">
@@ -194,7 +219,7 @@
 				<h4 class="h4-title1">식이입력</h4>
 				<p class="pTag">환자관리에서 대상 환자를 선택할 수 있습니다.</p>
 				<hr>
-				<form id="writeForm" name="writeForm">
+				<form id="writeForm" name="writeForm" class="writeFormCss">
 					<div class="mb-2 row">
 						<label for="wardDocument-input" class="col-sm-2 col-form-label">환자명</label>
 						<div class="col-sm-9">
@@ -253,7 +278,7 @@
 				<h4 class="h4-title1">IO입력</h4>
 				<p class="pTag">우측 상단의 IO생성 버튼을 클릭해 입력 날짜를 생성할 수 있습니다.</p>
 				<hr>
-				<form id="writeForm" name="writeForm">
+				<form id="writeForm" name="writeForm" class="writeFormCss">
 					<div class="mb-2 row">
 						<label for="wardDocument-input" class="col-sm-2 col-form-label">환자명</label>
 						<div class="col-sm-9">
@@ -334,7 +359,7 @@
 				<h4 class="h4-title1">VITAL입력</h4>
 				<p class="pTag">환자관리에서 대상 환자를 선택할 수 있습니다.</p>
 				<hr>
-				<form id="writeForm" name="writeForm">
+				<form id="writeForm" name="writeForm" class="writeFormCss">
 					<div class="mb-2 row">
 						<label for="wardDocument-input" class="col-sm-2 col-form-label">환자명</label>
 						<div class="col-sm-9">
@@ -398,7 +423,7 @@
 				<h4 class="h4-title1">간호기록입력</h4>
 				<p class="pTag">환자관리에서 대상 환자를 선택할 수 있습니다.</p>
 				<hr>
-		      	<form id="writeForm" name="writeForm">
+		      	<form id="writeForm" name="writeForm" class="writeFormCss">
 					<div class="mb-2 row">
 						<label for="wardDocument-input" class="col-sm-2 col-form-label">환자명</label>
 						<div class="col-sm-9">
@@ -715,7 +740,7 @@ $('#wardPatientListBody').on('click','tr',function(event){
 			const diff = today - inDate;
 			const diffDay = Math.floor(diff/(1000*60*60*24));
 			
-			$('#info_pwDays').val(diffDay);
+			$('#info_pwDays').val(diffDay+1);
 			
 			/* 환자명 입력 */
 			$('.input_paName').val(result.paName);
@@ -1130,8 +1155,10 @@ function io_list(hsptNo){
             			outputCapa += parseInt(output.outputCapa);
             		}					
 				});
-				
 				io = intakeCapa-outputCapa;
+				if(io<0){
+					io=`<span style="color:red; font-weight:bold;">\${intakeCapa-outputCapa}</span>`;
+				}
 				let trTag = $("<tr>")
                            .append(
                               $("<td>").html(v.ioDate)        
@@ -1422,13 +1449,45 @@ function vital_list(hsptNo){
 				vitalList = result[0].vitalList;
 			}
             $.each(vitalList, function(i, v){
+            	let v_tmp = v.vtTmp;
+            	let v_pls = v.vtPls;
+            	let v_bp = v.vtBp;
+            	let v_rp = v.vtRp;
+            	
+            	/* 체온경고 */
+            	if(v_tmp>38 ){
+            		v_tmp = `<span style="color:red; font-weight:bold;">\${v.vtTmp}</span>`
+            	} else if(v_tmp<35){
+            		v_tmp = `<span style="color:blue; font-weight:bold;">\${v.vtTmp}</span>`
+            	}
+            	
+            	/* 맥박경고 */
+            	if(v_pls>100){
+            		v_pls = `<span style="color:red; font-weight:bold;">\${v.vtPls}</span>`
+            	}else if(v_pls<60){
+            		v_pls = `<span style="color:blue; font-weight:bold;">\${v.vtPls}</span>`
+            	}
+            	
+            	/* 혈압경고 */
+            	if(v_bp>120){
+            		v_bp = `<span style="color:red; font-weight:bold;">\${v.vtBp}</span>`
+            	}else if(v_bp<80){
+            		v_bp = `<span style="color:blue; font-weight:bold;">\${v.vtBp}</span>`
+            	}
+            	/* 호흡수 경고*/
+            	if(v_rp>20){
+            		v_rp = `<span style="color:red; font-weight:bold;">\${v.vtRp}</span>`
+            	} else if(v_rp<12){
+            		v_rp = `<span style="color:blue; font-weight:bold;">\${v.vtRp}</span>`
+            	}
+            	
                	let trTag = $("<tr>")
                            .append(
                               $("<td>").html(v.vtDate)
-                              , $("<td>").html(v.vtTmp)
-                              , $("<td>").html(v.vtPls)
-                              , $("<td>").html(v.vtBp)
-                              , $("<td>").html(v.vtRp)
+                              , $("<td>").html(v_tmp)
+                              , $("<td>").html(v_pls)
+                              , $("<td>").html(v_bp)
+                              , $("<td>").html(v_rp)
                               , $("<td>").html(v.vtNe).attr("title",v.vtNe)
                            );
                trTags.push(trTag)

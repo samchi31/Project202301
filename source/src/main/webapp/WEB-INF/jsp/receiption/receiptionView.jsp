@@ -53,13 +53,7 @@
        align-self: center;
        text-align: center;
    }
-   .bed6_01_03{
-      margin-right: 15px;
-   }
-   .bed6_04_06{
-      margin-right: 15px;
-       margin-top: 15px;
-   }
+
    .cover{ 
        display : inline-block;
    } 
@@ -116,9 +110,9 @@ select>input {
 </style>
 <!-- 그리드 스택  -->
 <div class="grid-stack">
-   
+   <img id="bed10101" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png" alt="testImgChange" />
   <!-- 그리드스택 아이템 -->
-  <div class="grid-stack-item " gs-w="2" gs-h="2">
+  <div class="grid-stack-item " gs-w="3" gs-h="5">
 	<div class="grid-stack-item-content ">
     <h4 class="h4-title1">환자관리 </h4>
     <p class="pTag">이름, 생년월일, 전화번호로 환자 조회 가능합니다.</p>
@@ -134,34 +128,325 @@ select>input {
 		    <input class="btn-submit" id="Search" type="button" value="검색">
 		    <input class="btn-submit" id="proofPrint" type="button" data-bs-toggle="modal" data-bs-target="#layerpop" value="제증명출력">
     </form>
-     <table class="table-blue scrollhover" >
-		<thead>
-			<tr>
-               <th><a>환자번호</a></th>
-               <th><a>환자명</a></th>
-               <th><a>생년월일</a></th>
-               <th><a>전화번호</a></th>
-               <th><a>성별</a></th>
-            </tr>
-        </thead>
-         <tbody id="radiTBody"></tbody>
-      </table>
+	    <div class="scroller" style="height:585px">
+	     <table class="table-blue scrollshover" >
+			<thead>
+				<tr>
+	               <th style="width: 70px;"><a>환자번호</a></th>
+	               <th style="width: 85px;"><a>환자명</a></th>
+	               <th style="width: 100px;"><a>생년월일</a></th>
+	               <th><a>전화번호</a></th>
+	               <th style="width:40px;"><a>성별</a></th>
+	            </tr>
+	        </thead>
+	         <tbody id="radiTBody">
+	         
+	         </tbody>
+	      </table>
+      </div> 
     </div>
   </div>
 	
   <!-- 그리드스택 아이템2 -->
-  <div class="grid-stack-item" gs-w="3" gs-h="3">
+  
+  
+  <div class="grid-stack-item" gs-w="3" gs-h="2">
+    <div class="grid-stack-item-content" style="padding-bottom:0;">
+    <h4 class="h4-title2">접수</h4>
+    <!-- <p class="pTag">리스트의 환자를 클릭하고, 진료실을 지정하여 등록버튼을 눌러줍니다.</p> -->
+    <hr>
+    <div class="tab patient-rcp">
+			    <ul class="tabnav">
+			      <li><a href="#operWait">접수</a></li>
+			      <li><a href="#operSchedule">환자등록</a></li>
+			    </ul>
+			    <div class="tabcontentWrap">
+				    <div class="tabcontent">
+				      <div id="operWait">
+					    	<table>
+					    		<tr>
+						    		<td><label>환자번호</label></td>
+						    		<td><input class="form-control form-control-sm" type="text" id="regipaNo"  name="regipaNo" value="" readonly disabled/></td>
+					    		</tr>
+					    		<tr>
+							    	<td><label>환자명</label></td>
+							    	<td><input class="form-control form-control-sm" type="text" id="regipaName" name="regipaName" value=""readonly disabled/></td>
+					    		</tr>
+					    		<tr>
+							    	<td><label>생년월일</label></td>
+							    	<td><input class="form-control form-control-sm" type="text" id="regipaReg" name="regipaReg" value="" readonly disabled/></td>
+					    		</tr>
+					    		<tr>
+							    	<td><label>전화번호</label></td>
+							    	<td><input class="form-control form-control-sm" type="text" id="regipaHp" name="regipaHp" value="" readonly disabled/></td>
+					    		</tr>
+					    		<tr>
+							    	<td><label>성별</label></td>
+							    	<td><input class="form-control form-control-sm" type="text" id="regipaSex" name="regipaSex" value="" readonly disabled/></td>
+					    		</tr>
+						    	<tr>
+						    		<td>
+							    	<select>
+							    		<option name="officeCd" value="DO101">제 1진료실</option>
+							    		<option name="officeCd" value="DO102">제 2진료실</option>
+							    		<option name="officeCd" value="DO103">제 3진료실</option>
+							    	</select>
+						    		</td>
+						    		<td>
+						    			<input class="btn-submit" type="button" id="regiBtn" value="접수" onclick="fn_waitList()">
+						    			
+						    		</td>
+						    	</tr>
+					    	</table>
+				      </div>
+				      <div id="operSchedule">
+					    	<table>
+					    		<tr>
+							    	<td><label>환자명</label></td>
+							    	<td><input class="form-control form-control-sm" type="text" id="paName" name="paName" value=""/></td>
+					    		</tr>
+					    		<tr>
+							    	<td><label>생년월일</label></td>
+							    	<td><input class="form-control form-control-sm" type="text" id="paReg" name="paReg" value="" /></td>
+					    		</tr>
+					    		<tr>
+							    	<td><label>전화번호</label></td>
+							    	<td><input class="form-control form-control-sm" type="text" id="paHp" name="paHp" value=""/></td>
+					    		</tr>
+<!-- 					    		<tr> -->
+<!-- 							    	<th><label>우편번호</label></th> -->
+<!-- 							    	<td><input class="form-control form-control-sm" type="text" id="paZip" name="paZip" value=""/></td> -->
+<!-- 					    		</tr> -->
+					    		<tr>
+							    	<th><label>주소</label></th>
+							    	<td><input class="form-control form-control-sm" type="text" id="paAdd1" name="paAdd1" value=""/></td>
+					    		</tr>
+					    		<tr>
+							    	<th><label>상세주소</label></th>
+							    	<td><input class="form-control form-control-sm" type="text" id="paAdd2" name="paAdd2" value=""/></td>
+					    		</tr>
+					    		<tr>
+							    	<th><label>성별</label></th>
+							    	<td><select id="paSex">
+							    		<option value="M">남</option>
+							    		<option value="F">여</option>
+							    	</select>
+						    			<input class="btn-submit" type="button" id="newPAbtn" value="등록">
+							    	</td>
+					    		</tr>
+						    	<tr>
+						    		<td colspan="2">
+						    		</td>
+						    	</tr>
+					    	</table>
+				      </div>
+
+				    </div>
+				</div>
+			</div>
+	  
+    </div>
+  </div>
+    
+   <!-- 그리드스택 아이템 -->
+  <div class="grid-stack-item" gs-w="4" gs-h="3">
+    <div class="grid-stack-item-content"><h4 class="h4-title1">입/퇴원</h4><p class="pTag">입원 가능한 환자 정보를 클릭 후 입력된 폼에 병실 배정을 진행 하여 입원 등록을 할 수 있습니다.</p><hr>
+        <div class="tab patient-hospt">
+          <ul class="tabnav">
+            <li><a href="#inHospt">입원</a></li>
+            <li><a href="#outHospt">퇴원</a></li>
+            <li><a href="#manaHospt">관리</a></li>
+          </ul>
+          <div class="tabcontentWrap">
+             <div class="tabcontent" >
+               <div id="inHospt" style=" margin-right:20px; position: absolute;left: 3%;">
+              
+              <div id="hospitalList" style="display:inline-block;">
+                 <table class="table-blue scrollhover" >
+                    <thead>
+                     <tr>
+                        <th><a>차트번호</a></th>
+                        <th><a>환자번호</a></th>
+                        <th><a>이름</a></th>
+                        <th><a>생년월일</a></th>
+                        <th><a>담당의</a></th>
+                        <th><a>질병코드</a></th>
+                     </tr>
+                  </thead>
+                  <tbody id="hsptTbody">
+                  
+                  </tbody>
+                 </table>
+              </div>
+              <input type="button" class="btn-submit" id="wardChoose" value="병실배정" data-bs-toggle="modal" data-bs-target="#exampleModalToggle" style="margin-top:5px;"/>
+              </div>
+              
+              <div id="outHospt">
+		    	<table class="table-blue scrollshover" >
+		    		<thead>
+		    			<tr>
+		    				<th><a>환자이름</a></th>
+		    				<th><a>입퇴원번호</a></th>
+		    				<th><a>차트번호</a></th>
+		    				<th><a>입원일시</a></th>
+		    				<th><a>퇴원예정일</a></th>
+		    				<th><a>병상</a></th>
+		    				<th><a>질병코드</a></th>
+		    			</tr>
+		    		</thead>
+		    		<tbody id="tbdOutHsptList">
+						<c:forEach items="${outHsptList }" var="outHspt">
+							<tr class="hsptTr">
+								<td>${outHspt["paName"] }</td>
+								<td>${outHspt["hsptNo"] }</td>
+								<td>${outHspt["trmCd"] }</td>
+								<td>${outHspt["hsptInDt"] }</td>
+								<td>${outHspt["hsptOutDt"] }</td>
+								<td>${outHspt["wrRno"] }호 ${outHspt["bedNo"] }번</td>
+								<td>${outHspt["diseaseCd"] }</td>
+							</tr>
+								<div><input id="hiddenRcpNo" type="hidden" value="${outHspt['rcpNo']}"/></div>
+						</c:forEach>
+					</tbody>
+						
+  					</table>
+  					  <div>
+  					  	<input type="hidden" id="hiddenHsptNo" value=""/>
+  					  </div>
+					  <div>
+						<input class="btn-submit" type="button" id="exitHospt" value="퇴원" style="margin-top:5px;"/>
+						<input class="btn-submit" type="button" id="cancleHospt" value="입원취소"/>
+					  </div>
+			  </div>
+			   <div id="manaHospt">
+			       <table class="table-blue scrollshover" >
+		    		  <thead>
+			    		  <tr>
+	                         <th><a>이름</a></th>
+	                         <th><a>차트번호</a></th>
+			    		  	 <th><a>병실</a></th>
+	                         <th><a>침대</a></th>
+	                         <th><a>입실일자</a></th>
+	                         <th><a>퇴원예정</a></th>
+	                         <th><a>담당의</a></th>
+	                         <th><a>비고</a></th>
+			    		  </tr>
+    		   		  </thead>
+    		   		  <tbody id="manageListTbody">
+    		   		  	<c:forEach items="${outHsptList }" var="outHspt">
+							<tr class="hsptTr">
+								<td>${outHspt["paName"] }</td>
+								<td>${outHspt["trmCd"] }</td>
+								<td>${outHspt["wrRno"] }호</td>
+								<td>${outHspt["bedNo"] }번</td>
+								<td>${outHspt["hsptInDt"] }</td>
+								<td>${outHspt["hsptOutDt"] }</td>
+								<td>박시윤</td>
+								<td>-</td>
+							</tr>
+								<div><input type="hidden" value="${outHspt['rcpNo']}"/></div>
+						</c:forEach>
+    		   		  </tbody>
+	    		   </table>
+	    		   <div>
+	    		   	<input class="btn-submit" type="button" value="병실이동" data-bs-toggle="modal" data-bs-target="#exampleModalToggle" style="margin-top:5px;"/>
+	    		   </div>
+    		   </div>
+				</div>
+			</div>
+		</div>
+	</div>
+  </div>
+
+  
+
+<div class="grid-stack-item" gs-w="2" gs-h="5">
+    <div class="grid-stack-item-content">
+    	<h4 class="h4-title1">수납</h4>
+    	<p class="pTag">진료 및 퇴원을 통한 환자의 정보를 토대로 수납을 진행합니다.</p>
+    	<hr>
+    	<button class="btn-submit" id="rec_btn">수납</button>
+		<div>
+         <div class="mb-3 row">
+         	<label class="col-sm-3 col-form-label" style="width:40%">제증명및기타</label>
+         	<div class="col-sm-9" style="width:60%">
+         		<input class="form-control price" type="text" name="rdEtcf" value="${receive_detail.rdEtcf}" style="text-align:right;"/>
+         	</div>
+         </div>
+         <div class="mb-3 row">
+         	<label class="col-sm-3 col-form-label" style="width:40%">진료비 총액</label>
+         	<div class="col-sm-9"  style="width:60%">
+         		<input class="form-control price" type="text" name="rdTtfe" value="${receive_detail.rdTtfe}" style="text-align:right;"/>
+         	</div>
+         </div>
+         <div class="mb-3 row">
+     		<label class="col-sm-3 col-form-label" style="width:40%">진찰료</label>
+     		<div class="col-sm-9"  style="width:60%">    
+         		<input class="form-control " type="text" name="rdCofe" value="${receive_detail.rdCofe}" style="text-align:right;"/>
+         	</div>
+         </div>	
+         <div class="mb-3 row">
+     		<label class="col-sm-3 col-form-label" style="width:40%">입원료</label>		
+         	<div class="col-sm-9"  style="width:60%">  	
+			    <input class="form-control" type="text" name="rdHpfe" value="${receive_detail.rdHpfe}" style="text-align:right;"/>
+			</div>
+		</div>
+		<div class="mb-3 row">
+     		<label class="col-sm-3 col-form-label" style="width:40%">식대</label>		
+         	<div class="col-sm-9"  style="width:60%"> 
+    			<input class="form-control" type="text" name="rdFdfe" value="${receive_detail.rdFdfe}" style="text-align:right;"/>
+    		</div>
+    	</div>
+    	<div class="mb-3 row">
+     		<label class="col-sm-3 col-form-label" style="width:40%">투약및조제료</label>		
+         	<div class="col-sm-9"  style="width:60%"> 
+         	<input class="form-control " type="text" name="rdDrfe" value="${receive_detail.rdDrfe}" style="text-align:right;"/>
+        	</div>
+        </div>
+        <div class="mb-3 row">
+     		<label class="col-sm-3 col-form-label" style="width:40%">주사료</label>		
+         	<div class="col-sm-9"  style="width:60%"> 
+        		<input class="form-control " type="text" name="rdIjfe" value="${receive_detail.rdIjfe}" style="text-align:right;" />
+        	</div>
+        </div>
+         <div class="mb-3 row">
+     		<label class="col-sm-3 col-form-label" style="width:40%">물리치료비</label>		
+         	<div class="col-sm-9"  style="width:60%"> 
+        		<input class="form-control" type="text" name="rdPtfe" value="${receive_detail.rdPtfe}" style="text-align:right;"/>
+        	</div>
+        </div>
+       
+        <div class="mb-3 row">
+     		<label class="col-sm-3 col-form-label" style="width:40%">영상검사료</label>		
+         	<div class="col-sm-9"  style="width:60%"> 
+    			<input class="form-control" type="text" name="rdExfe" value="${receive_detail.rdExfe}" style="text-align:right;"/>
+    		</div>
+    	</div>
+    	
+	    <div class="mb-3 row">
+     		<label class="col-sm-3 col-form-label" style="width:40%">수술료</label>		
+         	<div class="col-sm-9"  style="width:60%">
+		    	<input class="form-control" type="text" name="rdOperfe" value="${receive_detail.rdOperfe}" style="text-align:right;"/>
+		    </div>
+		</div>
+		</div>
+    </div>
+  </div>
+
+
+<!-- 그리드스택 아이템 4 --> 
+ <div class="grid-stack-item" gs-w="3" gs-h="3">
      <div class="grid-stack-item-content"><h4 class="h4-title1">대기실</h4><p class="pTag">진료 접수를 한 환자를 진료실 별로 확인 할 수 있습니다.</p><hr>
      <div class="tab patient-wait">
        <ul class="tabnav">
-         <li><a href="#docOffice01">1진료실</a></li>
-         <li><a href="#docOffice02">2진료실</a></li>
-         <li><a href="#docOffice03">3진료실</a></li>
+         <li><a href="#docOffice01" style="font-size:15px;">1진료실</a></li>
+         <li ><a href="#docOffice02" style="font-size:15px;">2진료실</a></li>
+         <li ><a href="#docOffice03" style="font-size:15px;">3진료실</a></li>
        </ul>
     <div class="tabcontentWrap">
        <div class="tabcontent">
-            <div id="docOffice01" style="background-color:white; display:inline-block" >
-             <table class="table-blue" >
+            <div id="docOffice01" style="background-color:white; display:inline-block; height: 238px;" class="scroller" >
+             <table class="table-blue scrollshover" >
                <thead>
                   <tr>
                      <th><a>환자번호</a></th>
@@ -231,356 +516,12 @@ select>input {
  </div>
     </div>
   </div>  
-    
-   <!-- 그리드스택 아이템 -->
-  <div class="grid-stack-item" gs-w="4" gs-h="3">
-    <div class="grid-stack-item-content"><h4 class="h4-title1">입/퇴원</h4><p class="pTag">입원 가능한 환자 정보를 클릭 후 입력된 폼에 병실 배정을 진행 하여 입원 등록을 할 수 있습니다.</p><hr>
-        <div class="tab patient-hospt">
-          <ul class="tabnav">
-            <li><a href="#inHospt">입원</a></li>
-            <li><a href="#outHospt">퇴원</a></li>
-            <li><a href="#manaHospt">관리</a></li>
-          </ul>
-          <div class="tabcontentWrap">
-             <div class="tabcontent" >
-               <div id="inHospt" style="display:flex; position: absolute;left: 3%;">
-                  <div >
-                <table>
-                   <tr>
-                      <td><label style="width:50px;">차트번호</label></td>
-                      <td><input class="form-control form-control-sm" type="text" id="chartNo" name="chartNo" value="" readonly disabled/></td>
-                   </tr>
-                   <tr>
-                      <td><label>환자명</label></td>
-                      <td><input class="form-control form-control-sm" type="text" id="patientName" name="patientName" value="" readonly disabled/></td>
-                   </tr>
-                   <tr>
-                      <td><label>담당의</label></td>
-                      <td><input class="form-control form-control-sm" type="text" id="chargeOf" name="chargeOf" value="" readonly disabled/></td>
-                   </tr>
-                   <tr>
-                      <td><label>입원일자</label></td>
-                      <td><input class="form-control form-control-sm" type="datetime" id="hsptInDt" name="hsptInDt" value="" readonly disabled/></td>
-                   </tr>
-                   <tr>
-                      <td><label>퇴원일자</label></td>
-                      <td><input class="form-control form-control-sm" type="text" id="hsptOutDt" name="hsptOutDt" value="" readonly disabled/></td>
-                   </tr>
-                   <tr>
-                      <td><label>질병코드</label></td>
-                      <td><input class="form-control form-control-sm" type="text" id="diseaseCd" name="diseaseCd" value="" readonly disabled/></td>
-                   </tr>
-                </table>
-                      <input type="button" class="btn-submit" id="wardChoose" value="병실배정" data-bs-toggle="modal" data-bs-target="#exampleModalToggle" style="margin-top:5px;"/>
-                </div>
-                <div style="width:20px;"></div>
-             
-              <div id="hospitalList" style="display:inline-block; width: 350px;">
-                 <table class="table-blue scrollhover" >
-                    <thead>
-                     <tr>
-                        <th><a>차트번호</a></th>
-                        <th><a>환자번호</a></th>
-                        <th><a>이름</a></th>
-                        <th><a>생년월일</a></th>
-                        <th><a>담당의</a></th>
-                        <th><a>질병코드</a></th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <c:forEach items="${operationList }" var="oper">
-                        <tr class="operTr">
-                           <td>${oper["trmCd"] }</td>
-                           <td>${oper["paNo"] }</td>
-                           <td>${oper["paName"] }</td>
-                           <td>${oper["paReg"] }</td>
-                           <td>${oper["empNm"] }</td>
-                           <td>${oper["diseaseCd"] }</td>
-                        </tr>
-                     </c:forEach>
-                  </tbody>
-                 </table>
-              </div>
-              </div>
-              <div id="outHospt">
-		    	<table class="table-blue scrollhover" >
-		    		<thead>
-		    			<tr>
-		    				<th><a>환자이름</a></th>
-		    				<th><a>입퇴원번호</a></th>
-		    				<th><a>차트번호</a></th>
-		    				<th><a>입원일시</a></th>
-		    				<th><a>퇴원예정일</a></th>
-		    				<th><a>병상</a></th>
-		    				<th><a>질병코드</a></th>
-		    			</tr>
-		    		</thead>
-		    		<tbody id="tbdOutHsptList">
-						<c:forEach items="${outHsptList }" var="outHspt">
-							<tr class="hsptTr">
-								<td>${outHspt["paName"] }</td>
-								<td>${outHspt["hsptNo"] }</td>
-								<td>${outHspt["trmCd"] }</td>
-								<td>${outHspt["hsptInDt"] }</td>
-								<td>${outHspt["hsptOutDt"] }</td>
-								<td>${outHspt["wrRno"] }호 ${outHspt["bedNo"] }번</td>
-								<td>${outHspt["diseaseCd"] }</td>
-							</tr>
-								<div><input type="hidden" value="${outHspt['rcpNo']}"/></div>
-						</c:forEach>
-					</tbody>
-						
-  					</table>
-  					  <div>
-  					  	<input type="hidden" id="hiddenHsptNo" value=""/>
-  					  </div>
-					  <div>
-						<input class="btn-submit" type="button" id="exitHospt" value="퇴원" style="margin-top:5px;"/>
-						<input class="btn-submit" type="button" id="cancleHospt" value="입원취소"/>
-					  </div>
-			  </div>
-			   <div id="manaHospt">
-			       <table class="table-blue scrollhover" >
-		    		  <thead>
-			    		  <tr>
-	                         <th><a>이름</a></th>
-	                         <th><a>생년월일</a></th>
-			    		  	 <th><a>병실</a></th>
-	                         <th><a>침대</a></th>
-	                         <th><a>입실일자</a></th>
-	                         <th><a>퇴원예정</a></th>
-	                         <th><a>담당의</a></th>
-	                         <th><a>비고</a></th>
-			    		  </tr>
-    		   		  </thead>
-    		   		  <tbody id="outHsptListTbody">
-    		   		  	<c:forEach items="${outHsptList }" var="outHspt">
-							<tr class="hsptTr">
-								<td>${outHspt["paName"] }</td>
-								<td>${outHspt["hsptNo"] }</td>
-								<td>${outHspt["trmCd"] }</td>
-								<td>${outHspt["hsptInDt"] }</td>
-								<td>${outHspt["hsptOutDt"] }</td>
-								<td>${outHspt["wrRno"] }호 ${outHspt["bedNo"] }번</td>
-								<td>${outHspt["diseaseCd"] }</td>
-								<td>-</td>
-							</tr>
-								<div><input type="hidden" value="${outHspt['rcpNo']}"/></div>
-						</c:forEach>
-    		   		  </tbody>
-	    		   </table>
-	    		   <div>
-	    		   	<input class="btn-submit" type="button" value="병실이동" data-bs-toggle="modal" data-bs-target="#exampleModalToggle" style="margin-top:5px;"/>
-	    		   </div>
-    		   </div>
-				</div>
-			</div>
-		</div>
-	</div>
-  </div>
-
-  
-
-<div class="grid-stack-item" gs-w="3" gs-h="5">
-    <div class="grid-stack-item-content">
-    	<h4 class="h4-title1">수납</h4>
-    	<p class="pTag">진료 및 퇴원을 통한 환자의 정보를 토대로 수납을 진행합니다.</p>
-    	<hr>
-    	<button id="rec_btn">수납</button>
-		<div>
-			         <div class="mb-3 row">
-         	<label class="col-sm-3 col-form-label">제증명및기타</label>
-         	<div class="col-sm-9">
-         		<input class="form-control" type="number" name="rdEtcf" value="${receive_detail.rdEtcf}" />
-         	</div>
-         </div>
-         <div class="mb-3 row">
-         	<label class="col-sm-3 col-form-label">진료비 총액</label>
-         	<div class="col-sm-9">
-         		<input class="form-control" type="number" name="rdTtfe" value="${receive_detail.rdTtfe}" />
-         	</div>
-         </div>
-         <div class="mb-3 row">
-         	<label class="col-sm-3 col-form-label">환자부담 총액</label>
-         	<div class="col-sm-9">
-         		<input class="form-control" type="number" name="rdPafe" value="${receive_detail.rdPafe}" />
-         	</div>
-         </div>
-         <div class="mb-3 row">
-         	<label class="col-sm-3 col-form-label">납부할 금액</label>
-         	<div class="col-sm-9">
-	        	<input class="form-control" type="number" name="rdBffe" value="${receive_detail.rdBffe}" />
-	        </div>
-         </div>
-         <div class="mb-3 row">
-         	<label class="col-sm-3 col-form-label">이미 납부한 금액</label>
-         	<div class="col-sm-9">
-         		<input class="form-control" type="number" name="rdAtfe" value="${receive_detail.rdAtfe}" />
-         	</div>
-         </div>
-         <div class="mb-3 row">
-     		<label class="col-sm-3 col-form-label">진찰료</label>
-     		<div class="col-sm-9">    
-         		<input class="form-control" type="number" name="rdCofe" value="${receive_detail.rdCofe}" />
-         	</div>
-         </div>	
-         <div class="mb-3 row">
-     		<label class="col-sm-3 col-form-label">입원료</label>		
-         	<div class="col-sm-9">  	
-			    <input class="form-control" type="number" name="rdHpfe" value="${receive_detail.rdHpfe}" />
-			</div>
-		</div>
-		<div class="mb-3 row">
-     		<label class="col-sm-3 col-form-label">식대</label>		
-         	<div class="col-sm-9"> 
-    			<input class="form-control" type="number" name="rdFdfe" value="${receive_detail.rdFdfe}" />
-    		</div>
-    	</div>
-    	<div class="mb-3 row">
-     		<label class="col-sm-3 col-form-label">투약및조제료</label>		
-         	<div class="col-sm-9"> 
-         	<input class="form-control" type="number" name="rdDrfe" value="${receive_detail.rdDrfe}" />
-        	</div>
-        </div>
-        <div class="mb-3 row">
-     		<label class="col-sm-3 col-form-label">주사료</label>		
-         	<div class="col-sm-9"> 
-        		<input class="form-control" type="number" name="rdIjfe" value="${receive_detail.rdIjfe}" />
-        	</div>
-        </div>
-         <div class="mb-3 row">
-     		<label class="col-sm-3 col-form-label">물리치료비</label>		
-         	<div class="col-sm-9"> 
-        		<input class="form-control" type="number" name="rdPtfe" value="${receive_detail.rdPtfe}" />
-        	</div>
-        </div>
-        <div class="mb-3 row">
-     		<label class="col-sm-3 col-form-label">치료재료대</label>		
-         	<div class="col-sm-9"> 
-        		<input class="form-control" type="number" name="rdMtfe" value="${receive_detail.rdMtfe}" />
-        	</div>
-        </div>
-        <div class="mb-3 row">
-     		<label class="col-sm-3 col-form-label">영상검사료</label>		
-         	<div class="col-sm-9"> 
-    			<input class="form-control" type="number" name="rdExfe" value="${receive_detail.rdExfe}" />
-    		</div>
-    	</div>
-    	<div class="mb-3 row">
-     		<label class="col-sm-3 col-form-label">영상진단료</label>		
-         	<div class="col-sm-9"> 
-	    		<input class="form-control" type="number" name="rdMdfe" value="${receive_detail.rdMdfe}" />
-	    	</div>
-	    </div>
-	    <div class="mb-3 row">
-     		<label class="col-sm-3 col-form-label">수술료</label>		
-         	<div class="col-sm-9">
-		    	<input class="form-control" type="number" name="rdOperfe" value="${receive_detail.rdOperfe}" />
-		    </div>
-		</div>
-		</div>
-    </div>
-  </div>
-
-
  
  
-  <div class="grid-stack-item" gs-w="2" gs-h="3">
-    <div class="grid-stack-item-content"><h4 class="h4-title2">접수</h4><p class="pTag">환자 검색을 통해 담겨진 등록 폼에 배정을 할 진료실을 지정하여 등록버튼을 눌러줍니다.</p><hr>
-    <div class="tab patient-rcp">
-			    <ul class="tabnav">
-			      <li><a href="#operWait">접수</a></li>
-			      <li><a href="#operSchedule">환자등록</a></li>
-			    </ul>
-			    <div class="tabcontentWrap">
-				    <div class="tabcontent">
-				      <div id="operWait">
-					    	<table>
-					    		<tr>
-						    		<td><label>환자번호</label></td>
-						    		<td><input class="form-control form-control-sm" type="text" id="regipaNo"  name="regipaNo" value="" readonly disabled/></td>
-					    		</tr>
-					    		<tr>
-							    	<td><label>환자명</label></td>
-							    	<td><input class="form-control form-control-sm" type="text" id="regipaName" name="regipaName" value=""readonly disabled/></td>
-					    		</tr>
-					    		<tr>
-							    	<td><label>생년월일</label></td>
-							    	<td><input class="form-control form-control-sm" type="text" id="regipaReg" name="regipaReg" value="" readonly disabled/></td>
-					    		</tr>
-					    		<tr>
-							    	<td><label>전화번호</label></td>
-							    	<td><input class="form-control form-control-sm" type="text" id="regipaHp" name="regipaHp" value="" readonly disabled/></td>
-					    		</tr>
-					    		<tr>
-							    	<td><label>성별</label></td>
-							    	<td><input class="form-control form-control-sm" type="text" id="regipaSex" name="regipaSex" value="" readonly disabled/></td>
-					    		</tr>
-						    	<tr>
-						    		<td>
-							    	<select>
-							    		<option name="officeCd" value="DO101">제 1진료실</option>
-							    		<option name="officeCd" value="DO102">제 2진료실</option>
-							    		<option name="officeCd" value="DO103">제 3진료실</option>
-							    	</select>
-						    		</td>
-						    		<td>
-						    			<input class="btn-submit" type="button" id="regiBtn" value="접수" onclick="fn_waitList()">
-						    			
-						    		</td>
-						    	</tr>
-					    	</table>
-				      </div>
-				      <div id="operSchedule">
-					    	<table>
-					    		<tr>
-							    	<td><label>환자명</label></td>
-							    	<td><input class="form-control form-control-sm" type="text" id="paName" name="paName" value=""/></td>
-					    		</tr>
-					    		<tr>
-							    	<td><label>생년월일</label></td>
-							    	<td><input class="form-control form-control-sm" type="text" id="paReg" name="paReg" value="" /></td>
-					    		</tr>
-					    		<tr>
-							    	<td><label>전화번호</label></td>
-							    	<td><input class="form-control form-control-sm" type="text" id="paHp" name="paHp" value=""/></td>
-					    		</tr>
-					    		<tr>
-							    	<th><label>우편번호</label></th>
-							    	<td><input class="form-control form-control-sm" type="text" id="paZip" name="paZip" value=""/></td>
-					    		</tr>
-					    		<tr>
-							    	<th><label>주소</label></th>
-							    	<td><input class="form-control form-control-sm" type="text" id="paAdd1" name="paAdd1" value=""/></td>
-					    		</tr>
-					    		<tr>
-							    	<th><label>상세주소</label></th>
-							    	<td><input class="form-control form-control-sm" type="text" id="paAdd2" name="paAdd2" value=""/></td>
-					    		</tr>
-					    		<tr>
-							    	<th><label>성별</label></th>
-							    	<td><select id="paSex">
-							    		<option value="M">남</option>
-							    		<option value="F">여</option>
-							    	</select>
-						    			<input class="btn-submit" type="button" id="newPAbtn" value="등록">
-							    	</td>
-					    		</tr>
-						    	<tr>
-						    		<td colspan="2">
-						    		</td>
-						    	</tr>
-					    	</table>
-				      </div>
-
-				    </div>
-				</div>
-			</div>
-	  
-    </div>
-  </div>
+ 
+ <!-- 그리드스택 아이템5 -->
   
-<div class="grid-stack-item" gs-w="3" gs-h="2">
+<div class="grid-stack-item" gs-w="4" gs-h="2">
     <div class="grid-stack-item-content"><h4 class="h4-title2">SMS</h4><hr>
     	<div class="tab patient-sms">
 		    <ul class="tabnav">
@@ -590,41 +531,46 @@ select>input {
 	    <div class="tabcontentWrap">
 		    <div class="tabcontent">
 		      <div id="sendSMS" style="display:flex;">
-		      	<div style="border:pink solid 1px; width:250px;">
-		      		<table class="table-blue">
-	      				<c:forEach var="sms" items="${smsList }" varStatus="i">
-	      					 <tr>
-	      						<td>${i.index} - ${sms.smsTitle }</td>
-	      					</tr>
-	      				</c:forEach>
+		      	<div style=" width:300px; height: 150px;" class="scroller">
+		      		<table class="table-blue scrollshover">
+		      		  <thead>
+		      			<tr>
+		      				<td style="width:40px;">번호</td>
+		      				<td>제목</td>
+		      			</tr>
+		      		  </thead>
+		      		  <tbody class="smsTbody" >
+	      				
+		      		  </tbody>		
 		      		</table>
 		      	</div>
-		      	<div style="margin-left:20px;">
+		      	<div style="margin-left:20px; text-align:end;">
 		      		<textarea id="smsTextarea" rows="5" cols="40"></textarea>
-		      	</div>
-		      	<div style="display:block;">
-		      		<input type="button" value="전송" />
+			      	<div style="display:block;">
+			      		<input class="btn-submit" id="smsSend" type="button" value="전송" />
+			      	</div>
 		      	</div>
 		      </div>
 		      
-		      <div id="updateSMS">
-				<table>
-					<c:forEach var="sms" items="${smsList }" varStatus="i">
-	      					 <tr>
-	      						<td>${i.index} - ${sms.smsTitle }</td>
-	      					</tr>
-	      				</c:forEach>
-					<tr id="smstList">
-						
-					</tr>
-					<tr>
-						<td colspan="2">
-						<input class="btn-submit" type="button" id="newSms" value="추가" data-bs-toggle="modal" data-bs-target="#smsInsert">
-						<input class="btn-submit" type="button" id="updateSms" value="수정" data-bs-toggle="modal" data-bs-target="#smsUpdate">
-						<input class="btn-submit" type="button" id="deleteSms" value="삭제">
-						</td>
-					</tr>
-				</table>	      
+		      <div id="updateSMS" style="display:flex;">
+		      	<div style=" width:300px; height: 150px;" class="scroller">
+		      		<table class="table-blue scrollshover">
+		      		  <thead>
+		      			<tr>
+		      				<td style="width:40px;">번호</td>
+		      				<td>제목</td>
+		      			</tr>
+		      		  </thead>
+		      		  <tbody class="smsTbody">
+	      				
+		      		  </tbody>		
+		      		</table>
+	      		</div>
+	      		<div>
+					<input class="btn-submit" type="button" id="newSms" value="추가" data-bs-toggle="modal" data-bs-target="#smsInsert">
+					<input class="btn-submit" type="button" id="updateSms" value="수정" data-bs-toggle="modal" data-bs-target="#smsUpdate">
+					<input class="btn-submit" type="button" id="deleteSms" value="삭제">
+	      		</div>
 		      </div>
 	      </div>
 		</div>
@@ -690,11 +636,15 @@ select>input {
         <h5 class="modal-title" id="exampleModalToggleLabel2">침상 구분</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body bedDive" >
-       	<div class="cover"><img alt="2인실 01호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/></div>
-       	<div><input type="checkbox"  name="wardBedNo" value="1"></div>
-        <div class="cover"><img alt="2인실 02호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/></div>
-        <div><input type="checkbox"  name="wardBedNo" value="2"></div>
+      <div class="modal-body bedDive" style="dispaly:flex; justify-content: space-between;" >
+       	<div class="cover" style="padding-right: 50px;">
+       		<img alt="2인실 01호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+	       	<div><label>1번</label> <input type="radio"  name="wardBedNo" value="1"></div>
+   		</div>
+        <div class="cover" style="padding-left: 50px;">
+        	<img alt="2인실 02호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+        	<div><label>2번</label> <input type="radio"  name="wardBedNo" value="2"></div>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">뒤로가기</button>
@@ -714,15 +664,27 @@ select>input {
         <h5 class="modal-title" id="exampleModalToggleLabel3">침상 구분</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body bedDive">
-       	<img alt="4인실 01호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
-       		<div><input type="checkbox"  name="wardBedNo" value="1"></div>
-        <img alt="4인실 02호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
-        	<div><input type="checkbox"  name="wardBedNo" value="2"></div>
-        <img alt="4인실 03호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
-        	<div><input type="checkbox"  name="wardBedNo" value="3"></div>
-        <img alt="4인실 04호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
-        	<div><input type="checkbox"  name="wardBedNo" value="4"></div>
+	      <div class="modal-body bedDive" style="width: 445px;">
+	      <div style="display: flex;">
+	      <div style="margin: 0px 50px;">
+	       		<img alt="4인실 01호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+	       		<div> <label>1번</label> <input type="radio"  name="wardBedNo" value="1"></div>
+	      </div>
+	      <div style="margin: 0px 50px;">
+	        	<img alt="4인실 02호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+	        	<div> <label>2번</label> <input type="radio"  name="wardBedNo" value="2"></div>
+	      </div>
+	      </div>
+	      <div style="display: flex;">
+	      <div style="margin: 0px 50px;">
+	        	<img alt="4인실 03호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+	        	<div> <label>3번</label> <input type="radio"  name="wardBedNo" value="3"></div>
+	      </div>
+	      <div style="margin: 0px 50px;">
+	        	<img alt="4인실 04호 침상" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+	        	<div> <label>4번</label> <input type="radio"  name="wardBedNo" value="4"></div>
+	      </div>
+	      </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">뒤로가기</button>
@@ -742,19 +704,35 @@ select>input {
         <h5 class="modal-title" id="exampleModalToggleLabel4">침상 구분</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body bedDive">
-       	<img alt="6인실 01호 침상" class="bed6_01_03" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
-       	<input type="checkbox"  name="wardBedNo" value="1">
-        <img alt="6인실 02호 침상" class="bed6_01_03" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
-        <input type="checkbox"  name="wardBedNo" value="2">
-        <img alt="6인실 03호 침상" class="bed6_01_03" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
-        <input type="checkbox"  name="wardBedNo" value="3">
-        <img alt="6인실 04호 침상" class="bed6_04_06" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
-        <input type="checkbox"  name="wardBedNo" value="4">
-        <img alt="6인실 05호 침상" class="bed6_04_06" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
-        <input type="checkbox"  name="wardBedNo" value="5">
-        <img alt="6인실 06호 침상" class="bed6_04_06" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
-        <input type="checkbox"  name="wardBedNo" value="6">
+      <div class="modal-body bedDive" style="display:flex; align-self: center;">
+      	<div style="margin: 0px 50px;">	<!-- 3개 묶기 -->
+	      	<div>
+		       	<img alt="6인실 01호 침상" class="bed6_01_03" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+		       	<div> <label>1번</label> <input type="radio"  name="wardBedNo" value="1"></div>
+	      	</div>
+	      	<div>
+		        <img alt="6인실 02호 침상" class="bed6_01_03" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+		        <div> <label>2번</label> <input type="radio"  name="wardBedNo" value="2"></div>
+	      	</div>
+	      	<div>
+		        <img alt="6인실 03호 침상" class="bed6_01_03" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+		         <div> <label>3번</label> <input type="radio"  name="wardBedNo" value="3"></div>
+	      	</div>
+      	</div> 
+      	<div >	<!-- 3개 묶기 -->
+	      	<div>
+		        <img alt="6인실 04호 침상" class="bed6_04_06" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+		         <div> <label>4번</label> <input type="radio"  name="wardBedNo" value="4"></div>
+	      	</div>
+	      	<div>
+		        <img alt="6인실 05호 침상" class="bed6_04_06" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+		         <div> <label>5번</label> <input type="radio"  name="wardBedNo" value="5"></div>
+	      	</div>
+	      	<div>
+		        <img alt="6인실 06호 침상" class="bed6_04_06" src="${pageContext.request.contextPath }/resources/images/ptbedemty.png"/>
+		         <div> <label>6번</label> <input type="radio"  name="wardBedNo" value="6"></div>
+	      	</div>
+      	</div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" data-bs-dismiss="modal">뒤로가기</button>
@@ -776,7 +754,7 @@ select>input {
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="staticBackdropLabel">SMS 등록</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close smsInsertMoldalColse" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <table>
@@ -787,8 +765,8 @@ select>input {
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" id="smsInsertBtn" class="btn btn-primary">등록</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" id="smsInsertBtn" class="btn btn-primary" data-bs-dismiss="modal">등록</button>
+        <button type="button" class="btn btn-secondary smsInsertMoldalColse" data-bs-dismiss="modal">취소</button>
       </div>
     </div>
   </div>
@@ -802,19 +780,20 @@ select>input {
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="staticBackdropLabel">SMS 수정</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close smsUpdateCloseBtn" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <table>
         	<div>제목</div>
-        	<input type="text">
+        	<input id="smsUpdateModalTitle" type="text">
         	<div>내용</div>
-        	<textarea id="smsCont" rows="15" cols="50"></textarea>
+        	<textarea id="smsUpdateModal" rows="15" cols="50"></textarea>
+        	<input type="hidden" id="smsUpdateModalSttCd" value="" />
         </table>
       </div>
       <div class="modal-footer">
-        <button type="button" id="smsUpdateBtn" class="btn btn-primary">수정</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" id="smsUpdateBtn" class="btn btn-primary" data-bs-dismiss="modal">수정</button>
+        <button type="button" class="btn btn-secondary smsUpdateCloseBtn" data-bs-dismiss="modal">취소</button>
       </div>
     </div>
   </div>
@@ -848,7 +827,7 @@ select>input {
 		 <div class="mb-3 row">
 		    <label class="col-sm-2 col-form-label">진료차트</label>
 		    <div class="col-sm-10">
-			    <select class="form-select" id="proofTrmCd">
+			    <select class="form-select form-select-sm" style="height: 30px;" id="proofTrmCd">
 					<option selected>선택</option>
 			    </select>
 		    </div>
@@ -856,7 +835,7 @@ select>input {
 		 <div class="mb-3 row">
 		    <label class="col-sm-2 col-form-label">항목</label>
 		    <div class="col-sm-10">
-			    <select class="form-select" id="proofCate" onchange="">
+			    <select class="form-select form-select-sm" style="height: 30px;" id="proofCate" onchange="">
 					<option selected>선택</option>
 					<option value="prescription">처방전</option>
 					<option value="certificate">진단서</option>
@@ -895,97 +874,246 @@ select>input {
 	
 	});
 	
-	
-	$("#outHsptListTbody").on("click","tr",function(){
+//////////// 입/퇴원 ////////////////////	
+// 관리 탭
+	$("#manageListTbody").on("click","tr",function(){
 		let c_tr = $(this);
 		let hsptNo = c_tr.children().eq(1).text();
-		console.log(hsptNo)
 		$("#hiddenHsptNo").val(hsptNo);
+		
+		let $tr = $(this);
+		$tr.siblings('tr').removeClass("dblclick-on");
+// 		rcpNo = $tr.data("rcpNo");
+		$tr.addClass("dblclick-on");
 	});
-	
+let total_rcpNo = -1;	
+// 퇴원 탭 
 	$("#tbdOutHsptList").on("click","tr",function(){
 		let c_tr = $(this);
 		let hsptNo = c_tr.children().eq(1).text();
-		console.log(hsptNo)
 		$("#hiddenHsptNo").val(hsptNo);
+		
+		let vo = c_tr.data("list");
+		total_rcpNo = vo.rcpNo
+		
+		let $tr = $(this);
+		$tr.siblings('tr').removeClass("dblclick-on");
+// 		rcpNo = $tr.data("rcpNo");
+		$tr.addClass("dblclick-on");
 	});
 	
 	
 	$("#cancleHospt").on("click",function(){
 		let hsptNo = $("#hiddenHsptNo").val();
 		let data = {hsptNo : hsptNo};
-		$.ajax({
-			url : "${pageContext.request.contextPath}/receiption/cancleHospt",
-			method : "post",
-			data : JSON.stringify(data),
-			contentType : "application/json;charset=utf-8",
-			dataType : "json",
-			beforeSend: function(xhr) {
-		            xhr.setRequestHeader(header, token);
-		    },
-			success : function(result) { 
-				let trTags = [];
-				$.each(result, function(i, v){
-//						console.log(v)
-					let trTag = $("<tr class='trClass'>")
-					.append(
-						$("<td>").html(v.paName)
-						, $("<td>").html(v.hsptNo)
-						, $("<td>").html(v.trmCd)
-						, $("<td>").html(v.hsptInDt)
-						, $("<td>").html(v.hsptOutDt)
-						, $("<td>").html(v.wrRno+"실"+v.bedNo+"호")
-						, $("<td>").html(v.diseaseCd)
-					).data("list",v);
-					trTags.push(trTag);
-				})
-				$("#tbdOutHsptList").html(trTags);
-			}
-		})
+		if (confirm("정말 입원 취소 하시겠습니까?")) {
+			$.ajax({
+				url : "${pageContext.request.contextPath}/receiption/cancleHospt",
+				method : "post",
+				data : JSON.stringify(data),
+				contentType : "application/json;charset=utf-8",
+				dataType : "json",
+				beforeSend: function(xhr) {
+			            xhr.setRequestHeader(header, token);
+			    },
+				success : function(result) { 
+					let trTags = [];
+					$.each(result, function(i, v){
+	//						console.log(v)
+						let trTag = $("<tr class='trClass'>")
+						.append(
+							$("<td>").html(v.paName)
+							, $("<td>").html(v.hsptNo)
+							, $("<td>").html(v.trmCd)
+							, $("<td>").html(v.hsptInDt)
+							, $("<td>").html(v.hsptOutDt)
+							, $("<td>").html(v.wrRno+"실"+v.bedNo+"호")
+							, $("<td>").html(v.diseaseCd)
+						).data("list",v);
+						trTags.push(trTag);
+					})
+					$("#tbdOutHsptList").html(trTags);
+				}
+			})
+		}
+		else{
+			swal("입원을 취소하지 않습니다.","","error")
+		}
 	});
 	
 	
 	$("#exitHospt").on("click",function(){
 		let hsptNo = $("#hiddenHsptNo").val();
 		let data = {hsptNo : hsptNo};
-		$.ajax({
-			url : "${pageContext.request.contextPath}/receiption/exitHospt",
-			method : "post",
-			data : JSON.stringify(data),
-			contentType : "application/json;charset=utf-8",
-			dataType : "json",
-			beforeSend: function(xhr) {
-		            xhr.setRequestHeader(header, token);
-		    },
-			success : function(result) { 
-				let trTags = [];
-				$.each(result, function(i, v){
-//						console.log(v)
-					let trTag = $("<tr class='trClass'>")
-					.append(
-						$("<td>").html(v.paName)
-						, $("<td>").html(v.hsptNo)
-						, $("<td>").html(v.trmCd)
-						, $("<td>").html(v.hsptInDt)
-						, $("<td>").html(v.hsptOutDt)
-						, $("<td>").html(v.wrRno+"실"+v.bedNo+"호")
-						, $("<td>").html(v.diseaseCd)
-					).data("list",v);
-					trTags.push(trTag);
-				})
-				$("#tbdOutHsptList").html(trTags);
-			}
-		})
+		if (confirm("정말 퇴원 하시겠습니까?")) {
+			$.ajax({
+				url : "${pageContext.request.contextPath}/receiption/exitHospt",
+				method : "post",
+				data : JSON.stringify(data),
+				contentType : "application/json;charset=utf-8",
+				dataType : "json",
+				beforeSend: function(xhr) {
+			            xhr.setRequestHeader(header, token);
+			    },
+				success : function(result) { 
+					let trTags = [];
+					
+					$.each(result, function(i, v){
+						let trTag = $("<tr class='trClass'>")
+						.append(
+							$("<td>").html(v.paName)
+							, $("<td>").html(v.hsptNo)
+							, $("<td>").html(v.trmCd)
+							, $("<td>").html(v.hsptInDt)
+							, $("<td>").html(v.hsptOutDt)
+							, $("<td>").html(v.wrRno+"실"+v.bedNo+"호")
+							, $("<td>").html(v.diseaseCd)
+						).data("list",v);
+						trTags.push(trTag);
+					})
+					$("#tbdOutHsptList").html(trTags);
+					f_getChart(total_rcpNo);
+					total_rcpNo = -1;
+				}
+			})
+		}
+		else{
+			swal("퇴원을 취소하였습니다.","","error")
+		}
 	});
 	
+	// 입원 가능한 환자 리스트 조회 //	
+function fn_wardRegistList(){
+	$.ajax({
+		url : "wardRegistList",
+		method : "get",
+		contentType : "application/json;charset=utf-8",
+		dataType : "json",
+		beforeSend: function(xhr) {
+	            xhr.setRequestHeader(header, token);
+	    },
+		success : function(result) {
+			console.log(result)	
+			let trTags = [];
+			let trTag = '';
+			$.each(result, function(i,v){
+				trTag = $("<tr>")
+				.append(
+						$("<td>").html(v.trmCd)
+						,$("<td>").html(v.paNo)
+						,$("<td>").html(v.paName)
+						,$("<td>").html(v.paReg)
+						,$("<td>").html(v.empNm)
+						,$("<td>").html(v.diseaseCd)
+				).data("rcpNo",v.rcpNo);
+				trTags.push(trTag);
+			})
+			$("#hsptTbody").html(trTags);
+		}
+	})
+}	
+fn_wardRegistList();	
+// 입원 가능한 환자 리스트 조회  끝//	
+
+
+//퇴원탭 환자 리스트 조회
+function fn_wardList(){
+	$.ajax({
+		url : "${pageContext.request.contextPath}/receiption/wardList",
+		method : "post",
+		beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+    	},
+		contentType : "application/json;charset=utf-8",
+		dataType : "json",
+		success : function(result) {
+			let trTags = [];
+			$.each(result, function(i, v){
+					console.log(v)
+				let trTag = $("<tr class='trClass'>")
+				.append(
+					$("<td>").html(v.paName)
+					, $("<td>").html(v.hsptNo)
+					, $("<td>").html(v.trmCd)
+					, $("<td>").html(v.hsptInDt)
+					, $("<td>").html(v.hsptOutDt)
+					, $("<td>").html(v.wrRno+"호"+v.bedNo+"번")
+					, $("<td>").html(v.diseaseCd)
+				).data("list",v);
+				trTags.push(trTag);
+			})
+			$("#tbdOutHsptList").html(trTags);
+		}
+	})
+}	
+	
+let trmCd	= -1;
+let diseaseCd = -1;
+	
+//입원 가능 환자 리스트 클릭 이벤트 //
+$("#hsptTbody").on("click","tr",function(){
+	let check = $(this).children()
+	trmCd = $(this).children().eq(0).html();
+	diseaseCd = $(this).children().eq(5).html();
+		
+	let $tr = $(this);
+	$tr.siblings('tr').removeClass("dblclick-on");
+	$tr.addClass("dblclick-on");
+	
+})
+//입원 가능 환자 리스트 클릭 이벤트 끝 //
+	
+	
+// 입원 등록  버튼 이벤트////
+$(".wardRegi").on("click",function(){
+	let wardRno = $("[name=wardRno]:checked").val();
+	let wardBedNo = $("[name=wardBedNo]:checked").val();
+	
+	let data ={
+		 bedNo : wardBedNo
+		, wrRno : wardRno
+		, trmCd : trmCd
+		, diseaseCd : diseaseCd
+	}
+		
+	if(trmCd != null){
+	$.ajax({
+		url : "${pageContext.request.contextPath}/receiption/wardRegist",
+		method : "post",
+		data : JSON.stringify(data),
+		beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+    	},
+		contentType : "application/json;charset=utf-8",
+		dataType : "json",
+		success : function(result) { 			
+			swal("입원 등록 하였습니다","침상등록 성공하였습니다","success")
+			fn_wardRegistList();
+			trmCd = -1;
+			diseaseCd = -1;
+		},
+		error : function(jqXHR, status, error) {
+			console.log(jqXHR);
+			console.log(status);
+			console.log(error);
+		}
+	});
+	} else {
+		swal('정보를 입력해주세요', "환자 정보가 없습니다.", "error");
+	}
+})
+	// 입원 등록 버튼 이벤트 끝 //
+	
+
+/////////////// 입/퇴원 끝 ////////////////////////////////
+
+	/* 검색 */
 	function f_block(){
 		if(event.keyCode==13){
 			event.preventDefault();
 		}
 	}
 
-
-	/* 검색 */
 	//엔터키 누르면 검색실행되게 하는 코드
 	$(document).ready(function(){
 	    $("input[name=searchBtn]").keydown(function () {
@@ -997,130 +1125,140 @@ select>input {
 	    $("#Search").on("click", function(){
 	    	searchList();
 	    });
-	    
-	    searchList = function (){
-	        //검색 찾는 로직 구현
-	        let searchOption = $("#searchOption option:selected").val();
-			let searchWord = $("#searchWord").val();
-			
-			if(searchWord == ''){
-				swal('검색 실패!', "검색어를 입력해주세요", 'error');
-				return false;
-			}
-			
-			let data = {
-				searchOption:searchOption,
-				searchWord:searchWord
-			}
-			
-			$.ajax({
-				url : "patientSearch",
-				method : "post",
-				data : JSON.stringify(data),
-				contentType : "application/json;charset=utf-8",
-				dataType : "json",
-				beforeSend: function(xhr) {
-			            xhr.setRequestHeader(header, token);
-			    },
-				success : function(result) { 
-// 					console.log(result);
-					if(result == null || result.length == 0){
-						// 기록이 없을 때
-						swal('검색실패', "환자 정보가 없습니다.", "error");
-					}else if(result.length == 1){
-						// 기록이 하나일 때
-						let trTags = [];
-						$.each(result, function(i, v){
-							let trTag = $("<tr class='trClass'>")
-							.append(
-								$("<td>").html(v.paNo)
-								, $("<td>").html(v.paName)
-								, $("<td>").html(v.paReg)
-								, $("<td>").html(v.paHp)
-								, $("<td>").html(v.paSex)
-							).data("waitVO",v);
-							trTags.push(trTag);
-						})
-						$("#radiTBody").html(trTags);
-						
-						$(".trClass").on("click",function(){
-							let paNo = $(this).find('td').eq(0).html()
-							let paName = $(this).find('td').eq(1).html()
-							let paReg = $(this).find('td').eq(2).html()
-							let paHp = $(this).find('td').eq(3).html()
-							let paSex = $(this).find('td').eq(4).html()
-							
-							$("#regipaNo").val(paNo);
-							$("#regipaName").val(paName);
-							$("#regipaReg").val(paReg);
-							$("#regipaHp").val(paHp);
-							$("#regipaSex").val(paSex);
-							
-							/* 모달창으로 환자정보 전송 */
-							$('#proof_paName').val(paName);
-							$('#proof_paNo').val(paNo);
-							
-							/* 진료차트조회 */
-							loadTrmChart(paNo);
-							
-						})
-					}else{
-						// 기록이 여러개일 때
-						let trTags = [];
-						$.each(result, function(i, v){
-// 							console.log(v)
-							let trTag = $("<tr class='trClass'>")
-							.append(
-								$("<td>").html(v.paNo)
-								, $("<td>").html(v.paName)
-								, $("<td>").html(v.paReg)
-								, $("<td>").html(v.paHp)
-								, $("<td>").html(v.paSex)
-							).data("waitVO",v);
-							trTags.push(trTag);
-						})
-						$("#radiTBody").html(trTags);
-						
-						$(".trClass").on("click",function(){
-							let paNo = $(this).find('td').eq(0).html()
-							let paName = $(this).find('td').eq(1).html()
-							let paReg = $(this).find('td').eq(2).html()
-							let paHp = $(this).find('td').eq(3).html()
-							let paSex = $(this).find('td').eq(4).html()
-							
-							$("#regipaNo").val(paNo);
-							$("#regipaName").val(paName);
-							$("#regipaReg").val(paReg);
-							$("#regipaHp").val(paHp);
-							$("#regipaSex").val(paSex);
-							
-							/* 모달창으로 환자정보 전송 */
-							$('#proof_paName').val(paName);
-							$('#proof_paNo').val(paNo);
-							
-							/* 진료차트조회 */
-							loadTrmChart(paNo);
-							
-						})
-						
-					}
-				},
-				error : function(jqXHR, status, error) {
-					console.log(jqXHR);
-					console.log(status);
-					console.log(error);
-				}
-			});
-			
-			$("#searchWord").val("");
-			
-	    };
 	});
 
-// 	function fn_move(i,v){
-// // 		console.log(i)
-// 		console.log("체크"+v);
-// 	}
+    searchList = function (){
+        //검색 찾는 로직 구현
+        let searchOption = $("#searchOption option:selected").val();
+		let searchWord = $("#searchWord").val();
+		
+		if(searchWord == ''){
+			swal('검색 실패!', "검색어를 입력해주세요", 'error');
+			return false;
+		}
+		
+		let data = {
+			searchOption:searchOption,
+			searchWord:searchWord
+		}
+		
+		$.ajax({
+			url : "patientSearch",
+			method : "post",
+			data : JSON.stringify(data),
+			contentType : "application/json;charset=utf-8",
+			dataType : "json",
+			beforeSend: function(xhr) {
+		            xhr.setRequestHeader(header, token);
+		    },
+			success : function(result) { 
+//					console.log(result);
+				if(result == null || result.length == 0){
+					// 기록이 없을 때
+					swal('검색실패', "환자 정보가 없습니다.", "error");
+				}else if(result.length == 1){
+					// 기록이 하나일 때
+					let trTags = [];
+					$.each(result, function(i, v){
+						let trTag = $("<tr class='trClass'>")
+						.append(
+							$("<td>").html(v.paNo)
+							, $("<td>").html(v.paName)
+							, $("<td>").html(v.paReg)
+							, $("<td>").html(v.paHp)
+							, $("<td>").html(v.paSex)
+						).data("waitVO",v);
+						trTags.push(trTag);
+					})
+					$("#radiTBody").html(trTags);
+					
+					$(".trClass").on("click",function(){
+						
+						let $tr = $(this);
+						$tr.siblings('tr').removeClass("dblclick-on");
+//				 		rcpNo = $tr.data("rcpNo");
+						$tr.addClass("dblclick-on");
+						
+						let paNo = $(this).find('td').eq(0).html()
+						let paName = $(this).find('td').eq(1).html()
+						let paReg = $(this).find('td').eq(2).html()
+						let paHp = $(this).find('td').eq(3).html()
+						let paSex = $(this).find('td').eq(4).html()
+					
+						
+						
+						$("#regipaNo").val(paNo);
+						$("#regipaName").val(paName);
+						$("#regipaReg").val(paReg);
+						$("#regipaHp").val(paHp);
+						$("#regipaSex").val(paSex);
+						
+						/* 모달창으로 환자정보 전송 */
+						$('#proof_paName').val(paName);
+						$('#proof_paNo').val(paNo);
+						
+						/* 진료차트조회 */
+						loadTrmChart(paNo);
+						
+					})
+				}else{
+					// 기록이 여러개일 때
+					let trTags = [];
+					$.each(result, function(i, v){
+//							console.log(v)
+						let trTag = $("<tr class='trClass'>")
+						.append(
+							$("<td>").html(v.paNo)
+							, $("<td>").html(v.paName)
+							, $("<td>").html(v.paReg)
+							, $("<td>").html(v.paHp)
+							, $("<td>").html(v.paSex)
+						).data("waitVO",v);
+						trTags.push(trTag);
+					})
+					$("#radiTBody").html(trTags);
+					
+					$(".trClass").on("click",function(){
+						
+						let $tr = $(this);
+						$tr.siblings('tr').removeClass("dblclick-on");
+//				 		rcpNo = $tr.data("rcpNo");
+						$tr.addClass("dblclick-on");
+						
+						let paNo = $(this).find('td').eq(0).html()
+						let paName = $(this).find('td').eq(1).html()
+						let paReg = $(this).find('td').eq(2).html()
+						let paHp = $(this).find('td').eq(3).html()
+						let paSex = $(this).find('td').eq(4).html()
+						
+						$("#regipaNo").val(paNo);
+						$("#regipaName").val(paName);
+						$("#regipaReg").val(paReg);
+						$("#regipaHp").val(paHp);
+						$("#regipaSex").val(paSex);
+						
+						/* 모달창으로 환자정보 전송 */
+						$('#proof_paName').val(paName);
+						$('#proof_paNo').val(paNo);
+						
+						/* 진료차트조회 */
+						loadTrmChart(paNo);
+						
+					})
+					
+				}
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});
+		
+		$("#searchWord").val("");
+		
+    };	
+	
 
 	/* 검색 끝 */
 
@@ -1158,6 +1296,9 @@ $(function(){
 		hosptTabContents.hide().filter(this.hash).fadeIn();
 		hosptTabNavs.removeClass('active');
 		$(this).addClass('active');
+		if(this.hash == "#outHospt"){
+			fn_wardList();
+		}
 		return false;
 	});
 	hosptTabNavs.eq(0).click();
@@ -1173,13 +1314,14 @@ $(function(){
 });
 	
 ////////////// SMS ////////////////////////////////
-//추가
+
+	// 수정탭 - 추가 버튼이벤트 //
 $("#smsInsertBtn").on("click",function(){
 	let smsTitle = $("#smsInsertTitle").val();
 	let smsCont = $("#smsInsertCont").val();
-	
+
 	let data = {
-		smsTitle : smsTile,
+		smsTitle : smsTitle,
 		smsCont : smsCont
 	}
 	
@@ -1193,21 +1335,128 @@ $("#smsInsertBtn").on("click",function(){
 		contentType : "application/json;charset=utf-8",
 		dataType : "json",
 		success : function(result) {
-			
+			swal("등록되었습니다","","success")
+			$("#smsInsertTitle").val("");
+			$("#smsInsertCont").val("");
+			fn_smsRead();
 		}
 	})
 });
-/// 추가 끝 
 
-//수정 탭 - 클릭해서 모달 창에 띄우기 
+$(".smsInsertMoldalColse").on("click",function(){
+	$("#smsInsertTitle").val("");
+	$("#smsInsertCont").val("");
+})
+	// 수정탭 - 추가 버튼이벤트  끝//
 
+	// 수정탭 - 수정  - 클릭해서 모달 창에 띄우기 //
+$(".smsTbody").on("click","tr",function(){
+	let Cont = this.children[1].dataset.smscont;
+	let Title = this.children[1].innerHTML;
+	let SttCd = this.children[1].dataset.sttcd;
+	let smsCont = $("#smsUpdateModal").val(Cont);
+	let smsTitle = $("#smsUpdateModalTitle").val(Title);
+	let sttCd = $("#smsUpdateModalSttCd").val(SttCd);
 	
+})
+
+	// 수정버튼 이벤트 - ajax //
+$("#smsUpdateBtn").on("click",function(){
+	let smsCont = $("#smsUpdateModal").val();
+	let smsTitle = $("#smsUpdateModalTitle").val();
+	let sttCd = $("#smsUpdateModalSttCd").val();
 	
-// 입원 관련 리스트 조회
-function fn_wardList(){
+	let data = {
+			smsCont : smsCont,
+			smsTitle : smsTitle,
+			sttCd : sttCd
+	}	
 	$.ajax({
-		url : "${pageContext.request.contextPath}/receiption/wardList",
+		url : "${pageContext.request.contextPath}/receiption/smsUpdate",
 		method : "post",
+		data : JSON.stringify(data),
+		beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+    	},
+		contentType : "application/json;charset=utf-8",
+		dataType : "json",
+		success : function(result) {
+			swal("수정되었습니다","","success")
+			$("#smsUpdateModal").val("");
+			$("#smsUpdateModalTitle").val("");
+			fn_smsRead();
+		}
+	})
+});
+
+$(".smsUpdateCloseBtn").on("click",function(){
+	$("#smsUpdateModal").val("");
+	$("#smsUpdateModalTitle").val("");
+})
+	// 수정탭 - 수정  - 클릭해서 모달 창에 띄우기 끝//
+
+	// 수정탭 - 삭제 이벤트 -ajax //
+$(".smsTbody").on("click","tr",function(event){
+	let sttCd = this.children[1].dataset.sttcd;
+	
+	let $tr = $(this);
+	$tr.siblings('tr').removeClass("dblclick-on");
+//		rcpNo = $tr.data("rcpNo");
+	$tr.addClass("dblclick-on");
+	
+	let data ={
+			sttCd : sttCd
+	}
+	$("#deleteSms").on("click",function(){
+		if(confirm("삭제하시겠습니까?")){
+			$.ajax({
+				url : "${pageContext.request.contextPath}/receiption/smsDelete",
+				method : "post",
+				data : JSON.stringify(data),
+				beforeSend: function(xhr) {
+		            xhr.setRequestHeader(header, token);
+		    	},
+				contentType : "application/json;charset=utf-8",
+				dataType : "json",
+				success : function(result) {
+					swal("삭제 성공하셨습니다.","","success")
+					fn_smsRead();
+				}
+			})
+		}else{
+			return;
+		}
+	})
+})
+	// 수정탭 - 삭제 이벤트 -ajax 끝 //
+
+	
+	// 제목 클릭하면 텍스트 창에 내용 들어가기//
+$(".smsTbody").on("click","tr", function(event){
+	let smsCont = this.children[1].dataset.smscont;
+	$("#smsTextarea").val(smsCont);
+	
+	let $tr = $(this);
+	$tr.siblings('tr').removeClass("dblclick-on");
+//		rcpNo = $tr.data("rcpNo");
+	$tr.addClass("dblclick-on");
+	
+})
+
+	// 제목 클릭하면 텍스트 창에 내용 들어가기 끝//
+
+	// 전송버튼 이벤트 //
+$("#smsSend").on("click",function(){
+	swal("전송에 성공 하셨습니다.","","success")
+	$("#smsTextarea").val("");
+})
+	// 전송버튼 이벤트 끝 //
+
+
+function fn_smsRead(){
+	$.ajax({
+		url : "${pageContext.request.contextPath}/receiption/smsRead",
+		method : "get",
 		beforeSend: function(xhr) {
             xhr.setRequestHeader(header, token);
     	},
@@ -1216,91 +1465,21 @@ function fn_wardList(){
 		success : function(result) {
 			let trTags = [];
 			$.each(result, function(i, v){
-//					console.log(v)
-				let trTag = $("<tr class='trClass'>")
-				.append(
-					$("<td>").html(v.paName)
-					, $("<td>").html(v.hsptNo)
-					, $("<td>").html(v.trmCd)
-					, $("<td>").html(v.hsptInDt)
-					, $("<td>").html(v.hsptOutDt)
-					, $("<td>").html(v.wrRno+"호"+v.bedNo+"번")
-					, $("<td>").html(v.diseaseCd)
-				).data("list",v);
+				let trTag = $("<tr>").attr("class" , "smsTr").append(
+					$("<td>").html(i+1)
+					, $("<td>").html(v.smsTitle).attr("data-sttcd",v.sttCd).attr("data-smscont",v.smsCont)
+				).attr("sms",v);
 				trTags.push(trTag);
 			})
-			$("#tbdOutHsptList").html(trTags);
-// 			$("#outHsptListTbody").html(trTags);
+			$(".smsTbody").html(trTags);
 		}
 	})
 }	
+fn_smsRead();
+////////////// SMS 끝 ///////////////
 	
 	
-	
-// 입원 등록하기 form////
-$(".wardRegi").on("click",function(){
-	let wardRno = $("[name=wardRno]:checked").val();
-	let wardBedNo = $("[name=wardBedNo]:checked").val();
-	let chartNo = $("#chartNo").val();
-	let patientName = $("#patientName").val();
-	let hsptInDt = $("#hsptInDt").val();
-	let diseaseCd = $("#diseaseCd").val();
-	
-	let data ={
-		  hsptInDt : hsptInDt
-		, bedNo : wardBedNo
-		, wrRno : wardRno
-		, trmCd : chartNo
-		, diseaseCd : diseaseCd
-	}
-		
-	if(chartNo != ''){
-	$.ajax({
-		url : "${pageContext.request.contextPath}/receiption/wardRegist",
-		method : "post",
-		data : JSON.stringify(data),
-		beforeSend: function(xhr) {
-            xhr.setRequestHeader(header, token);
-    	},
-		contentType : "application/json;charset=utf-8",
-		dataType : "json",
-		success : function(result) { 			
-			swal("입원 등록 하였습니다","침상등록 성공하였습니다","success")
-			$("#chartNo").val("");
-			$("#patientName").val("");
-			$("#chargeOf").val("");
-			$("#hsptInDt").val("");
-			$("#diseaseCd").val("");
-			fn_wardList();
-		}					
-	});
-	} else {
-		swal('정보를 입력해주세요', "환자 정보가 없습니다.", "error");
-	}
-})
-	
-// 입원 환자 리스트에서 등록 테이블로 넣기 // 
-$(".operTr").on("click",function(){
-	let dt = new Date();
-	let year = dt.getFullYear();
-	let month = dt.getMonth()+1;
-	let day = dt.getDate();
-	
-	let format = year+"-"+(("00"+month.toString()).slice(-2))+"-"+(("00"+day.toString()).slice(-2));
-	
-	let trmCd = $(this).find("td").eq(0).html();
-	let paNo = $(this).find("td").eq(1).html();
-	let paName = $(this).find("td").eq(2).html();
-	let paReg = $(this).find("td").eq(3).html();
-	let empNm = $(this).find("td").eq(4).html();
-	let diseaseCd = $(this).find("td").eq(5).html();
-	$("#chartNo").val(trmCd);
-	$("#patientName").val(paName);
-	$("#chargeOf").val(empNm);
-	$("#hsptInDt").val(format);
-	$("#diseaseCd").val(diseaseCd);
-});
-///	리스트에 등록 끝 ///////
+
 
 
 // 신규 환자 등록 //
@@ -1376,6 +1555,66 @@ function fn_selectPatient(){
 //새로 등록한 환자 접수 테이블에 넣기	끝	//
 
 
+function fn_fisrtshowAllPatientList(){
+	$.ajax({
+		url : "${pageContext.request.contextPath}/receiption/fisrtshowAllPatientList",
+		method : "get",
+		beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+   		},
+		dataType : "json",
+		success : function(result) {
+			
+			let trTags = [];
+			$.each(result, function(i, v){
+//					console.log(v)
+				let trTag = $("<tr class='trClass'>")
+				.append(
+					$("<td>").html(v.paNo)
+					, $("<td>").html(v.paName)
+					, $("<td>").html(v.paReg)
+					, $("<td>").html(v.paHp)
+					, $("<td>").html(v.paSex)
+				).data("waitVO",v);
+				trTags.push(trTag);
+			})
+			$("#radiTBody").html(trTags);
+			
+			$(".trClass").on("click",function(){
+				
+				let $tr = $(this);
+				$tr.siblings('tr').removeClass("dblclick-on");
+//		 		rcpNo = $tr.data("rcpNo");
+				$tr.addClass("dblclick-on");
+				
+				let paNo = $(this).find('td').eq(0).html()
+				let paName = $(this).find('td').eq(1).html()
+				let paReg = $(this).find('td').eq(2).html()
+				let paHp = $(this).find('td').eq(3).html()
+				let paSex = $(this).find('td').eq(4).html()
+				
+				$("#regipaNo").val(paNo);
+				$("#regipaName").val(paName);
+				$("#regipaReg").val(paReg);
+				$("#regipaHp").val(paHp);
+				$("#regipaSex").val(paSex);
+				
+				/* 모달창으로 환자정보 전송 */
+				$('#proof_paName').val(paName);
+				$('#proof_paNo').val(paNo);
+				
+				/* 진료차트조회 */
+				loadTrmChart(paNo);
+				})
+			
+			
+			
+		}
+	})
+}
+
+fn_fisrtshowAllPatientList()
+
 // 접수 등록 //
 $(function(){
 	$("#regiBtn").on("click", function(){
@@ -1426,6 +1665,7 @@ function fn_insertHitsory(){
    		 },
 		success : function(result) {
 			fn_waitList()
+			
 		}
 	})
 }
@@ -1463,6 +1703,7 @@ function fn_waitList(){
 			});
 			if(officeCd == "DO101"){
 				$("#doc01_disp").html(trTags);
+				
 			} else if(officeCd == "DO102"){
 				$("#doc02_disp").html(trTags);
 			} else{
@@ -1493,10 +1734,10 @@ let $rdExfe = $("input[name=rdExfe]");
 let $rdMdfe = $("input[name=rdMdfe]");
 let $rdOperfe = $("input[name=rdOperfe]");
 
-let trmCd = -1;
+let trmCdAdd = -1;
 
 //접수환자 클릭 시 차트 수납 목록 표시
-let f_getChart = function(){
+let f_getChart = function(rcpNo){
 	$.ajax({
 		url : "${pageContext.request.contextPath}/receive/chart/" + rcpNo,
 		method : "get",
@@ -1527,13 +1768,13 @@ let f_setReceiveData = function(v_data){
 	let price1 = 0;
 	let price2 = 0;
 	
-	trmCd = v_data.trmCd;
+	trmCdAdd = v_data.trmCd;
 	
 	// 제증명및 기타
-	$rdEtcf.val(f_randPrice);
+	$rdEtcf.val(comma(f_randPrice()));
 	
 	// 수술 비, 물리치료비
-	$.each(data.diagHistoryVOList, function(i, v){
+	$.each(v_data.diagHistoryVOList, function(i, v){
 		console.log(i,v);
 		if(v.operTf == "Y"){
 			price1 += 121300;
@@ -1543,52 +1784,53 @@ let f_setReceiveData = function(v_data){
 		}
 		
 	});	
-	$rdOperfe.val(price1);
-	$rdPtfe.val(price2);
+	$rdOperfe.val(comma(price1));
+	$rdPtfe.val(comma(price2));
 	
 	// 수술했으면
 	if(price1 > 0){
 		// 입원비
-		$rdHpfe.val(174000);
+		$rdHpfe.val(comma(174000));
 		// 식대
-		$rdFdfe.val(9000);
+		$rdFdfe.val(comma(9000));
 		// 투약및조제료
-		$rdDrfe.val(10000);
+		$rdDrfe.val(comma(10000));
 		// 주사료
-		$rdIjfe.val(13000);
+		$rdIjfe.val(comma(13000));
 	}
 	
 	// 진료비
-	$rdCofe.val(v_randPrice());
+	$rdCofe.val(comma(f_randPrice()));
 	
 	// 영상검사료
 	price1=0;
-	$.each(data.filmOrderVOList,function(i, v){
+	$.each(v_data.filmOrderVOList,function(i, v){
 		price1 += 21000;
 	});
-	$rdExfe.val(price1);
+	$rdExfe.val(comma(price1));
 	
+	let totalResult = Number(uncomma($rdOperfe.val())) + Number(uncomma($rdPtfe.val())) +Number(uncomma($rdHpfe.val())) 
+	+Number(uncomma($rdFdfe.val())) + Number(uncomma($rdDrfe.val())) + Number(uncomma($rdIjfe.val())) 
+	+ Number(uncomma($rdCofe.val())) + Number(uncomma($rdExfe.val()));
 	
 	// 진료비 총액
-	$rdTtfe.val($rdOperfe.val() + $rdPtfe.val() + $rdHpfe.val() 
-			+ $rdFdfe.val() + $rdDrfe.val() + $rdIjfe.val() 
-			+ $rdCofe.val() + $rdExfe.val());
+	$rdTtfe.val(comma(totalResult));
 };
 
 // 수납 정보 입력
 let f_complete = function(){
 	
-	if(trmCd == -1){ return; } 
+	if(trmCdAdd == -1){ return; } 
 	let data = {
-			rdOperfe : $rdOperfe.val()
-			, rdPtfe : $rdPtfe.val()
-			, rdHpfe : $rdHpfe.val() 
-			, rdFdfe : $rdFdfe.val()
-			, rdDrfe : $rdDrfe.val()
-			, rdIjfe : $rdIjfe.val() 
-			, rdCofe : $rdCofe.val()
-			, rdExfe : $rdExfe.val()
-			, trmCd : trmCd 
+			rdOperfe : Number($rdOperfe.val())
+			, rdPtfe : Number($rdPtfe.val())
+			, rdHpfe : Number($rdHpfe.val()) 
+			, rdFdfe : Number($rdFdfe.val())
+			, rdDrfe : Number($rdDrfe.val())
+			, rdIjfe : Number($rdIjfe.val()) 
+			, rdCofe : Number($rdCofe.val())
+			, rdExfe : Number($rdExfe.val())
+			, trmCd : trmCdAdd 
 	};
 	
 	$.ajax({
@@ -1644,4 +1886,19 @@ function loadTrmChart(paNo){
 		}
 	});
 }
+
+$("#bed10101").on("click",function(){
+	$("#bed10101").attr("src","${pageContext.request.contextPath}/resources/images/ptbedfull.png")
+})
+
+function comma(number){
+	alert(number.toLocaleString('ko-KR'));
+	let result = number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+	return result;
+}
+function uncomma(str) {
+    str = String(str);
+    return str.replace(/[^\d]+/g, '');
+} 
+
 </script>

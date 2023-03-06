@@ -26,11 +26,18 @@ import kr.or.ddit.commons.vo.WorkingStatusVO;
 @Mapper
 public interface NoticeDAO {
 	/**
-	 * 공지사항 조회
+	 * 공지사항 리스트 조회
 	 * @param noticeVO
 	 * @return
 	 */
-	public List<NoticeVO> selectNoticeList (NoticeVO noticeVO);
+	public List<NoticeVO> selectNoticeList();
+	
+	/**
+	 * 공지사항 하나 조회
+	 * @param ntcCd
+	 * @return
+	 */
+	public NoticeVO selectNotice(int ntcCd);
 	
 	/**
 	 * 공지사항 Insert
@@ -38,7 +45,21 @@ public interface NoticeDAO {
 	 * @return
 	 */
 	public int insertNotice(NoticeVO noticeVO);
-
+	
+	/**
+	 * 공지사항 Update
+	 * @param noticeVO
+	 * @return
+	 */
+	public int updateNotice(NoticeVO noticeVO);
+	
+	/**
+	 * 공지사항 Delete
+	 * @param ntcCd
+	 * @return
+	 */
+	public int deleteNotice(int ntcCd);
+	
 	/**
 	 * 스케쥴 조회
 	 * @return List<WorkingStatusVO>

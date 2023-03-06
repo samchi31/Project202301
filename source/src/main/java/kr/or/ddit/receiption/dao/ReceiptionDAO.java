@@ -124,7 +124,7 @@ public interface ReceiptionDAO {
 	 * @param sttCd
 	 * @return
 	 */
-	public int deleteSms(SmsVO smsVO);
+	public int deleteSms(String sttCd);
 	
 	/**
 	 * SMS 문구 조회리스트
@@ -164,4 +164,10 @@ public interface ReceiptionDAO {
 	 * @return
 	 */
 	public int deleteHsptList(Integer hsptNo);
+
+	/**
+	 * 첫 화면 환자리스트
+	 * @return
+	 */
+	public List<ReceiptionVO> selectFisrtShowAllPatientLis();
 }

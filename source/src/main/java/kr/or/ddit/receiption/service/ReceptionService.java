@@ -105,7 +105,7 @@ public interface ReceptionService {
 	 * @param sttCd
 	 * @return
 	 */
-	public int removeSms(SmsVO smsVO);
+	public int removeSms(String sttCd);
 	
 	/**
 	 * SMS 문구 조회 리스트
@@ -147,6 +147,14 @@ public interface ReceptionService {
 	 * @return
 	 */
 	public int removeHsptList(Integer hsptNo);
+
+	/**
+	 * 환자리스트를 처음에 띄움
+	 * @return
+	 */
+	public List<ReceiptionVO> retrieveFisrtShowAllPatientList();
+
+	
 }
 
 

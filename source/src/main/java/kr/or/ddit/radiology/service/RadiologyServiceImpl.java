@@ -102,6 +102,13 @@ public class RadiologyServiceImpl implements RadiologyService {
 		//2이면 모두 ok
 		return result;
 	}
+	//대기히스토리 추가(촬영중->대기중, 영상촬영실->진료실)
+	@Override
+	public int createWaitList(Map<String, String> map){
+		int result = radiologyDAO.createWaitList(map);
+		
+		return result;
+	}
 
 	/* 
 	 * 환자번호에 해당하는 접수번호를 얻고
@@ -256,24 +263,6 @@ public class RadiologyServiceImpl implements RadiologyService {
 		
 		result = result + this.radiologyDAO.insertAttaches(filmAtchDetailVOList);
 		
-//		List<AttachVO> attachList = filmAttach.getAttachList();
-//		if(attachList == null || attachList.isEmpty())
-//			return 0;
-//		// 1. metadata 저장 - DB(FILE_ATCH)
-//		log.info("filmAttach : {}", filmAttach);
-//		log.info("attachList : {}", attachList);
-//		// 2. binary 저장 - Middle Tier : (D:\saveFiles)
-//		
-//		try {
-//			for (AttachVO attach : attachList) {
-//				attach.saveTo(saveFiles);
-//			}
-//			int rowcnt = attachDAO.insertAttatches(filmAttach);
-//			return rowcnt;
-//		}catch (IOException e) {
-//			throw new RuntimeException(e);
-//		}
-		
 		return result;
 	}
 	
@@ -327,6 +316,22 @@ public class RadiologyServiceImpl implements RadiologyService {
 	public List<FilmAtchDetailVO> retrieveFilmAtchDetailVO(String rcpNo) {
 		List<FilmAtchDetailVO> filmAtchDetailList = radiologyDAO.selectFilmAtchDetail(rcpNo);
 		return filmAtchDetailList;
+	}
+
+
+
+	@Override
+	public int retriveCheckFilmList() {
+		return radiologyDAO.selectCheckFilmList();
+	}
+
+
+
+
+	@Override
+	public int retriveRadiWaitList(Map<String, String> map) {
+
+		return radiologyDAO.selectRadiWaitList(map);
 	}
 
 }

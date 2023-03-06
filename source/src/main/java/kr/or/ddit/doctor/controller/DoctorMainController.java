@@ -79,6 +79,7 @@ public class DoctorMainController {
 		
 		log.info(" getChart - trmVO : {}", trmChartVO);
 		
+		
 		return trmChartVO;
 	}
 	
@@ -96,7 +97,7 @@ public class DoctorMainController {
 			// 수정
 			int rowcnt = service.modifyTrmChart(trmChart);
 			if(rowcnt > 0) {
-				msg = "수정 성공";
+				msg = "진료차트(오더) 작성 완료";
 			} else {
 				msg = "수정 실패";
 			}
@@ -105,7 +106,7 @@ public class DoctorMainController {
 			trmChart.setEmpNo(emp.getEmpNo());
 			int rowcnt = service.createTrmChart(trmChart);
 			if(rowcnt > 0) {
-				msg = "최초 삽입 성공";
+				msg = "진료차트(오더) 작성 성공";
 			} else {
 				msg = "최초 삽입 실패";
 			}
@@ -119,7 +120,6 @@ public class DoctorMainController {
 		// log.info("wait vo request : {}",waitHistoryVO);
 		int rowcnt = service.createWaitHistory(waitHistoryVO);
 		
-		// websocket으로 다른 접속자들한테도 알리기
 		String resp = null;
 		if(rowcnt > 0) {
 			resp= "대기 히스토리 성공";

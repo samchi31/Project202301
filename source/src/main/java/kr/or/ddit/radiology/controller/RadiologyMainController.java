@@ -1,11 +1,15 @@
 package kr.or.ddit.radiology.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.logging.log4j.core.config.plugins.PluginNode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,6 +66,7 @@ public class RadiologyMainController {
 	@PostMapping(value="/patientSearch", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List patientSearch(@RequestBody Map<String, String> map
 			,Model model) {
+			
 		log.info("searchOption : " + map.get("searchOption"));
 		log.info("searchWord :" + map.get("searchWord"));
 		
@@ -72,21 +77,6 @@ public class RadiologyMainController {
 		return list;
 	}
 	
-//	// 환자 검색
-//	@ResponseBody
-//	@PostMapping("/patientSearch")
-//	public List MripatientSearch(@RequestBody Map<String, String> map
-//			,Model model) {
-//		log.info("searchOption : " + map.get("searchOption"));
-//		log.info("searchWord :" + map.get("searchWord"));
-//		
-//		List<FilmCateVO> list = service.retrieveMriPatientSearchList(map);
-//		model.addAttribute("patientList",list);
-//		log.info("list : {}",list);
-//		
-//		return list;  
-//	}
-
 	
 	@ResponseBody
 	@GetMapping(value="/xrayList", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -96,14 +86,16 @@ public class RadiologyMainController {
 		return list;
 		
 	}
-
-
+	
+	
 	@ResponseBody
 	@GetMapping(value="/radiwaitinglist", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List RadiAllList() {
 		List<WaitHistoryVO> list = service.selectRadiAllList();
 		//MRI,URSONIC -> List<String> filmCdList로 들어감
 		List<WaitHistoryVO> listResult = new ArrayList<WaitHistoryVO>();
+		
+		
 		
 		for(WaitHistoryVO vo : list) {
 			String[] filmCdArr = vo.getFilmCd().split(",");
@@ -137,6 +129,34 @@ public class RadiologyMainController {
 		log.info("result : " + result);
 		
 		String msg = "";
+		
+		if(result > 0) {
+			msg = "성공";
+		} else {
+			msg = "실패";
+		}
+		return msg;
+	}
+	
+	// 바뀐 값 가져올 컨트롤러
+	@ResponseBody
+	@PostMapping(value="/insertWaitList", produces="text/plain;charset=UTF-8")
+	public String createWaitList(@RequestBody Map<String, String> map) {
+		String msg = "";
+		int result = 0;
+		log.info("map : " + map.get("rcpNo"));
+		
+		System.out.println(map.get("radioVal"));
+		int cnt = service.retriveCheckFilmList();
+		log.info("cnt : {} ", cnt);
+		if(cnt>0) {
+			msg = "실패"; 
+		}else {
+			result = service.createWaitList(map);
+		}
+		//result : 2이면 성공
+		log.info("result : " + result);
+		
 		
 		if(result > 0) {
 			msg = "성공";
@@ -214,8 +234,14 @@ public class RadiologyMainController {
 	// date 바뀐 값 가져올 컨트롤러
 	@ResponseBody
 	@PostMapping(value="/updateFilmDate", produces="text/plain;charset=utf-8")
-	public String updateFilmDate(FilmAtchVO filmatchvo) {
+	public String updateFilmDate(
+			FilmAtchVO filmatchvo
+			,HttpServletResponse resp
+			) throws IOException {
 		//map : {trmCd=TC0202, filmCd=MRI}
+		if(filmatchvo == null) {
+			resp.sendError(500);
+		}
 		log.info("vo : {}", filmatchvo);
 		
 		int result = service.modifyFilmDate(filmatchvo);
@@ -226,6 +252,7 @@ public class RadiologyMainController {
 			msg = "성공";
 		} else {
 			msg = "실패";
+			
 		}
 		return msg;
 	}
@@ -239,6 +266,17 @@ public class RadiologyMainController {
 		log.info("cat : {}", filmAtchDetailVOList);
 	return filmAtchDetailVOList;
 	
+	}
+	
+	@ResponseBody
+	@PostMapping("/countRadiWaitList")
+	public int countRadiWaitList(
+				@RequestBody Map<String, String> map
+			) {
+		int cnt = service.retriveRadiWaitList(map);
+		
+		
+		return cnt;
 	}
 }
 

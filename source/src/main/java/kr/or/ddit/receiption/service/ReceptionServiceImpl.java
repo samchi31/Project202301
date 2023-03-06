@@ -87,8 +87,8 @@ public class ReceptionServiceImpl implements ReceptionService {
 	}
 
 	@Override
-	public int removeSms(SmsVO smsVO) {
-		int cnt = DAO.deleteSms(smsVO);
+	public int removeSms(String sttCd) {
+		int cnt = DAO.deleteSms(sttCd);
 		return cnt;
 	}
 
@@ -126,6 +126,12 @@ public class ReceptionServiceImpl implements ReceptionService {
 	public int removeHsptList(Integer hsptNo) {
 		int cnt = DAO.deleteHsptList(hsptNo);
 		return cnt;
+	}
+
+	@Override
+	public List<ReceiptionVO> retrieveFisrtShowAllPatientList() {
+		List<ReceiptionVO> list = DAO.selectFisrtShowAllPatientLis();
+		return list;
 	}
 
 

@@ -16,4 +16,14 @@
 		<put-attribute name="content" value="/WEB-INF/jsp/index.jsp" />
 	</definition>
 	
+	<definition name="sub/noticeInsertTab" template="/WEB-INF/jsp/subTemplate.jsp" >
+		<put-attribute name="preScript" value="/includee/preScript.jsp" />  	
+		<put-attribute name="content" value="/WEB-INF/jsp/sub/noticeInsertTab.jsp" />
+	</definition>
+	
+	<definition name="sub/noticeDetail" template="/WEB-INF/jsp/subTemplate.jsp" >
+		<put-attribute name="preScript" value="/includee/preScript.jsp" />  	
+		<put-attribute name="content" value="/WEB-INF/jsp/sub/noticeDetail.jsp" />
+	</definition>
+	
 </tiles-definitions>

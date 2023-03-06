@@ -57,7 +57,7 @@
 		
 	#detailText{
 		min-height : 260px;
-		height : 42rem;
+		height : 41rem;
 	}
 	
 	input[type="number"]::-webkit-outer-spin-button,
@@ -98,13 +98,13 @@
 		<div class="grid-stack-item "
 			gs-x="0" gs-y="0" gs-w="4" gs-h="2" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid" >
-				<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="기초자료에서 증상과 상병을 클릭하여 작성할 수 있습니다. 진단에서 세부 오더를 내릴 수 있습니다." style="position: absolute; right: 16px;"></i>
+				<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="기초자료에서 증상과 상병을 클릭하여 작성할 수 있습니다. 진단에서 세부 오더를 내릴 수 있습니다. 더블클릭하여 항목을 삭제할 수 있습니다." style="position: absolute; right: 16px;"></i>
 				<div class="tab doc-diag">
 				    <ul class="tabnav">
 				      <li><a href="#sym">증상</a></li>
 				      <li><a href="#diag">진단</a></li>		      
 				    </ul>
-			    	<div class="tabcontentWrap tab-mid">
+			    	<div class="tabcontentWrap tab-mid scroller scrollshover">
 					    <div class="tabcontent">
 					    	<div id="sym">
 					    		<table class="table-blue">
@@ -150,13 +150,13 @@
 		<div class="grid-stack-item" 
 			gs-x="0" gs-y="2" gs-w="4" gs-h="3" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid" >
-				<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="기초자료에서 처방과 방사선을 클릭하여 작성할 수 있습니다. 처방에서 세부 작성을 할 수 있습니다. 촬영오더에서 결과를 확인 할 수 있습니다." style="position: absolute; right: 16px;"></i>
+				<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="기초자료에서 처방과 방사선을 클릭하여 작성할 수 있습니다. 처방에서 세부 작성을 할 수 있습니다. 촬영오더에서 결과를 확인 할 수 있습니다. 더블클릭하여 항목을 삭제할 수 있습니다." style="position: absolute; right: 16px;"></i>
 				<div class="tab doc-pre">
 				    <ul class="tabnav">
 				      <li><a href="#pre">처방</a></li>
 				      <li><a href="#film">촬영오더</a></li>		      
 				    </ul>
-			    	<div class="tabcontentWrap tab-bigger">
+			    	<div class="tabcontentWrap tab-bigger scroller scrollshover">
 					    <div class="tabcontent">
 					    	<div id="pre" >
 					    		<table class="table-blue">
@@ -213,7 +213,7 @@
 			gs-x="10" gs-y="0" gs-w="2" gs-h="2" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid " >
 				<h4 class="h4-title1">진료내역<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="환자의 과거 진료기록입니다. 클릭하여 상세 확인할 수 있습니다."></i></h4>
-				<div class="tabcontentWrap tab-mid">
+				<div class="tabcontentWrap tab-mid scroller scrollshover">
 			    	<div class="tabcontent">
 			    		<table class="table-blue">
 							<colgroup>
@@ -241,7 +241,7 @@
 				<div class="tabcontentWrap">
 					<div class="tabcontent">
 						<textarea rows="13" cols="" class="form-control" id="detailText" style="resize: none;"></textarea>
-						<input class="btn_blue" type="button" value="등록" />
+						<input class="btn_blue" type="button" value="등록" style="float: right; margin-top: 10px;"/>
 					</div>
 				</div>
 			</div>	
@@ -250,7 +250,8 @@
 			gs-x="7" gs-y="0" gs-w="3" gs-h="2" gs-no-resize="true" gs-no-move="true">
 			<div class="grid-stack-item-content card-grid" >
 				<h4 class="h4-title1">환자대기<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="더블클릭하여 진료할 환자를 선택합니다. 병과구분과 대기상태를 변경합니다. 환자번호를 눌러 환자상세 정보를 확인합니다."></i></h4>
-				<div class="tabcontentWrap tab-mid">
+				<button style="position: absolute;right: 50px;top: 21px;" class="btn_blue" id="btn_change">변경</button>
+				<div class="tabcontentWrap tab-mid scroller scrollshover">
 			    	<div class="tabcontent">
 						<table class="table-blue">
 							<colgroup>
@@ -309,7 +310,7 @@
 				      <li><a href="#radi">방사선</a></li>				      
 				      <li><a href="#group">그룹오더</a></li>				      
 				    </ul>
-				    <div class="tabcontentWrap tab-big">
+				    <div class="tabcontentWrap tab-big scroller scrollshover">
 					    <div class="tabcontent">
 					      <div id="dise">
 					      	<table class="table-blue">
@@ -1140,16 +1141,54 @@
 	});
 	
 	// 대기 상태 selectbox 바꾸기
-	let $divSelect = $(".divSelect");
-	let $changeWait = $(".statusSelect").on('change',function(){
-		//console.log($divSelect.find("option:selected").val(), $divSelect.find("option:selected").text());
-// 		let dvCd = $divSelect.find("option:selected").val();
-		let dvCd = $(this).parents("tr").find(".divSelect").val();
-		let stCd = $(this).find("option:selected").val();
-// 		console.log(dvCd, stCd);
-		// console.log($(this).parents().filter("tr").trigger("dblclick"));
+	let $divSelect = $(".divSelect").on('change',function(){
 		$(this).parents().filter("tr").trigger("dblclick");
-		console.log("rcpNo : ", rcpNo);
+	});
+	let $WaitSelect = $(".statusSelect").on('change',function(){
+// 		//console.log($divSelect.find("option:selected").val(), $divSelect.find("option:selected").text());
+// // 		let dvCd = $divSelect.find("option:selected").val();
+// 		let dvCd = $(this).parents("tr").find(".divSelect").val();
+// 		let stCd = $(this).find("option:selected").val();
+// // 		console.log(dvCd, stCd);
+// 		// console.log($(this).parents().filter("tr").trigger("dblclick"));
+		$(this).parents().filter("tr").trigger("dblclick");
+// 		console.log("rcpNo : ", rcpNo);
+// 		if(rcpNo != -1){
+// 			let url = "${pageContext.request.contextPath}/doctor/main/wait";
+// 			let data = {
+// 					"rcpNo" : rcpNo
+// 					, "waitstCd" : stCd
+// 					, "divCd" : dvCd
+// 			}
+// 			//console.log("wait data",data);
+// 			$.ajax({
+// 				url : url,
+// 				method : "post",
+// 				data : JSON.stringify(data),
+// 				dataType : "text",	// 받는거
+// 				contentType : "application/json;charset=UTF-8",	//보내는거
+// 				beforeSend: function(xhr) {
+// 			           xhr.setRequestHeader(header, token);
+// 			    },
+// 				success : function(resp) {
+// 					//console.log("wait resp",resp);
+// 				},
+// 				error : function(jqXHR, status, error) {
+// 					console.log(jqXHR);
+// 					console.log(status);
+// 					console.log(error);
+// 				}
+// 			});
+// 		}		
+	});
+	
+	let f_changeWaitStatus = () => {
+ 		//console.log($waitTable.find(".dblclick-on"));
+ 		let tr = $waitTable.find(".dblclick-on");
+ 		let dvCd = tr.find(".divSelect option:selected").val();
+ 		let stCd = tr.find(".statusSelect option:selected").val();
+		//console.log(dvCd, stCd, rcpNo);
+		
 		if(rcpNo != -1){
 			let url = "${pageContext.request.contextPath}/doctor/main/wait";
 			let data = {
@@ -1177,7 +1216,9 @@
 				}
 			});
 		}		
-	});
+	}
+	
+	let $btn_change = $("#btn_change").on('click', f_changeWaitStatus);
 
 	// 기초자료 그룹오더 리스트 리셋
 	let $groupBody = $("#group").find("tbody");

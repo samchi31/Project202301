@@ -34,19 +34,14 @@ text-decoration-line: none;
 		<div class="login">
 			<form method="post" action="<c:url value='/login'/>" id="loginForm">
 				<security:csrfInput />
-				<img
-					src="${pageContext.request.contextPath}/resources/images/loginLog.png"
-					class="imgPlace" /> <label for="chk" aria-hidden="true">Login</label>
-				<input type="text" name="empNo" placeholder="아이디"
-					class="login-input-tag" /> <input type="password" name="empPw"
-					placeholder="비밀번호" class="login-input-tag" />
-				<div
-					style="padding-top: 14px; padding-bottom: 12px; font-size: 14px;">
-					자동 로그인<input type="checkbox" name="rememberMe"
-						class="logincheckBox" />
+				<img src="${pageContext.request.contextPath}/resources/images/loginLog.png" class="imgPlace" /> 
+				<label for="chk" aria-hidden="true">Login</label>
+				<input type="text" name="empNo" placeholder="아이디" class="login-input-tag" /> 
+				<input type="password" name="empPw" placeholder="비밀번호" class="login-input-tag" />
+				<div style="padding-top: 14px; padding-bottom: 12px; font-size: 14px;"> 자동 로그인
+					<input type="checkbox" name="rememberMe" class="logincheckBox" />
 				</div>
-				<input type="submit" value="로그인" class="loginInput login-input-tag"
-					style="background-color: #F7AA00;" />
+				<input type="submit" value="로그인" class="loginInput login-input-tag" style="background-color: #F7AA00;" />
 			</form>
 			${exceptionMessage } ${error } ${message }
 			<div class="videoDiv">

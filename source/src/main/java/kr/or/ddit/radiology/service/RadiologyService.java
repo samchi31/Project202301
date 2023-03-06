@@ -134,11 +134,22 @@ public interface RadiologyService {
 	public int processAttachList(FilmAtchVO filmAtchVO);
 
 
-
+	/**
+	 * 대기히스토리 추가(촬영중->대기중, 영상촬영실->진료실)
+	 * @param map
+	 * @return
+	 */
+	public int createWaitList(Map<String, String> map);
 
 	public int modifyFilmDate(FilmAtchVO filmatchvo);
 
 
 	public List<FilmAtchDetailVO> retrieveFilmAtchDetailVO(String rcpNo);
+
+
+	public int retriveCheckFilmList();
+
+
+	public int retriveRadiWaitList(Map<String, String> map);
 
 }

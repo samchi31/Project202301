@@ -22,6 +22,11 @@
 		</where>      
 	</select>
 
+	<select id="selectFisrtShowAllPatientLis" resultType="ReceiptionVO">
+		select pa_no, pa_name, pa_reg, pa_sex,pa_hp,pa_zip,pa_add1,pa_add2
+		 from patient 
+	</select>
+
 
 	<insert id="insertReceiption" parameterType="kr.or.ddit.receiption.vo.RegistVO" >
 		insert into reception(
@@ -120,26 +125,30 @@
 	 -->
 	<select id="selectWaitList" parameterType="String" resultType="kr.or.ddit.receiption.vo.WaitListVO">
 		WITH T AS(
-		    select    b.office_nm
-		            , c.PA_NO, c.PA_NAME, c.PA_REG 
-		            ,(SELECT MAX(D.WAITST_CD) FROM WAITING_HISTORY D WHERE a.RCP_NO = d.RCP_NO) WAITST_CD
-		            , (SELECT E.WAITST_NM FROM WAIT_STATUS E WHERE E.WAITST_CD =(SELECT MAX(D.WAITST_CD) FROM WAITING_HISTORY D WHERE a.RCP_NO = d.RCP_NO)) WAITST_NM
-		    from reception a
-		            inner join doctor_office b
-		            on a.OFFICE_CD = B.OFFICE_CD
-		            inner join patient c
-		            on a.PA_NO = c.PA_NO
-		    where B.OFFICE_CD = #{officeCd, jdbcType=VARCHAR}
-		)
-		SELECT T.PA_NO, T.PA_NAME, T.PA_REG, T.WAITST_NM
+			    select    b.office_nm
+			            , c.PA_NO, c.PA_NAME, c.PA_REG, e.wait_no 
+			            ,(SELECT MAX(D.WAITST_CD) FROM WAITING_HISTORY D WHERE a.RCP_NO = d.RCP_NO) WAITST_CD
+			            , (SELECT E.WAITST_NM FROM WAIT_STATUS E WHERE E.WAITST_CD =(SELECT MAX(D.WAITST_CD) FROM WAITING_HISTORY D WHERE a.RCP_NO = d.RCP_NO)) WAITST_NM
+			    from reception a
+			            inner join doctor_office b
+			            on a.OFFICE_CD = B.OFFICE_CD
+			            inner join patient c
+			            on a.PA_NO = c.PA_NO
+	                    inner join waiting_history e
+	                    on e.rcp_no = a.rcp_no
+			    where B.OFFICE_CD = #{officeCd}
+			)
+		SELECT T.PA_NO, T.PA_NAME, T.PA_REG, T.WAITST_NM, T.WAIT_NO
 		FROM   T
 		WHERE  T.WAITST_CD = 'WS001'
+        order by T.wait_no desc
+        
 	</select>
 	
 	
 	<select id="selectOperationList" parameterType="String" resultType="SelectOperationListVO">
 		select a.PA_NAME, a.PA_NO, a.PA_REG
-		     , e.OPER_TF, d.emp_no, d.emp_nm, c.trm_cd, e.disease_cd
+		     , e.OPER_TF, d.emp_no, d.emp_nm, c.trm_cd, e.disease_cd , f.hspt_no
 		from patient a
 		    inner join reception b 
 		    on a.pa_no = b.pa_no
@@ -149,7 +158,11 @@
 		    on c.EMP_NO = d.emp_no
 		    inner join DIAGNOSIS_HISTORY e
 		    on c.TRM_CD = e.trm_cd
-		where e.OPER_TF = #{operTf}
+            left outer join hospitalization f
+            on e.disease_cd = f.disease_cd
+            and e.trm_cd = f.trm_cd
+		where e.OPER_TF = 'Y'
+        and f.hspt_no is null
 	</select>
 	
 	<insert id="insertWardRegist" parameterType="WardRegistVO">
@@ -165,8 +178,8 @@
 		) VALUES (
 		    seq_hospt_no.nextval
 		    ,'Y'
-		    ,#{hsptInDt}
-		    ,to_date(#{hsptInDt},'YYYY-MM-DD') +7 
+		    ,TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+		    ,to_date(SYSDATE,'YYYY-MM-DD') +7 
 		    ,#{bedNo}
 		    ,#{wrRno}
 		    ,#{trmCd}
@@ -241,8 +254,9 @@
 	
 	<update id="updateSms" parameterType="kr.or.ddit.receiption.vo.SmsVO">
 		UPDATE statement
-  		   SET	SMS_CONT = #{smsCont}
-		 WHERE	stt_cd =#{sttCd}
+  		   SET	SMS_CONT = #{smsCont},
+  		   		SMS_TITLE = #{smsTitle}
+		 WHERE	STT_CD =#{sttCd}
 	</update>
 	
 	<delete id="deleteSms" parameterType="String">

@@ -40,6 +40,8 @@
 		<intercept-url pattern="/" access="permitAll"/>
 		<intercept-url pattern="/login" access="isAnonymous()"/>
 		<intercept-url pattern="/menu" access="isAuthenticated()"/>
+		<intercept-url pattern="/notice/**" access="isAuthenticated()"/>
+		<intercept-url pattern="/employee/**" access="isAuthenticated()"/>
 		
 		<intercept-url pattern="/doctor/**" access="hasAnyRole('DOC', 'HEAD')"/>
 		<intercept-url pattern="/radiology/**" access="hasAnyRole('RAD', 'HEAD')"/>

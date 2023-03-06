@@ -2,9 +2,14 @@ package kr.or.ddit.commons.service;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +29,7 @@ public class MemberServiceImpl implements MemberService{
 	@Inject
 	private PasswordEncoder encoder;
 	
+	@PostConstruct
 	public void init() {
 		log.info("주입된 객체 : {}, {}, {}", memberDAO, authenticationManager, encoder);
 	}
@@ -48,14 +54,32 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	public ServiceResult modifyMember(EmployeeVO member) {
-		// TODO Auto-generated method stub
-		return null;
+		ServiceResult result = null;
+		Authentication inputData = new UsernamePasswordAuthenticationToken(member.getEmpNo(), member.getEmpPw());
+		try {
+			authenticationManager.authenticate(inputData);
+			int rowcnt = memberDAO.updateMember(member);
+			result = rowcnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;
+		}catch (UsernameNotFoundException e) {
+			result = ServiceResult.NOTEXIST;
+		}catch (AuthenticationException e) {
+			result = ServiceResult.INVALIDPASSWORD;
+		}
+		return result;
 	}
 
 	@Override
 	public ServiceResult removeMember(EmployeeVO member) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public ServiceResult matchPassword(String inputPass, String savedPass) {
+		if(! encoder.matches(inputPass, savedPass)) {
+			return ServiceResult.INVALIDPASSWORD;
+		}
+		return ServiceResult.OK;
 	}
 
 }

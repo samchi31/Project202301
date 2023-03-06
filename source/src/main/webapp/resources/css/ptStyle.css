@@ -6,6 +6,8 @@ button {
 
 .bedbutton {
 	background: none;
+    width: 100px;
+    height: 120px;
 }
 
 .table1 {
@@ -30,8 +32,8 @@ thead tr {
 	color: #ffffff
 }
 
-.active {
-	border: #4E73DF;
+.active2 {
+	outline: solid #4E73DF;
 }
 
 .scroller {
@@ -163,3 +165,19 @@ thead tr {
     left: 4%;
     width: 92%;
 }
+
+
+
+.table-blue tbody tr.dblclick-on{
+	background-color : antiquewhite;
+	opacity:0.8;
+	font-weight:bold;
+	color: #00334E;
+}	
+
+.table-blue tbody td.dblclick-on{
+	background-color : antiquewhite;
+	opacity:0.8;
+	font-weight:bold;
+	color: #00334E;
+}	

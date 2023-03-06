@@ -4,9 +4,16 @@
 
 	<!-- 공지사항 조회 -->
 	<select id="selectNoticeList" resultType="kr.or.ddit.commons.vo.NoticeVO">
-		SELECT *
-		FROM notice
+		SELECT a.NTC_CD, a.NTC_TITLE, a.NTC_ENDT, a.NTC_HIT, a.EMP_NO, b.EMP_NM
+		FROM notice a, EMPLOYEE b
+		where a.emp_no = b.emp_no
 		order by NTC_CD desc
+	</select>
+	
+	<select id="selectNotice" parameterType="int" resultType="kr.or.ddit.commons.vo.NoticeVO">
+		SELECT 	NTC_CD, NTC_TITLE, NTC_CONT, NTC_ENDT, NTC_HIT, EMP_NO
+		FROM 	notice
+		where 	NTC_CD = #{ntcCd} 
 	</select>
 	
 	<!-- 	공지사항 Insert -->
@@ -24,6 +31,15 @@
 		  )
 	</insert>
 	
+	<!-- 	공지사항 Update -->
+	<update id="updateNotice" parameterType="kr.or.ddit.commons.vo.NoticeVO" >
+		UPDATE 	notice
+		SET		 NTC_TITLE = #{ntcTitle,jdbcType=VARCHAR}
+		        , NTC_CONT = #{ntcCont,jdbcType=CLOB}
+		        , NTC_ENDT = SYSDATE
+		WHERE   ntc_cd = #{ntcCd,jdbcType=NUMERIC}
+	</update>
+	
 	<!-- 등록된 근무상태를 모두 조회 -->
 	<select id="selectScheduleList" resultType="kr.or.ddit.commons.vo.WorkingStatusVO">
 	/* kr.or.ddit.commons.dao.NoticeDAO.selectScheduleList */
@@ -40,6 +56,12 @@
 		INNER JOIN EMPLOYEE B ON A.EMP_NO = B.EMP_NO
 		LEFT OUTER JOIN WORKING_STATUS_DETAIL C ON A.WSD_CD = C.WSD_CD
 	</select>
+	
+	<!-- 	공지사항 Delete -->
+	<delete id="deleteNotice">
+		DELETE FROM notice
+		WHERE ntc_cd = #{ntcCd,jdbcType=NUMERIC}
+	</delete>
 	
 	<!-- 근무상태 등록 -->
 	<insert id="insertSchedule" parameterType="hashMap">

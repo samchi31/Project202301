@@ -188,9 +188,6 @@ function wardPatientDetail(hsptNo){
 		beforeSend: function(xhr) {
             xhr.setRequestHeader(header, token);
     	},
-		beforeSend: function(xhr) {
-            xhr.setRequestHeader(header, token);
-    	},
 		dataType : "json",
 		success : function(result) {
 			$('#hsptNo').val(result.hsptNo);

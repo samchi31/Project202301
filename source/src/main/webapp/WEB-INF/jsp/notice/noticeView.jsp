@@ -4,9 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
-<link href="${pageContext.request.contextPath }/resources/css/ptStyle.css" rel="stylesheet" />
-<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/translations/ko.js"></script>
+<%-- <link href="${pageContext.request.contextPath }/resources/css/ptStyle.css" rel="stylesheet" /> --%>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js"></script>
 <!-- 차트js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -28,8 +26,19 @@
   .ck-content { font-size: 12px; }
 /* 풀캘린더 */
 .scheduleCalendar{width: 46.7rem; height: 40.7rem;}
-</style>
 
+#noticeBody + thead tr {
+	background-color: #3161A3;
+	color: #ffffff
+}
+.table-blue{
+table-layout: auto;
+}
+.scroller {
+    height: 72%;
+ }
+
+</style>
 <!-- 그리드 스택  -->
 <div class="grid-stack">
 	<!-- 그리드스택 아이템 공지사항 -->
@@ -46,17 +55,15 @@
 					</select> 
 					<input name="searchBtn" class="radi-input" id="searchWord" type="text" value=""> 
 					<input class="btn-submit" id="Search" type="button" value="검색"> 
-					<input class="btn-submit" id="Write" type="button" value="글 쓰기" onclick="newWrite()">
+					<input class="btn-submit" id="write" type="button" value="글 쓰기" >
 				</form>
 			</div>
-
 			<div class="scroller">
 				<table class="table2 table-blue scrollshover">
 					<thead class="fixedHeader">
 						<tr>
 							<td>순번</td>
 							<td>제목</td>
-							<td>내용</td>
 							<td>등록일자</td>
 							<td>등록자</td>
 						</tr>
@@ -71,74 +78,16 @@
     								data-ntc-cont = "${noticeList.ntcCont}"
     								data-ntc-endt = "${noticeList.ntcEndt.substring(0,10)}"
     								data-ntc-hit = "${noticeList.ntcHit}"
-    								data-emp-no = "${noticeList.empNo}">${noticeList.ntcTitle}</button></td>
-								<td>${noticeList.ntcCont}</td>
+    								data-emp-nm = "${noticeList.empNm}">${noticeList.ntcTitle}</button></td>
 								<td>${noticeList.ntcEndt.substring(0,10)}</td>
-								<td>${noticeList.empNo}</td>
+								<td>${noticeList.empNm}</td>
 							</tr>
 						</c:forEach>
 					</tbody>
 				</table>
 			</div>
-
-			<div id="goodsShowDiv">
-				<div>
-					<h4 class="h4-title1">공지사항 작성하기</h4>
-					<hr>
-				</div>
-				<form id="writeForm" name="writeForm">
-					<div class="mb-3 row">
-						<label for="ptDocument-input" class="col-sm-3 col-form-label">제목</label>
-						<div class="col-sm-9">
-							<input type="text" class="form-control writeChartCd " name="ntcTitle" id="writeChartCd"> 
-							<input type="hidden" class="form-control writeChartCd " name="ntcTitle" id="writeChartCdA">
-						</div>
-					</div>
-					<div class="mb-3 row">
-						<label for="inputPassword" class="col-sm-3 col-form-label">내용</label>
-						<div class="col-sm-9">
-							<textarea class="form-control" name="pdCont" id="ntcCont"></textarea>
-						</div>
-					</div>
-					<div class="mb-3 row">
-						<label for="ptDocument-input" class="col-sm-3 col-form-label">등록자</label>
-						<div class="col-sm-9">
-						<input type="text" class="form-control writeChartCd " name="empNo" id="writeChartCdB"> 
-					</div>
-					</div>
-					<input class="form-input" id="writeInsert" type="button" value="등록" onclick="writeInsertClick();" />
-				</form>
-			</div>
 			
 			
-			<div id="updateDiv">
-				<div>
-					<h4 class="h4-title1">공지사항 수정하기</h4>
-					<hr>
-				</div>
-				<form id="writeForm" name="writeForm">
-					<div class="mb-3 row">
-						<label for="ptDocument-input" class="col-sm-3 col-form-label">제목</label>
-						<div class="col-sm-9">
-							<input type="text" class="form-control writeChartCd " name="ntcTitle" id="writeChartCd"> 
-							<input type="hidden" class="form-control writeChartCd " name="ntcTitle" id="writeChartCdA">
-						</div>
-					</div>
-					<div class="mb-3 row">
-						<label for="inputPassword" class="col-sm-3 col-form-label">내용</label>
-						<div class="col-sm-9">
-							<textarea class="form-control" name="pdCont" id="ntcCont"></textarea>
-						</div>
-					</div>
-					<div class="mb-3 row">
-						<label for="ptDocument-input" class="col-sm-3 col-form-label">등록자</label>
-						<div class="col-sm-9">
-						<input type="text" class="form-control writeChartCd " name="empNo" id="writeChartCdB"> 
-					</div>
-					</div>
-					<input class="form-input" id="writeInsert" type="button" value="수정" onclick="writeUpdateClick();" />
-				</form>
-			</div>
 		</div>
 	</div>
 	
@@ -256,10 +205,13 @@
 </div>
 <!-- *******************모달 끝************************* -->
 <script type="text/javascript">
+
 //공지사항 수정 Update
 function writeUpdateClick() {
 	alert("뀨");
 }
+
+
 $(".detailButtonClass").on("click", function(){
 	let ntcCd = $(this).data("ntcCd");
 	let ntcTitle = $(this).data("ntcTitle");
@@ -288,49 +240,11 @@ $(".detailButtonClass").on("click", function(){
 });
 
 
-//공지사항 작성 Insert
-function writeInsertClick(){
-	let ntcTitle = $("input[name=ntcTitle]").val();
-	let ntcCont = $("#ntcCont").val();
-	let data = {
-			"ntcTitle" : ntcTitle,
-			"ntcCont" : ntcCont
-	}
-	
-	$.ajax({
-		url : "/HurryUp/notice/noticeWriteInsert",
-		method : "post",
-		data : JSON.stringify(data),
-		contentType : "application/json;charset=utf-8",
-		dataType : "json",
-		beforeSend: function(xhr) {
-            xhr.setRequestHeader(header, token);
-    	},
-		success : function(resp) {
-			Swal.fire('공지사항 등록이 완료되었습니다', '  ', 'success');
-			$(".form-control").val(''); //등록 완료 후 input태그 안에 텍스트 제거
-			console.log("======resp : " + resp);
-		},
-		erro : function(jqXHR, status, error) {
-			console.log(jqXHR);
-			console.log(status);
-			console.log(error);
-
-		}
-	});
-}
-
-
-
 console.log("${selectNoticeList}"); //이엘테그 하려면 이렇게 써야함 
-
-//글쓰기 part hide / show 반복 start
-function newWrite() {
-	$("#goodsShowDiv").show();
-	$("#Write").click(function(event) {
-		$("#goodsShowDiv").toggle();
-	});
-}
+let $write = $("#write").on("click", function(){
+	window.open("${pageContext.request.contextPath}/notice/insert","go","top=100em,left=100em,width=970,height=688");
+	//서블릿 주소를 써야한다
+});
 
 function updateBox() {
 	$("#updateDiv").show();
@@ -343,10 +257,7 @@ function updateBox() {
 //그리드 스택 시작	
 GridStack.init();
 
-//ckeditor
-ClassicEditor.create( document.querySelector( '#ntcCont' ),{
-	language: "ko"
-} );
+
 
 /* 밀리세컨드를 날짜로 변환해주는 함수 */
 function convertDate(milliSecond) {
@@ -801,4 +712,40 @@ function f_sch(){
 }
 /* 창 열자마자 검색 한 번 */
 f_sch();
+
+let $noticeBody = $("#noticeBody").on("click",'tr',function(){
+	//console.log($(this).data("object"));
+	let data = $(this).data("object");
+	
+	window.open("${pageContext.request.contextPath}/notice/noticeDetail/"+data.ntcCd,"go","top=100em,left=100em,width=970,height=688");
+	
+});
+function f_noticeList(){
+	$.ajax({
+			url : "${pageContext.request.contextPath}/notice/notice"
+			, dataType : "json"
+			, success : function(resp){
+				console.log(resp);
+				$noticeBody.empty();
+				let trTags = [];
+				$.each(resp, function(i, data){
+					let tr = $("<tr>").append(
+						$("<td>").html(data["ntcCd"])
+						,$("<td>").html(data["ntcTitle"])
+						, $("<td>").html(data["ntcEndt"].substring(0,10))
+						, $("<td>").html(data["empNm"])
+					);
+					tr.data("object", data);
+					trTags.push(tr);
+				});
+				$noticeBody.append(trTags);
+			}, error : function(jqxhr, status, error){
+				console.log(jqxhr);
+				console.log(status);
+				console.log(error);
+			}
+		});
+}
+f_noticeList();
+
 </script>

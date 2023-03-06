@@ -53,4 +53,11 @@ public interface MemberService {
 	 * @return 존재 안함, 비번 인증 실패, 성공, 실패
 	 */
 	public ServiceResult removeMember(EmployeeVO member);
+	
+	/**
+	 * 비밀번호 여부
+	 * @param pw
+	 * @return
+	 */
+	public ServiceResult matchPassword(String pw, String savedPass);
 }

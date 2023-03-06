@@ -100,6 +100,13 @@ public interface RadiologyDAO {
 	public int changeWaitListFilmOrderInsert(Map<String, String> map);
 	
 	/**
+	 * 대기히스토리 추가(촬영중->대기중, 영상촬영실->진료실)
+	 * @param map
+	 * @return
+	 */
+	public int createWaitList(Map<String, String> map);
+	
+	/**
 	 * 환자 현재 진료 차트
 	 * @param rcpNo 접수번호
 	 * @return 환자의 진료차트
@@ -160,5 +167,9 @@ public interface RadiologyDAO {
 	public int updateFilmDate(FilmAtchVO filmatchVO);
 	
 	public List<FilmAtchDetailVO> selectFilmAtchDetail(String rcpNo);
+	
+	public int selectCheckFilmList();
+
+	public int selectRadiWaitList(Map<String, String> map);
 	
 }

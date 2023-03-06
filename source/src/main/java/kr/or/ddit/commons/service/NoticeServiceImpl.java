@@ -21,11 +21,31 @@ public class NoticeServiceImpl implements NoticeService {
 	NoticeDAO noticedao;
 	
 	@Override
-	public List<NoticeVO> selectNoticeList(NoticeVO noticeVO) {
-		List<NoticeVO> selectNoticeList = noticedao.selectNoticeList(noticeVO);
+	public List<NoticeVO> selectNoticeList() {
+		List<NoticeVO> selectNoticeList = noticedao.selectNoticeList();
 		log.info("selectNoticeList : {}" , selectNoticeList);
 		
 		return selectNoticeList;
+	}
+	
+	@Override
+	public NoticeVO retreiveNotice(int ntcCd) {
+		return noticedao.selectNotice(ntcCd);
+	}
+	
+	/**
+	 * 공지사항 삭제하기
+	 */
+	@Override
+	public int removeNotice(int ntcCd) {
+		return noticedao.deleteNotice(ntcCd);
+	}
+	/**
+	 * 공지사항 수정하기
+	 */
+	@Override
+	public int modifyNotice(NoticeVO noticeVO) {
+		return noticedao.updateNotice(noticeVO);
 	}
 	
 	/**
@@ -75,4 +95,8 @@ public class NoticeServiceImpl implements NoticeService {
 	public int retrieveCountReception(Map<String, String> map) {
 		return noticedao.selectCountReception(map);
 	}
+
+	
+
+	
 }

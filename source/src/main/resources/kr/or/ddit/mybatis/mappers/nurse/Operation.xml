@@ -20,6 +20,7 @@
 		    , D.PA_NAME
 		    , B.ICD_NAME
 		    , F.CEX_STATUS
+		    , E.op_reserv_starttime
 		FROM TRM_CHART A
 		INNER JOIN DIAGNOSIS_HISTORY B
 		ON A.TRM_CD = B.TRM_CD
@@ -33,7 +34,7 @@
 		ON C.PA_NO = D.PA_NO
 		WHERE B.OPER_TF = 'Y'
 		AND E.OP_NO IS NULL OR E.OP_STATE = 'F'
-		ORDER BY TRM_CD, DISEASE_CD 
+		ORDER BY A.TRM_CD, B.DISEASE_CD 
 	</select>
 	
 	<resultMap type="TrmChartVO" id="operationDetailMap" autoMapping="true">
@@ -132,6 +133,7 @@
 		INNER JOIN CLINICAL_EXAMINATION E
 		ON D.TRM_CD =E.TRM_CD AND D.DISEASE_CD = E.DISEASE_CD
 		WHERE CEX_STATUS = 'F'
+		ORDER BY E.CEX_NO DESC
 	</select>
 	
 	<select id="selectCexCompleteList" resultMap="PatientCexMap">
@@ -154,6 +156,7 @@
 		INNER JOIN CLINICAL_EXAMINATION E
 		ON D.TRM_CD =E.TRM_CD AND D.DISEASE_CD = E.DISEASE_CD
 		WHERE CEX_STATUS = 'T'
+		ORDER BY E.CEX_DATE DESC
 	</select>
 	
 	<select id="selectCexList" resultMap="PatientCexMap" parameterType="hashMap">
@@ -186,6 +189,7 @@
 				</when>
 			</choose>
 		</if>
+		ORDER BY E.CEX_DATE DESC
 	</select>
 	
 	<select id="selectOperationHistory" resultType="OperationInfomationVO" parameterType="hashMap">
@@ -207,17 +211,17 @@
 	INNER JOIN PATIENT D
 	ON C.PA_NO = D.PA_NO
 	WHERE E.OP_STATE = 'T'
-	ORDER BY OP_NO
 	<if test="searchOption!=null">
-			<choose>
-				<when test="searchOption=='no'">
-					AND D.PA_NO = #{searchWord}
-				</when>
-				<when test="searchOption=='name'">
-					AND D.PA_NAME LIKE '%' || #{searchWord} || '%'
-				</when>
-			</choose>
-		</if>
+		<choose>
+			<when test="searchOption=='no'">
+				AND D.PA_NO = #{searchWord}
+			</when>
+			<when test="searchOption=='name'">
+				AND D.PA_NAME LIKE '%' || #{searchWord} || '%'
+			</when>
+		</choose>
+	</if>
+	ORDER BY OP_NO
 	</select>
 	
 	<!-- 검사결과를 등록 -->
@@ -231,7 +235,6 @@
 		    , CEX_PFTS = #{cexPfts}
 		    , CEX_DATE = SYSDATE
 		    , CEX_NE = #{cexNe}
-		    , EMP_NO = 6
 		    , CEX_STATUS = 'T'
 		WHERE
 		    CEX_NO = #{cexNo}
@@ -240,17 +243,14 @@
 	<select id="selectCexDetail" parameterType="CexVO" resultType="CexVO">
 	/* kr.or.ddit.nurse.dao.OperationDAO.selectCexDetail */
 		SELECT
-		    A.cex_cbc
-		    , A.cex_ecg
-		    , A.cex_ua
-		    , A.cex_pfts
-		    , TO_CHAR(A.cex_date, 'YY/MM/DD') AS cex_date
-		    , A.cex_ne
-		    , A.emp_no
-		    , B.emp_nm
-		FROM clinical_examination A
-		INNER JOIN EMPLOYEE B
-		ON A.EMP_NO = B.EMP_NO
+		    cex_cbc
+		    , cex_ecg
+		    , cex_ua
+		    , cex_pfts
+		    , TO_CHAR(cex_date, 'YY/MM/DD') AS cex_date
+		    , cex_ne
+		    , emp_no
+		FROM clinical_examination
 		WHERE CEX_NO = #{cexNo}
 	</select>
 	
@@ -298,12 +298,14 @@
 		    , E.OP_START_TIME
 		    , E.OP_END_TIME
 		    , E.OP_RECORD
+		    , G.OP_KR_NM
+            , G.OP_EN_NM
 		FROM TRM_CHART A
 		INNER JOIN DIAGNOSIS_HISTORY B ON A.TRM_CD = B.TRM_CD
 		INNER JOIN OPERATION_INFOMATION E ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
-		INNER JOIN OPERATION G ON E.OP_CD = G.OP_CD
-		INNER JOIN OPERATION_JOIN H ON E.OP_NO = H.OP_NO
-		INNER JOIN EMPLOYEE I ON H.EMP_NO = I.EMP_NO
+		LEFT OUTER JOIN OPERATION G ON E.OP_CD = G.OP_CD
+		LEFT OUTER JOIN OPERATION_JOIN H ON E.OP_NO = H.OP_NO
+		LEFT OUTER JOIN EMPLOYEE I ON H.EMP_NO = I.EMP_NO
 		INNER JOIN RECEPTION C ON A.RCP_NO = C.RCP_NO
 		INNER JOIN PATIENT D ON C.PA_NO = D.PA_NO
 		WHERE E.OP_NO = #{opNo}
@@ -319,6 +321,7 @@
 		    , disease_cd
 		    , op_reserv_starttime
 		    , op_reserv_endtime
+		    , op_color_cd
 		) VALUES (
 		    'OP'||LPAD(SEQ_OPERATION.NEXTVAL, 4, '0')
 		    , 'F'
@@ -326,6 +329,7 @@
 		    , #{diseaseCd,jdbcType=VARCHAR}
 		    , TO_DATE(#{opReservStarttime,jdbcType=DATE}, 'YYYY-MM-DD HH24:MI:SS')
 		    , TO_DATE(#{opReservEndtime,jdbcType=DATE}, 'YYYY-MM-DD HH24:MI:SS')
+		    , 'D25565'
 		)
 	</insert>
 	
@@ -334,21 +338,25 @@
 		SELECT
 		    E.op_no
 		    , D.PA_NAME
-            , D.PA_REG
-            , E.OP_RESERV_STARTTIME
+		    , D.PA_REG
+		    , E.OP_RESERV_STARTTIME
+		    , G.OP_KR_NM
+		    , G.OP_EN_NM
 		FROM TRM_CHART A
 		INNER JOIN DIAGNOSIS_HISTORY B
-		ON A.TRM_CD = B.TRM_CD
+		    ON A.TRM_CD = B.TRM_CD
 		INNER JOIN OPERATION_INFOMATION E
-		ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
+		    ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
+		LEFT OUTER JOIN OPERATION G
+		    ON E.OP_CD = G.OP_CD
 		LEFT OUTER JOIN CLINICAL_EXAMINATION F
-		ON B.DISEASE_CD = F.DISEASE_CD AND B.TRM_CD = F.TRM_CD
+		    ON B.DISEASE_CD = F.DISEASE_CD AND B.TRM_CD = F.TRM_CD
 		INNER JOIN RECEPTION C
-		ON A.RCP_NO = C.RCP_NO
+		    ON A.RCP_NO = C.RCP_NO
 		INNER JOIN PATIENT D
-		ON C.PA_NO = D.PA_NO
+		    ON C.PA_NO = D.PA_NO
 		WHERE E.OP_STATE = 'F'
-		ORDER BY OP_NO
+		ORDER BY E.OP_RESERV_STARTTIME
 	</select>
 	
 	<select id="selectOperCompleteList" resultType="OperationInfomationVO">
@@ -370,7 +378,7 @@
 		INNER JOIN PATIENT D
 		ON C.PA_NO = D.PA_NO
 		WHERE E.OP_STATE = 'T'
-		ORDER BY OP_NO
+		ORDER BY E.OP_END_TIME DESC
 	</select>
 	
 	<resultMap type="PatientVO" id="PatientOperationMap" autoMapping="true">
