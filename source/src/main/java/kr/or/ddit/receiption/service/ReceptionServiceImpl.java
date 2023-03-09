@@ -18,9 +18,11 @@ import kr.or.ddit.receiption.vo.SelectPatientVO;
 import kr.or.ddit.receiption.vo.SmsVO;
 import kr.or.ddit.receiption.vo.WaitListVO;
 import kr.or.ddit.receiption.vo.WardRegistVO;
+import lombok.extern.slf4j.Slf4j;
 import kr.or.ddit.receiption.vo.SelectOperationListVO;
 
 @Service
+@Slf4j
 public class ReceptionServiceImpl implements ReceptionService {
 
 	@Inject
@@ -69,8 +71,9 @@ public class ReceptionServiceImpl implements ReceptionService {
 	}
 
 	@Override
-	public List<SelectOperationListVO> retrieveOperationList(String operTf) {
-		List<SelectOperationListVO> list = DAO.selectOperationList(operTf);
+	public List<SelectOperationListVO> retrieveOperationList() {
+		List<SelectOperationListVO> list = DAO.selectOperationList();
+		log.info("wardList>>>>>>>>ServiceImpl  {}", list);
 		return list;
 	}
 

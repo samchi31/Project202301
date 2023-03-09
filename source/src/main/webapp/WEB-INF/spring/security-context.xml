@@ -37,7 +37,6 @@
 		<logout logout-url="/logout" logout-success-url="/" invalidate-session="true"/>
 		
 		<!-- pattern="서블릿주소" -->		
-		<intercept-url pattern="/" access="permitAll"/>
 		<intercept-url pattern="/login" access="isAnonymous()"/>
 		<intercept-url pattern="/menu" access="isAuthenticated()"/>
 		<intercept-url pattern="/notice/**" access="isAuthenticated()"/>
@@ -49,6 +48,7 @@
 		<intercept-url pattern="/pt/**" access="hasAnyRole('PHY', 'HEAD')"/>
 		<intercept-url pattern="/nurse/**" access="hasAnyRole('CHN','NUR', 'HEAD')"/>
 		
+		<intercept-url pattern="/" access="permitAll"/>
 		
 		<csrf disabled="false"/>
 		<!-- <csrf disabled="true"/> -->

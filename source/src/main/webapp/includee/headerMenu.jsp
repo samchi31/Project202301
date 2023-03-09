@@ -96,7 +96,7 @@
          <figure class="user-photo-link"
             style="background-image: url(<c:url value='/resources/images/profile.png'/>);"></figure>
       </li>
-      <li class="user_info"><a href="" class="menu-link-user">${employeeVO.empNm}(${employeeVO.posiName})님
+      <li class="user_info"><a href="${pageContext.request.contextPath}/employee/mypage" class="menu-link-user">${employeeVO.empNm}(${employeeVO.posiName})님
             접속중입니다.</a></li>
    </ul>
 </div>

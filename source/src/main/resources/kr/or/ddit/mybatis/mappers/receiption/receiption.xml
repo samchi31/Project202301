@@ -127,8 +127,9 @@
 		WITH T AS(
 			    select    b.office_nm
 			            , c.PA_NO, c.PA_NAME, c.PA_REG, e.wait_no 
-			            ,(SELECT MAX(D.WAITST_CD) FROM WAITING_HISTORY D WHERE a.RCP_NO = d.RCP_NO) WAITST_CD
+			            , (SELECT MAX(D.WAITST_CD) FROM WAITING_HISTORY D WHERE a.RCP_NO = d.RCP_NO) WAITST_CD
 			            , (SELECT E.WAITST_NM FROM WAIT_STATUS E WHERE E.WAITST_CD =(SELECT MAX(D.WAITST_CD) FROM WAITING_HISTORY D WHERE a.RCP_NO = d.RCP_NO)) WAITST_NM
+			            , e.wait_dt
 			    from reception a
 			            inner join doctor_office b
 			            on a.OFFICE_CD = B.OFFICE_CD
@@ -138,17 +139,27 @@
 	                    on e.rcp_no = a.rcp_no
 			    where B.OFFICE_CD = #{officeCd}
 			)
-		SELECT T.PA_NO, T.PA_NAME, T.PA_REG, T.WAITST_NM, T.WAIT_NO
+		SELECT T.PA_NO, T.PA_NAME, T.PA_REG, T.WAITST_NM, T.WAIT_NO, T.WAIT_DT
 		FROM   T
 		WHERE  T.WAITST_CD = 'WS001'
+		AND  t.wait_dt = to_char(sysdate, 'YYYY-MM-DD')
         order by T.wait_no desc
         
 	</select>
 	
 	
-	<select id="selectOperationList" parameterType="String" resultType="SelectOperationListVO">
-		select a.PA_NAME, a.PA_NO, a.PA_REG
-		     , e.OPER_TF, d.emp_no, d.emp_nm, c.trm_cd, e.disease_cd , f.hspt_no
+	<select id="selectOperationList"  resultType="SelectOperationListVO">
+	/* kr.or.ddit.receiption.dao.ReceiptionDAO."selectOperationList" */
+		select a.PA_NAME
+				, a.PA_NO
+				, a.PA_REG
+			    , e.OPER_TF
+			    , d.emp_no
+			    , d.emp_nm
+			    , c.trm_cd
+			    , e.disease_cd 
+			    , f.hspt_no
+                , c.trm_dt
 		from patient a
 		    inner join reception b 
 		    on a.pa_no = b.pa_no
@@ -163,6 +174,8 @@
             and e.trm_cd = f.trm_cd
 		where e.OPER_TF = 'Y'
         and f.hspt_no is null
+        and b.rcp_date = to_char(SYSDATE,'YYYY-MM-DD')
+        order by c.trm_dt desc
 	</select>
 	
 	<insert id="insertWardRegist" parameterType="WardRegistVO">
@@ -199,11 +212,12 @@
 		    disease_cd
 		FROM
 		    hospitalization
+	    order by hspt_no desc
 	</select>
 	
 	
 	<select id="selectOutHsptList" resultType="OutHospitalizationVO">
-		select A.PA_NAME, B.RCP_NO, C.TRM_CD
+		select A.PA_NAME, B.RCP_NO, C.TRM_CD, A.PA_REG
 				, to_char(D.HSPT_IN_DT,'YYYY-MM-DD') as HSPT_IN_DT, to_char(D.HSPT_OUT_DT,'YYYY-MM-DD') as HSPT_OUT_DT, D.HSPT_NO
 				, D.BED_NO, D.WR_RNO,D.DISEASE_CD
 		FROM PATIENT A
@@ -214,6 +228,7 @@
 			INNER JOIN HOSPITALIZATION D
 			ON C.TRM_CD = D.TRM_CD
 		WHERE D.HSPT_YN = 'Y'
+        order by hspt_no desc
 	</select>
 	
 	<update id="updateCancleHspt" parameterType="Integer">

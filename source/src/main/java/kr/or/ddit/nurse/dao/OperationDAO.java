@@ -71,7 +71,7 @@ public interface OperationDAO {
 
 	public List<OperationInfomationVO> selectOperCompleteList();
 
-	public List<OperationInfomationVO> selectOperationHistory();
+	public List<OperationInfomationVO> selectOperationHistory(Map<String, String> map);
 
 
 }

@@ -620,7 +620,7 @@
 		}
 		return false;
 	});
-	$basicNavs.eq(0).click();
+	
 	
 	let $diagNavs = $('.doc-diag li a').click(function () {
 		$diagContents.hide().filter(this.hash).fadeIn();
@@ -652,6 +652,7 @@
 		return false;
 	});
 	$preNavs.eq(0).click();
+	$basicNavs.eq(0).click();
 	
 	// 진료차트 테이블 더블클릭
 	let tbody_diag = $diagContents.filter("#diag").find("tbody").on('dblclick','tr', function(){

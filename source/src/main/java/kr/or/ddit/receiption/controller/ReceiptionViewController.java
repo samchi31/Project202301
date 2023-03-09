@@ -68,10 +68,11 @@ public class ReceiptionViewController {
 		return viewName;
 	}
     
-    @GetMapping("/wardRegistList")
+    @GetMapping(value="/wardRegistList", produces="application/json;charset=UTF-8")
     @ResponseBody
     public List<SelectOperationListVO> wardRegistList() {
-    	List<SelectOperationListVO> operationList = service.retrieveOperationList("Y");
+    	List<SelectOperationListVO> operationList = service.retrieveOperationList();
+    	log.info("wardList>>>>>>>>  {}", operationList);
     	return operationList;
     }
     
@@ -82,6 +83,12 @@ public class ReceiptionViewController {
     	return list;
     }
     
+    @PostMapping("/smsReceiverList")
+    @ResponseBody
+    public List<ReceiptionVO> smsReceiverList(){
+    	List<ReceiptionVO> list = service.retrieveFisrtShowAllPatientList();
+    	return list;
+    }
     
     @ResponseBody
     @PostMapping("/patientSearch")

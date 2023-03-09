@@ -103,7 +103,7 @@ public interface ReceiptionDAO {
 	 * @param operTf
 	 * @return
 	 */
-	public List<SelectOperationListVO> selectOperationList(String operTf);
+	public List<SelectOperationListVO> selectOperationList();
 	
 	/**
 	 * SMS 문구 등록

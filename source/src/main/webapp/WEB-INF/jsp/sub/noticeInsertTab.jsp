@@ -9,8 +9,7 @@
 <style>
 body {
 		padding : 70px;
-		font-size: 12px;
-		text-align: center;	
+		font-size: 14px;
 }
 
 </style>
@@ -41,9 +40,12 @@ body {
 <script>
 //ckeditor
 CKEDITOR.replace('ntcCont', {
-	//filebrowserUploadUrl: '${pageContext.request.contextPath}/board/boardImage.do?command=QuickUpload&type=Files&responseType=json'
+// 	filebrowserUploadUrl: '${pageContext.request.contextPath}/board/boardImage.do?command=QuickUpload&type=Files&responseType=json'
 });
 
+CKEDITOR.config.extraPlugins = "base64image";
+
+//ㅋㅋ작업중
 let ntcTitle = $("input[name=ntcTitle]");
 let formcontol =$(".form-control");
 

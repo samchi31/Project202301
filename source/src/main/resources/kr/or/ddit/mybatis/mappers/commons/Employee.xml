@@ -3,20 +3,25 @@
 <mapper namespace="kr.or.ddit.commons.dao.MemberDAO">
 
 	<select id="selectMember" parameterType="int" resultType="EmployeeVO">
-		select 	a.*, b. posi_name
-		from 	employee a left outer join position b on (a.posi_cd = b.posi_cd)
-		where 	a.emp_no = #{empNo}
+		select 	
+			a.*
+			, b.posi_name
+			, C.JOB_NAME
+		from employee a 
+		left outer join position b on (a.posi_cd = b.posi_cd)
+		left outer join job c on (A.JOB_CD = C.JOB_CD)
+		where a.emp_no = #{empNo}
 	</select>
 	
 	<update id="updateMember" parameterType="EmployeeVO">
 		update	employee
 		set		emp_nm = #{empNm}
-<!-- 	    		emp_pw = #{empPw} -->
 	    		, emp_tel = #{empTel}
 	    		, emp_mail = #{empMail}
-	    		, emp_zip = #{empZip}
 	    		, emp_add1 = #{empAdd1}
 	    		, emp_add2 = #{empAdd2}
 		where	emp_no = #{empNo}
+<!-- 	    		emp_pw = #{empPw} -->
+<!-- 	    		, emp_zip = #{empZip} -->
 	</update>
 </mapper>

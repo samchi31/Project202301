@@ -4,7 +4,7 @@
 	
 	<!-- 물리치료실 대기환자 조회 -->
 	<select id="selectPtRoomList" resultType="kr.or.ddit.commons.vo.PtAssinmentVO">
-		 WITH testView AS (
+		  WITH testView AS (
 		    				SELECT  RCP_NO, MAX(WAIT_NUM) AS WAIT_NUM
 		    				 FROM  WAITING_HISTORY
 		    				 GROUP  BY  RCP_NO	)
@@ -12,6 +12,7 @@
 		FROM    V_WAIT_HIST A   INNER JOIN  testView B ON(A.RCP_NO = B.RCP_NO AND A.WAIT_NUM = B.WAIT_NUM)
 		WHERE   DIV_CD = 'DV003'
         AND WAITST_CD = 'WS001'
+        AND TO_CHAR(RCP_DATE,'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD')
 	</select>
 	
 	<!-- 물리치료실 bed 상태 -->

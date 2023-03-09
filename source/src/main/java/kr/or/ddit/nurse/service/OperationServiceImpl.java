@@ -156,7 +156,7 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public List<OperationInfomationVO> retrieveOperHistory(Map<String, String> map) {
-		return operationDAO.selectOperationHistory();
+		return operationDAO.selectOperationHistory(map);
 	}
 
 

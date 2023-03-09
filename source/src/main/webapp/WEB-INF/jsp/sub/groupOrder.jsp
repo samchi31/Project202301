@@ -410,6 +410,9 @@ const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstra
 			data : JSON.stringify(f_getData()),
 			contentType : "application/json;charset=UTF-8",
 			dataType : "text",
+			beforeSend: function(xhr) {
+		           xhr.setRequestHeader(header, token);
+		    },
 			success : function(resp) {
 				swal({title:resp, icon:"success"});
 				// 그룹오더 목록 리셋
@@ -460,6 +463,9 @@ const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstra
 					data : JSON.stringify(f_getData()),
 					contentType : "application/json;charset=UTF-8",
 					dataType : "text",
+					beforeSend: function(xhr) {
+				           xhr.setRequestHeader(header, token);
+				    },
 					success : function(resp) {
 						swal({title:resp, icon:"success"});
 						// 그룹오더 목록 수정

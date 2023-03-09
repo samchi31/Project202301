@@ -242,7 +242,7 @@ $(".detailButtonClass").on("click", function(){
 
 console.log("${selectNoticeList}"); //이엘테그 하려면 이렇게 써야함 
 let $write = $("#write").on("click", function(){
-	window.open("${pageContext.request.contextPath}/notice/insert","go","top=100em,left=100em,width=970,height=688");
+	window.open("${pageContext.request.contextPath}/notice/insert","go","top=100em,left=100em,width=750,height=710");
 	//서블릿 주소를 써야한다
 });
 
@@ -698,8 +698,9 @@ function f_sch(){
             	let newsDate = convertDate(item[ranNum].pubDate);
             	
             	trTag = $('<tr>').append(
-            				$('<td>').append(
-            					$('<a>').attr({"href":item[ranNum].link,"target":"_blank"}).html(item[ranNum].title)
+            				$('<td>').attr("style","text-align:left;").append(
+            					$('<a>').attr({"href":item[ranNum].link
+            								, "target":"_blank"}).html(item[ranNum].title)
             				),
             				$('<td>').html(newsDate)
             			);
@@ -717,7 +718,7 @@ let $noticeBody = $("#noticeBody").on("click",'tr',function(){
 	//console.log($(this).data("object"));
 	let data = $(this).data("object");
 	
-	window.open("${pageContext.request.contextPath}/notice/noticeDetail/"+data.ntcCd,"go","top=100em,left=100em,width=970,height=688");
+	window.open("${pageContext.request.contextPath}/notice/noticeDetail/"+data.ntcCd,"go","top=100em,left=100em,width=750,height=710");
 	
 });
 function f_noticeList(){

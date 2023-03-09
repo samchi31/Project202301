@@ -16,4 +16,5 @@ public class SelectOperationListVO {
 	private String empNm;
 	private String trmCd;
 	private String diseaseCd;
+	private Integer hsptNo;
 }

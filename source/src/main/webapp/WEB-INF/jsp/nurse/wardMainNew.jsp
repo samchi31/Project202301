@@ -36,13 +36,10 @@
     left: 6%;
     width: 96%;
 }
-.btn_blue {
-	position: absolute;
-    left: 71.5%;
-}
-.btn_blue2{
-	position: absolute;
-    left: 78.5%;
+
+.leftBtn{
+	position:absolute; 
+	left:71.8%;
 }
 /* 스크롤러 */
 .patientScroller{width: 27.1rem;height: 36.6rem;}
@@ -258,7 +255,7 @@
 							<textarea class="form-control" id="diet_ne"></textarea>
 						</div>
 					</div>
-					<input class="btn_blue" id="diet-register" type="button" value="등록" onclick="diet_insert()">
+					<input class="btn_blue leftBtn" id="diet-register" type="button" value="등록" onclick="diet_insert()">
 				</form>
 		      </div>
 		      <div id="io">
@@ -327,7 +324,7 @@
 <!-- 							<textarea class="form-control" id="io_textarea"></textarea> -->
 <!-- 						</div> -->
 <!-- 					</div> -->
-					<input class="btn_blue" id="io-register" type="button" value="등록" onclick="io_detail_insert()">
+					<input class="btn_blue leftBtn" id="io-register" type="button" value="등록" onclick="io_detail_insert()">
 				</form>
 		      </div>
 		      <div id="vital">
@@ -400,7 +397,7 @@
 							<textarea class="form-control" id="vital_textarea"></textarea>
 						</div>
 					</div>
-				<input class="btn_blue" id="vital-register" type="button" value="등록" onclick="vital_insert()">
+				<input class="btn_blue leftBtn" id="vital-register" type="button" value="등록" onclick="vital_insert()">
 				</form>
 		      </div>
 		      <div id="nursingrecord">
@@ -436,7 +433,7 @@
 							<textarea class="form-control" id="nursingRecord_textarea"></textarea>
 						</div>
 					</div>
-					<input class="btn_blue" id="nursingRecord-register" type="button" value="등록" onclick="nrec_insert()">
+					<input class="btn_blue leftBtn" id="nursingRecord-register" type="button" value="등록" onclick="nrec_insert()">
 				</form>
 		      </div>
 		    </div>

@@ -23,8 +23,8 @@
 	<div class="content">
 		<img src="${pageContext.request.contextPath }/resources/images/Hurry UPOP70.png" style="
 		    position: fixed;
-    		left: 70%;
-   			top: 90%;
+    		left: 59%;
+    		top: 88%;
     		z-index: -10;"/>
 		<tiles:insertAttribute name="content" />
 	</div>

@@ -83,7 +83,7 @@ public interface ReceptionService {
 	 * @param operTf
 	 * @return
 	 */
-	public List<SelectOperationListVO> retrieveOperationList(String operTf);
+	public List<SelectOperationListVO> retrieveOperationList();
 	
 	/**
 	 * SMS 문구 등록

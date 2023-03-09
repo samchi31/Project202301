@@ -10,7 +10,17 @@
 		order by NTC_CD desc
 	</select>
 	
-	<select id="selectNotice" parameterType="int" resultType="kr.or.ddit.commons.vo.NoticeVO">
+	<resultMap type="kr.or.ddit.commons.vo.NoticeVO" id="noticeMap">
+		<result property="ntcCd" column="NTC_CD" />
+		<result property="ntcTitle" column="NTC_TITLE" />
+		<result property="ntcCont" column="NTC_CONT" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="ntcEndt" column="NTC_ENDT" />
+		<result property="ntcHit" column="NTC_HIT" />
+		<result property="empNo" column="EMP_NO" />
+	</resultMap>
+	
+	<!-- 공지사항 상세 -->
+	<select id="selectNotice" parameterType="int" resultMap="noticeMap">
 		SELECT 	NTC_CD, NTC_TITLE, NTC_CONT, NTC_ENDT, NTC_HIT, EMP_NO
 		FROM 	notice
 		where 	NTC_CD = #{ntcCd} 

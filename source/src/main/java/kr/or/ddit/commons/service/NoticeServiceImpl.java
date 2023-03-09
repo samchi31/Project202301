@@ -1,10 +1,12 @@
 package kr.or.ddit.commons.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import kr.or.ddit.commons.dao.NoticeDAO;
@@ -19,6 +21,10 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	@Inject
 	NoticeDAO noticedao;
+	
+	@Value("#{appInfo.noticeFiles}")
+	private File noticeFiles;
+	
 	
 	@Override
 	public List<NoticeVO> selectNoticeList() {

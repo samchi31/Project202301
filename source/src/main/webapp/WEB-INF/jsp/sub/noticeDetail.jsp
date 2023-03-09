@@ -9,9 +9,11 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 <style>
 body {
-		padding : 70px;
-    	font-size: 12px;
-    	text-align: center;
+		padding-top : 70px;
+		padding-bottom : 70px;
+    	font-size: 14px;
+		padding-right: 66px;
+    	padding-left: 66px;
 }
 .btn_blue {
 	width: 5.25rem;
@@ -27,6 +29,17 @@ body {
  #updateDiv{
         display:none
     }
+.buttonDiv {
+    position: absolute;
+    left: 68%;
+    top: 12%;
+}
+#writeUpdate {
+position: absolute;
+    top: 12%;
+    left: 80%;
+
+}
 </style>
 <div id="noticeDetailDiv">
 	<h4 class="h4-title1" style="color: #4E73DF;">공지사항 상세</h4>
@@ -36,8 +49,10 @@ body {
 	<security:authorize access="isAuthenticated()">
 		<security:authentication property="principal.realMember" var="employeeVO" />
 		<c:if test="${employeeVO.empNo eq notice.empNo }">
-			<button class="btn btn-priamary" id="updateButton">수정</button>
-			<button class="btn btn-priamary" id="writedelete" type="submit" value="삭제">삭제</button>
+			<div class="buttonDiv">
+				<button class="btn_blue" id="updateButton" >수정</button>
+				<button class="btn_blue" id="writedelete" type="submit" value="삭제">삭제</button>
+			</div>
 		</c:if>
 	</security:authorize>
 </div>
@@ -64,7 +79,7 @@ body {
 		<input class="form-input" id="writeUpdate" type="submit" value="수정"/>
 	</form:form>
 </div>
-
+<hr>
 <script>
 //ckeditor
 CKEDITOR.replace('ntcCont', {

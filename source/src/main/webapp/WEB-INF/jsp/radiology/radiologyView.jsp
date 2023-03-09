@@ -223,7 +223,7 @@ p {
 						<div style="margin-top: 30px;">
 							<label class="form-label" style="margin-top: 3px">기록</label> 
 							<textarea name="mediRecord" class="form-control form-control-sm" id="mediRecord_offcanvas"
-								readonly="readonly" style="font-size: 12px; width: 96%; height: 80px;" disabled></textarea> 
+								readonly="readonly" style="font-size: 12px; width: 96%; height: 46px;" disabled></textarea> 
 						</div>
 						<div class="offcanvas-footer col-12" id="filmInsertBtn">
 							<button type="button" class="btn_blue" style="float: right; margin-top: 10px;">저장</button>
@@ -244,7 +244,7 @@ p {
 		</div>
 	</div>
 </div>
-<!-- Modal -->
+<!-- Modal --> 
 <div class="modal fade modal-sm" id="layerpop">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
@@ -280,10 +280,6 @@ p {
 							<input class="form-check-input" type="radio" id="flexRadioDefault2" name="filmCd" value="URSONIC" readonly>
 							<label class="form-check-label" for="flexRadioDefault2"> <span style="font-size: 14px;">초음파</span> </label>
 						</div>
-<!-- 						<div> <input type="radio" name="filmCd" value="X-RAY" readonly /> <span style="font-size: 14px;">X-RAY</span></div><br>  -->
-<!-- 						<div> <input type="radio" name="filmCd" value="MRI" readonly /> <span style="font-size: 14px;">MRI</span></div><br>  -->
-<!-- 						<div> <input type="radio" name="filmCd" value="CT" readonly /> <span style="font-size: 14px;">CT</span></div><br>  -->
-<!-- 						<div> <input type="radio" name="filmCd" value="URSONIC" readonly /> <span style="font-size: 14px;">초음파</span></div> -->
 					</fieldset>
 				</div>
 				<!-- Footer -->

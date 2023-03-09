@@ -1709,6 +1709,7 @@ $('#operationEnd').on('click',function(){
 							$('#oper-detail-endTime').val(v_endTime);
 							/* 수술예정 리스트 반영 */
 							operReservList();
+							operCompleteList();
 							swal("수술종료","수술이 종료되었습니다. 수고하셨습니다.", "success");
 						},
 						error : function(jqXHR, status, error) {
@@ -2001,9 +2002,6 @@ $("#SearchOperation").on("click", function(){
 			searchWord:searchWord
 	}
 	
-	console.log(searchOption)
-	console.log(searchWord)
-
 	$.ajax({
 		url : "operHistorySearch",
 		method : "post",
