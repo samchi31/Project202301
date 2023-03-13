@@ -31,5 +31,7 @@ public class EmployeeVO {
 	private String jobName;
 	private String posiName;
 	
+	private String authPass;
+	
 	private List<VitalVO> vitalList;
 }

@@ -3,6 +3,8 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="security"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<!-- 주소 API -->
 <style>
 body {
     background-color: #f2f6ff;
@@ -43,7 +45,7 @@ form.form1 {
 	border-radius: 20px;
 	outline: none;
 	box-sizing: border-box;
-	border: 2px solid rgba(0, 0, 0, 0.02);
+	border: 2px solid rgba(0, 0, 0, 0.10);
 	margin-bottom: 50px;
 	margin-left: 46px;
 	text-align: center;
@@ -98,15 +100,11 @@ th {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sign in</title>
 </head>
-
-<body>
   <div id="div_pw" class="main" style="margin-top: 263px;">
     <p class="sign" align="center">비밀번호를 다시 입력해주세요.</p>
     	<input id="pwText" class="pass" type="password" align="center" placeholder="Password" style="margin-top: 32px;">
     	<div><button id="btn_pw" class="a_btn" style="margin-left: 164px; border-radius: 13px;">입력</button></div>
    </div>
-</body>
-
 </html>
 <!-- 	<div id="div_update" class="container"> -->
 <!-- 		<div class="main-body"> -->
@@ -161,10 +159,10 @@ th {
 									
 									<tr><th>사번</th><td><input class="form-control" type="number"  required name="empNo" value="${employee.empNo}" readonly /><span class="text-danger">${errors.empNo}</span></td></tr>
 									<tr><th>성명</th><td><input class="form-control" type="text" name="empNm" value="${employee.empNm}" /><span class="text-danger">${errors.empNm}</span></td></tr>
-									<tr><th>새비밀번호</th><td><input class="form-control" type="text" name="empPw2" /><input type="hidden" name="empPw" value="${employee.empPw}"/></td></tr>
+									<tr><th>새비밀번호</th><td><input class="form-control" type="password" name="empPw"/></td></tr>
 									<tr><th>전화번호</th><td><input class="form-control" type="text" name="empTel" value="${employee.empTel}" /><span class="text-danger">${errors.empTel}</span></td></tr>
 									<tr><th>이메일</th><td><input class="form-control" type="text" name="empMail" value="${employee.empMail}" /><span class="text-danger">${errors.empMail}</span></td></tr>
-									<tr><th>주소</th><td><input class="form-control" type="text" name="empAdd1" value="${employee.empAdd1}" /><span class="text-danger">${errors.empAdd1}</span></td></tr>
+									<tr><th>주소</th><td><div class="input-group"><input class="form-control" type="text" name="empAdd1" value="${employee.empAdd1}" /><button id="address_kakao" class="btn btn-outline-secondary">주소찾기</button></div><span class="text-danger">${errors.empAdd1}</span></td></tr>
 									<tr><th>상세주소</th><td><input class="form-control" type="text" name="empAdd2" value="${employee.empAdd2}" /><span class="text-danger">${errors.empAdd2}</span></td></tr>
 									<tr><th>직무코드</th><td><input class="form-control" type="text" name="jobCd" value="${employee.jobCd}" readonly disabled/><span class="text-danger">${errors.jobCd}</span></td></tr>
 									<tr><th>직급코드</th><td><input class="form-control" type="text" name="posiCd" value="${employee.posiCd}" readonly disabled/><span class="text-danger">${errors.posiCd}</span></td></tr>
@@ -185,9 +183,11 @@ th {
 
 <script>
 
+
+
 	function goBack(){
 	    window.history.back();
-	 }
+	}
 
 	let empNo = $("[name=empNo]");
 	let empNm = $("[name=empNm]");
@@ -207,19 +207,30 @@ th {
 	let div_pw = $("#div_pw");
 	let div_update = $("#div_update");
 	div_update.hide();
+	
+	let updateForm = $("#updateForm");
+	
 	let btn_complete = $("#btn_complete").on('click', function(event){
 		event.preventDefault();
 		
 		empNo.attr("disabled", false);
+		
 		
 		updateForm.submit();
 		
 		return false;
 	});
 	
-	let pwText = $("#pwText");
+	let btn_pw =  $("#btn_pw");
 	
-	$("#btn_pw").on('click', function(){
+	let pwText = $("#pwText").on("keypress",function(event){
+		console.log(event.keyCode);
+		if (event.keyCode == 13) {
+			btn_pw.trigger('click');
+		}
+	});
+	
+	btn_pw.on('click', function(){
 		console.log(pwText.val());
 		let data = { password : pwText.val()}
 		$.ajax({
@@ -241,7 +252,7 @@ th {
 					imgEmpMail.text(data.empMail);
 					
 					empNo.val(data.empNo);
-					empPw.val(data.empPw);
+					//empPw.val(data.empPw);
 					empNm.val(data.empNm);
 					empTel.val(data.empTel);
 					empMail.val(data.empMail);
@@ -250,6 +261,10 @@ th {
 					jobCd.val(data.jobCd);
 					posiCd.val(data.posiCd);
 					majorCd.val(data.majorCd);
+					
+					console.log(pwText.val());
+					updateForm.append($("<input>").attr("type","hidden").attr("name","authPass").val(pwText.val()));
+					console.log(updateForm.serialize());
 					
 					// div show hide
 					div_pw.hide();
@@ -265,6 +280,23 @@ th {
 			}
 		}); 
 		
+	});
+	
+	//주소 API) 카카오 //
+	document.getElementById("address_kakao").addEventListener("click", function(){ //주소입력칸을 클릭하면
+		event.preventDefault();
+
+	//카카오 지도 발생
+	    new daum.Postcode({
+	        oncomplete: function(data) { //선택시 입력값 세팅
+//	             document.getElementById("address_kakao").value = data.address; // 주소 넣기
+//	             document.querySelector("input[name=memAddr2]").focus(); //상세입력 포커싱
+	            empAdd1.val(data.address); // 주소 넣기
+	            document.querySelector("input[name=empAdd2]").focus(); //상세입력 포커싱
+	        }
+	    }).open();
+	
+	    return false;
 	});
 
 </script>

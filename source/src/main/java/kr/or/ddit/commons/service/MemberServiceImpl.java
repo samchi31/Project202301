@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -55,29 +56,41 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	public ServiceResult modifyMember(EmployeeVO member) {
+				
 		ServiceResult result = null;
-		//Authentication inputData = new UsernamePasswordAuthenticationToken(member.getEmpNo(), member.getEmpPw());
 		try {
-			//authenticationManager.authenticate(inputData);
+			/*
+			 * empPw : 새비밀번호 -> 있으면 db 변경 후 새 authentication 생성
+			 * authPass : 기존 비밀번호 (인증용)
+			 */
+			
+			// 아이디와 비번을 담은 데이터 생성
+			Authentication inputData = null;
+			// 새 비밀번호가 없으면
+			if(StringUtils.isBlank(member.getEmpPw())) {
+				inputData = new UsernamePasswordAuthenticationToken(member.getEmpNo(), member.getAuthPass());
+			} else {
+				inputData = new UsernamePasswordAuthenticationToken(member.getEmpNo(), member.getEmpPw()); 	
+				// 새 비밀번호 암호화
+				String encoded = encoder.encode(member.getEmpPw());
+				member.setEmpPw(encoded);
+			}			
+			
 			int rowcnt = memberDAO.updateMember(member);
-			changeAuthentication(member);
+			
+			// 데이터로 인증 후 인증 객체 생성 (userdetail principal -> membervowrapper)
+			Authentication newAuthentication = authenticationManager.authenticate(inputData);
+			// 현재 security session 정보 변경
+			SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+			
 			result = rowcnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;
 		}catch (UsernameNotFoundException e) {
 			result = ServiceResult.NOTEXIST;
 		}catch (AuthenticationException e) {
+			log.info("{}", e.getMessage());
 			result = ServiceResult.INVALIDPASSWORD;
 		}
 		return result;
-	}
-	
-	// 새 인증객체를 만들어줌
-	private void changeAuthentication(EmployeeVO member) {
-		// 아이디와 비번을 담은 데이터 생성
-		Authentication inputData = new UsernamePasswordAuthenticationToken(member.getEmpNo(), member.getEmpPw());
-		// 데이터로 인증 후 인증 객체 생성 (userdetail principal -> membervowrapper)
-		Authentication newAuthentication = authenticationManager.authenticate(inputData);
-		// 현재 security session 정보 변경
-		SecurityContextHolder.getContext().setAuthentication(newAuthentication); 	// 
 	}
 
 	@Override

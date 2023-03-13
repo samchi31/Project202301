@@ -29,23 +29,21 @@ body {
  #updateDiv{
         display:none
     }
-.buttonDiv {
-    position: absolute;
-    left: 68%;
-    top: 12%;
+.buttonDiv { 
+  	float:right; 
 }
-#writeUpdate {
-position: absolute;
-    top: 12%;
-    left: 80%;
+/* #writeUpdate { */
+/* position: absolute; */
+/*     top: 12%; */
+/*     left: 80%; */
 
-}
+/* } */
 </style>
 <div id="noticeDetailDiv">
 	<h4 class="h4-title1" style="color: #4E73DF;">공지사항 상세</h4>
 	<hr>
 	<div id="notice">${notice.ntcCont }</div>
-
+	<hr>
 	<security:authorize access="isAuthenticated()">
 		<security:authentication property="principal.realMember" var="employeeVO" />
 		<c:if test="${employeeVO.empNo eq notice.empNo }">
@@ -79,7 +77,6 @@ position: absolute;
 		<input class="form-input" id="writeUpdate" type="submit" value="수정"/>
 	</form:form>
 </div>
-<hr>
 <script>
 //ckeditor
 CKEDITOR.replace('ntcCont', {

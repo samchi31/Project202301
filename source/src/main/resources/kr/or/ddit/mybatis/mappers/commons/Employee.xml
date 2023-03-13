@@ -20,6 +20,9 @@
 	    		, emp_mail = #{empMail}
 	    		, emp_add1 = #{empAdd1}
 	    		, emp_add2 = #{empAdd2}
+	    		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(empPw)">
+	    		, emp_pw = #{empPw}
+	    		</if>
 		where	emp_no = #{empNo}
 <!-- 	    		emp_pw = #{empPw} -->
 <!-- 	    		, emp_zip = #{empZip} -->

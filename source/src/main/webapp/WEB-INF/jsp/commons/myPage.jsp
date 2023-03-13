@@ -149,8 +149,7 @@ body {
 							<hr>
 							<div class="row">
 								<div class="col-sm-12">
-									<a class="btn btn-info " target="__blank"
-										href="<c:url value='/employee/edit' />">수정하기</a>
+									<a class="btn btn-info" href="<c:url value='/employee/edit' />">수정하기</a><!-- target="__blank" -->
 								</div>
 							</div>
 						</div>

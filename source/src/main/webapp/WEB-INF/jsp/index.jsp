@@ -2,17 +2,20 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="security"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <%-- <link href="${pageContext.request.contextPath }/resources/css/button.css" rel="stylesheet" /> --%>
 <title>HurryUP 로그인</title>
+<link href="${pageContext.request.contextPath }/resources/css/style_last.css" rel="stylesheet">
 <style>
-
 a{
 text-decoration-line: none;
 }
 
 .aaa {
 	text-decoration-line: none;
-	color : #ffffff;
+	color : #F7AA00;
+	font-size: 35px;
+	font-family: 'Nanum Gothic', sans-serif;
 }
 
 .menubtn {
@@ -21,7 +24,7 @@ text-decoration-line: none;
     text-transform: uppercase;
     padding: 2em 2em;
     background: #ffffff; /* 눌렀을 때*/
-    border: 2px solid #004262;  /* 위에선 */
+    border: 1px solid #004262;  /* 위에선 */
     border-radius: 0.75em;
     transform-style: preserve-3d;
     transition: transform 150ms cubic-bezier(0, 0, 0.58, 1);
@@ -42,9 +45,9 @@ text-decoration-line: none;
     left: 0;
     right: 0;
     bottom: 0;
-    background: #86B1E5;
+    background: #004262;
     border-radius: inherit;
-    box-shadow: 0 0 0 2px #004262, 0 0.625em 0 0 #DCE4ED;
+    box-shadow: 0 0 0 1px #004262, 0 0.625em 0 0 #DCE4ED;
     transform: translate3d(0, 0.75em, -1em);
     transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
     box-sizing: border-box;
@@ -54,11 +57,12 @@ text-decoration-line: none;
     box-sizing: border-box;
 }
 .menubtn:hover {
-    background: #ffe593;
+    background: #D8E6EC;
+    color: #4E6D7E;
     transform: translate(0, 0.25em);
 }
 .menubtn:hover::before {
-    box-shadow: 0 0 0 2px #004262, 0 0.5em 0 0 #DCE4ED;
+    box-shadow: 0 0 0 1px #004262, 0 0.5em 0 0 #DCE4ED;
     transform: translate3d(0, 0.5em, -1em);
 }
 .menubtn:active {
@@ -66,17 +70,17 @@ text-decoration-line: none;
     transform: translate(0em, 0.75em);
 }
 .menubtn:active::before {
-    box-shadow: 0 0 0 2px #004262, 0 0 #DCE4ED;
+    box-shadow: 0 0 0 1px #004262, 0 0 #DCE4ED;
     transform: translate3d(0, 0, -1em);
 }
 
 .menubtn_disable{ 
 	background: #D7E8FF; 
 	font-weight: 600;
-    color: #382b22; /* 글씨 */
+    color: #4E6D7E; /* 글씨 */
     text-transform: uppercase;
     padding: 2em 2em;
-    border: 2px solid #004262;  /* 위에선 */
+    border: 1px solid #004262;  /* 위에선 */
     border-radius: 0.75em;
     transform-style: preserve-3d;
     transition: transform 150ms cubic-bezier(0, 0, 0.58, 1);
@@ -93,6 +97,9 @@ text-decoration-line: none;
 .button_area{display:inline-block;margin: 1rem 0.5rem;}
 
 </style>
+
+
+
 <c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION }">
 	<script>
 		alert("${SPRING_SECURITY_LAST_EXCEPTION.message}");
@@ -129,133 +136,47 @@ text-decoration-line: none;
 </security:authorize>
 
 <security:authorize access="isAuthenticated()">
+
 	<security:authentication property="principal.realMember" var="employeeVO" />
-    <div style=" width: 34%; height: 100%; background-color: #4E73DF;">
-		<div class="profile-div" style="box-sizing: border-box; 
-									width: 22%;
-	    							position: absolute; 
-	    							left: 6%; top: 14%">
-			<img src="${pageContext.request.contextPath}/resources/images/homemain.png" class="profileimgPlace" />
-			<div style="text-align: center; ">
-				<div class="v234_2198">반갑습니다</div>
-				<div class="v234_2196"><a href="${pageContext.request.contextPath}/employee/mypage" class="aaa">${employeeVO.empNm}님</a></div>
-				<div class="v234_2197">(${employeeVO.posiName})</div>
-			</div>
-		</div>
-	</div>
-	<form:form name="logoutForm" action="${pageContext.request.contextPath }/logout" method="post"></form:form>
-	<a class="logoutBtn " href="#"> 
-		<img src="${pageContext.request.contextPath}/resources/images/logout.png" class="imgPlace2" />
-	</a>
-	<script type="text/javascript">
-		$(document).on("click", ".logoutBtn", function(event) {
-			//event.preventDefault();
-			console.log("logout");
-			document.logoutForm.submit();
-			return false;
-		});
-	</script>
-	
-	<!-- button Start -->
-<!-- 	<div style="position: absolute; -->
-<!--    				top: 20%"> -->
-<!-- 		<div class="btnTable"> -->
-<!-- 			<div class="card1"> -->
-<%-- 				<c:choose> --%>
-<%-- 					<c:when test="${employeeVO.jobCd eq 'ROLE_HEAD' or employeeVO.jobCd eq 'ROLE_REC'}"> --%>
-<!-- 						<div> -->
-<%-- 							<a class="menubtn draw-border" href="<c:url value='/receiption/receiptionView?menu=1'/>" >원무과</a> --%>
-<!-- 						</div> -->
-<%-- 					</c:when> --%>
-<%-- 					<c:otherwise> --%>
-<!-- 						<div class="menubtn draw-border-none">원무과</div> -->
-<%-- 					</c:otherwise> --%>
-<%-- 				</c:choose> --%>
+<!--     <div style=" width: 34%; height: 100%; background-color: #4E73DF;"> -->
+<!-- 		<div class="profile-div" style="box-sizing: border-box; width: 22%;position: absolute; left: 6%; top: 14%"> -->
+<%-- 			<img src="${pageContext.request.contextPath}/resources/images/homemain.png" class="profileimgPlace" /> --%>
+<!-- 			<div style="text-align: center; "> -->
+<!-- 				<div class="v234_2198">반갑습니다</div> -->
+<%-- 				<div class="v234_2196"><a href="${pageContext.request.contextPath}/employee/mypage" class="aaa">${employeeVO.empNm}님</a></div> --%>
+<%-- 				<div class="v234_2197">(${employeeVO.posiName})</div> --%>
 <!-- 			</div> -->
-	
-<!-- 			<div class="card1"> -->
-<!-- 				DOC만 접근 가능 -->
-<%-- 				<c:choose> --%>
-<%-- 					<c:when test="${employeeVO.jobCd eq 'ROLE_DOC' or employeeVO.jobCd eq 'ROLE_HEAD'}"> --%>
-<%-- 						<a href="<c:url value='/doctor/main?menu=2'/>" class="menubtn draw-border">의사</a> --%>
-<%-- 					</c:when> --%>
-<%-- 					<c:otherwise> --%>
-<!-- 						<div  class="menubtn draw-border-none">의사</div> -->
-<%-- 					</c:otherwise> --%>
-<%-- 				</c:choose> --%>
-<!-- 			</div> -->
-	
-<!-- 			<div class="card1"> -->
-<!-- 				RAD만 접근 가능 -->
-<%-- 				<c:choose> --%>
-<%-- 					<c:when test="${employeeVO.jobCd eq 'ROLE_RAD'  or employeeVO.jobCd eq 'ROLE_HEAD'}"> --%>
-<%-- 						<a href="<c:url value='/radiology/radiologyView?menu=3'/>" class="menubtn draw-border">영상촬영실</a> --%>
-<%-- 					</c:when> --%>
-<%-- 					<c:otherwise> --%>
-<!-- 						<div class="menubtn draw-border-none">영상촬영실</div> -->
-<%-- 					</c:otherwise> --%>
-<%-- 				</c:choose> --%>
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 		<div class="btnTable" style=""> -->
-<!-- 			<div class="card2"> -->
-<%-- 				<c:choose> --%>
-<%-- 					<c:when test="${employeeVO.jobCd eq 'ROLE_PHY'  or employeeVO.jobCd eq 'ROLE_HEAD'}"> --%>
-<%-- 						<a href="<c:url value='/pt/ptView?menu=4' />" class="menubtn draw-border">물리치료과</a> --%>
-<%-- 					</c:when> --%>
-<%-- 					<c:otherwise> --%>
-<!-- 						<div class="menubtn draw-border-none">물리치료과</div> -->
-<%-- 					</c:otherwise> --%>
-<%-- 				</c:choose> --%>
-<!-- 			</div> -->
-	
-<!-- 			<div class="card2"> -->
-<%-- 				<c:choose> --%>
-<%-- 					<c:when test="${employeeVO.jobCd eq 'ROLE_CHN' or employeeVO.jobCd eq 'ROLE_NUR' or employeeVO.jobCd eq 'ROLE_HEAD'}"> --%>
-<%-- 						<a href="<c:url value='/nurse/wardMain?menu=5'/> " class="menubtn draw-border">병동관리</a> --%>
-<%-- 					</c:when> --%>
-<%-- 					<c:otherwise> --%>
-<!-- 						<div class="menubtn draw-border-none">병동관리</div> -->
-<%-- 					</c:otherwise> --%>
-<%-- 				</c:choose> --%>
-<!-- 			</div> -->
-	
-<!-- 			<div class="card2"> -->
-<%-- 				<c:choose> --%>
-<%-- 					<c:when --%>
-<%-- 						test="${employeeVO.jobCd eq 'ROLE_HEAD' or employeeVO.jobCd eq 'ROLE_REC' or employeeVO.jobCd eq 'ROLE_CHN' or employeeVO.jobCd eq 'ROLE_NUR'}"> --%>
-<!-- 						<div> -->
-<!-- 							<a class="menubtn draw-border" -->
-<%-- 								href="<c:url value='/nurse/operationMain?menu=6'/>">수술/검사</a> --%>
-<!-- 						</div> -->
-<%-- 					</c:when> --%>
-<%-- 					<c:otherwise> --%>
-<!-- 						<div class="menubtn draw-border-none">수술/검사</div> -->
-<%-- 					</c:otherwise> --%>
-<%-- 				</c:choose> --%>
-<!-- 			</div> -->
-<!-- 		</div> -->
-	
-<!-- 		<div class="btnTable" style=""> -->
-<!-- 			<div class="card3"> -->
-<%-- 				<a href="<c:url value='/notice/notice?menu=7' />" class="menubtn draw-border">공지사항</a> --%>
-<!-- 			</div> -->
-<!-- 			<div class="card3"> -->
-<%-- 				<a href="<c:url value='/employee/mypage' />" class="menubtn draw-border">내정보</a> --%>
-<!-- 			</div> -->
-<!-- 			<div class="card3"> -->
-<%-- 				<a href="<c:url value='/notice/notice?menu=7' />" class="menubtn draw-border">스케줄</a> --%>
-<!-- 			</div> -->
-	
 <!-- 		</div> -->
 <!-- 	</div> -->
+	<div>
+		<!-- ======= Hero Section ======= -->
+	  <section id="hero" class="d-flex align-items-center">
+	    <div class="container">
+	      <h1>Welcome to HurryUp</h1>
+	      <h2> 반갑습니다. 
+	      	<span class="aaa">${employeeVO.empNm}</span> 님 <span class="aaa">(${employeeVO.posiName})</span> 오늘도 좋은 하루 보내세요 
+	      </h2>
+	      <a href="${pageContext.request.contextPath}/employee/mypage" class="btn-get-started scrollto">MyPage</a> 
+	      <form:form name="logoutForm" action="${pageContext.request.contextPath }/logout" method="post"></form:form>
+			<a class="logoutBtn " href="#" style="width: 30px; height: 28px; opacity: 1; position: absolute; top: 76.5%; left: 12%; vertical-align: middle;"> 
+				<img src="${pageContext.request.contextPath}/resources/images/logout.png" class="imgPlace2" />
+			</a>
+			<script type="text/javascript">
+				$(document).on("click", ".logoutBtn", function(event) {
+					//event.preventDefault();
+					console.log("logout");
+					document.logoutForm.submit();
+					return false;
+				});
+			</script>
+	    </div>
+	  </section><!-- End Hero -->
+	</div>
+	
 
-	<div style="position: absolute;
-   				width: 50%;
-   				left: 47%;
-   				top: 20%">
+	<div style="position: absolute;width: 50%;left: 53%; top: 20%">
    		
-   		<div class="button_area">
+   		<div class="button_area" id="div11">
 			<c:choose>
 				<c:when test="${employeeVO.jobCd eq 'ROLE_HEAD' or employeeVO.jobCd eq 'ROLE_REC'}">
 					<div>
@@ -268,8 +189,7 @@ text-decoration-line: none;
 			</c:choose>
 		</div>
 		
-		<div class="button_area">
-			<!-- DOC만 접근 가능 -->
+		<div class="button_area" id="div12">
 			<c:choose>
 				<c:when test="${employeeVO.jobCd eq 'ROLE_DOC' or employeeVO.jobCd eq 'ROLE_HEAD'}">
 					<a href="<c:url value='/doctor/main?menu=2'/>" class="menubtn ">의사</a>
@@ -280,8 +200,7 @@ text-decoration-line: none;
 			</c:choose>
 		</div>
 		
-		<div class="button_area">
-			<!-- RAD만 접근 가능 -->
+		<div class="button_area" id="div13">
 			<c:choose>
 				<c:when test="${employeeVO.jobCd eq 'ROLE_RAD'  or employeeVO.jobCd eq 'ROLE_HEAD'}">
 					<a href="<c:url value='/radiology/radiologyView?menu=3'/>" class="menubtn ">영상촬영실</a>
@@ -292,21 +211,21 @@ text-decoration-line: none;
 			</c:choose>
 		</div>
 		
-		<div class="button_area">
+		<div class="button_area" id="div21">
 			<c:choose>
 				<c:when test="${employeeVO.jobCd eq 'ROLE_PHY'  or employeeVO.jobCd eq 'ROLE_HEAD'}">
 					<a href="<c:url value='/pt/ptView?menu=4' />" class="menubtn ">물리치료과</a>
 				</c:when>
 				<c:otherwise>
-					<div class="menubtn_disable ">물리치료과</div>
+					<div class="menubtn_disable">물리치료과</div>
 				</c:otherwise>
 			</c:choose>
 		</div>
 		
-		<div class="button_area">
+		<div class="button_area"  id="div22">
 			<c:choose>
 				<c:when test="${employeeVO.jobCd eq 'ROLE_CHN' or employeeVO.jobCd eq 'ROLE_NUR' or employeeVO.jobCd eq 'ROLE_HEAD'}">
-					<a href="<c:url value='/nurse/wardMain?menu=5'/> " class="menubtn ">병동관리</a>
+					<a href="<c:url value='/nurse/wardMainNew?menu=5'/> " class="menubtn ">병동관리</a>
 				</c:when>
 				<c:otherwise>
 					<div class="menubtn_disable ">병동관리</div>
@@ -314,10 +233,9 @@ text-decoration-line: none;
 			</c:choose>
 		</div>
 		
-		<div class="button_area">
+		<div class="button_area" id="div23">
 			<c:choose>
-				<c:when
-					test="${employeeVO.jobCd eq 'ROLE_HEAD' or employeeVO.jobCd eq 'ROLE_REC' or employeeVO.jobCd eq 'ROLE_CHN' or employeeVO.jobCd eq 'ROLE_NUR'}">
+				<c:when test="${employeeVO.jobCd eq 'ROLE_HEAD' or employeeVO.jobCd eq 'ROLE_REC' or employeeVO.jobCd eq 'ROLE_CHN' or employeeVO.jobCd eq 'ROLE_NUR'}">
 					<div>
 						<a class="menubtn "
 							href="<c:url value='/nurse/operationMain?menu=6'/>">수술/검사</a>
@@ -329,18 +247,63 @@ text-decoration-line: none;
 			</c:choose>
 		</div>
 		
-		<div class="button_area">
+		<div class="button_area" id="div31">
 			<a href="<c:url value='/notice/notice?menu=7' />" class="menubtn ">공지사항</a>
 		</div>
-		<div class="button_area">
+		<div class="button_area" id="div32">
 			<a href="<c:url value='/employee/mypage' />" class="menubtn ">내정보</a>
 		</div>
-		<div class="button_area">
+		<div class="button_area" id="div33">
 			<a href="<c:url value='/notice/notice?menu=7' />" class="menubtn ">스케줄</a>
 		</div>
 	</div>
+
+
+	
  
  <script>
-    
+ 
+	$(function(){
+		console.log("왔다");
+		
+		let hero = $("#hero");
+		//메인페이지의 메인이미지 변경
+		$("#div11").mouseover(function() {
+			hero.css("background-image", "url('${pageContext.request.contextPath}/resources/images/hero-bg.jpg')");
+			  console.log("div11");
+		});
+		$("#div12").mouseover(function() {
+			hero.css("background-image", "url('${pageContext.request.contextPath}/resources/images/div12.jpg')");
+			  console.log("div12");
+		});
+		$("#div13").mouseover(function() {
+			hero.css("background-image", "url('${pageContext.request.contextPath}/resources/images/div13.jpg')");
+			console.log("div13");
+		});
+		$("#div21").mouseover(function() {
+			hero.css("background-image", "url('${pageContext.request.contextPath}/resources/images/div21.jpg')");
+			  console.log("div21");
+		});
+		$("#div22").mouseover(function() {
+			hero.css("background-image", "url('${pageContext.request.contextPath}/resources/images/div22.jpg')");
+			  console.log("div22");
+		});
+		$("#div23").mouseover(function() {
+			hero.css("background-image", "url('${pageContext.request.contextPath}/resources/images/div23.jpg')");
+			  console.log("div23");
+		});
+		$("#div31").mouseover(function() {
+			hero.css("background-image", "url('${pageContext.request.contextPath}/resources/images/div31.jpg')");
+			  console.log("div31");
+		});
+		$("#div32").mouseover(function() {
+			hero.css("background-image", "url('${pageContext.request.contextPath}/resources/images/div32.jpg')");
+			  console.log("div32");
+		});
+		$("#div33").mouseover(function() {
+			hero.css("background-image", "url('${pageContext.request.contextPath}/resources/images/div33.jpg')");
+			  console.log("div33");
+		});
+	});  
   </script>
 </security:authorize>

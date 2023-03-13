@@ -411,14 +411,13 @@ function writeInsertClick() {
 	            xhr.setRequestHeader(header, token);
 	    },
 		success : function(resp) {
-			console.log("뭐가 찍히노 :",resp);
-			Swal.fire('진료일지 작성 완료되었습니다', '  ', 'success');
+			Swal.fire('치료일지 작성 완료되었습니다', '  ', 'success');
 			$(".form-control").val(''); //input태그에 있던 val값 제거
 			$('#writeChartText').val(''); //textBox태그에 있던 val값 제거
 			$('#pdPart').val(''); //pdPart태그에 있던 val값 제거
-			$(".curePartSelect").find($("input[type='radio']:checked")).remove();
+			$(".curePartSelect").find("input[type='radio']:checked").prop("checked", false);
 			//curePartSelect안에 있는 input 태그를 찾아서 언체크드를 해라.....ball2")
-			$("#ball").remove();
+			$("#ball").hide();
 			$("#ball2").remove();
 			for(let i=0; i<resp.length; i++){
 				console.log("반복문 돌아가유")
@@ -495,7 +494,7 @@ let $writeChartCd = $('.writeChartCd');
 				let pdPartValue = list[0].ptDocumentList[0].pdPart;
 				let pdPart= $('#pdPart').val(pdPartValue); //치료부위
 				console.log("=========규가가가가가가 pdPartValue : ",pdPartValue);
-				
+				$("#ball").show();
 				if(pdPartValue!=null) {//pdPart에 데이터가 있으면 writeChartText에 데이터를 추가하고 비활성화 시켜라
 					//console.log("pdPart : ",pdPart);
 					$("#writeChartText").val(list[0].ptDocumentList[0].pdCont).attr("disabled",true);

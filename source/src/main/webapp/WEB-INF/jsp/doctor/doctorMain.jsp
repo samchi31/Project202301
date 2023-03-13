@@ -687,8 +687,8 @@
 			let newTr = $("<tr>").append(
 				$("<td>").html(v_data["mdsCd"])	  
 				, $("<td>").html(v_data["itmNm"])
-				, $("<td>").html($("<input>").attr("type", "number").attr("min","1"))
-				, $("<td>").html($("<input>").attr("type", "number").attr("min","1"))
+				, $("<td>").html($("<input>").attr("type", "number").attr("min","1").css("text-align","right"))
+				, $("<td>").html($("<input>").attr("type", "number").attr("min","1").css("text-align","right"))
 				, $("<td>").html(v_data["injcPthNm"])
 				, $("<td>").html(v_data["unit"])
 				, $("<td>").html(v_data["payTpNm"])
@@ -724,7 +724,7 @@
 		           xhr.setRequestHeader(header, token);
 		    },
 			success : function(resp) {
-				//console.log(resp);
+				console.log(resp);
 
 				swal({title:resp, icon:"success"});
 			},
@@ -1055,8 +1055,8 @@
 					, $("<td>").html(v.preDetail)
 					//, $("<td>").html(v.preNt)
 					//, $("<td>").html(v.preTotal)
-					, $("<td>").html($("<input>").attr("type", "number").attr("min","1").val(v.preNt))
-					, $("<td>").html($("<input>").attr("type", "number").attr("min","1").val(v.preTotal))
+					, $("<td>").html($("<input>").attr("type", "number").attr("min","1").css("text-align","right").val(v.preNt))
+					, $("<td>").html($("<input>").attr("type", "number").attr("min","1").css("text-align","right").val(v.preTotal))
 					, $("<td>").html(v.injcPthNm)
 					, $("<td>").html(v.unit)
 					, $("<td>").html(v.payTpNm)
@@ -1209,6 +1209,7 @@
 			    },
 				success : function(resp) {
 					//console.log("wait resp",resp);
+					swal({title:resp, icon:"success"});
 				},
 				error : function(jqXHR, status, error) {
 					console.log(jqXHR);
@@ -1272,8 +1273,8 @@
 					$("<tr>").append(
 						$("<td>").html(v.preCd)
 						, $("<td>").html(v.preDetail)
-						, $("<td>").html($("<input>").attr("type", "number").attr("min","1"))
-						, $("<td>").html($("<input>").attr("type", "number").attr("min","1"))
+						, $("<td>").html($("<input>").attr("type", "number").attr("min","1").css("text-align","right"))
+						, $("<td>").html($("<input>").attr("type", "number").attr("min","1").css("text-align","right"))
 						, $("<td>").html(v.injcPthNm)
 						, $("<td>").html(v.unit)
 						, $("<td>").html(v.payTpNm)

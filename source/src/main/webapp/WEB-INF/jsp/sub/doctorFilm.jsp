@@ -20,7 +20,7 @@
 					      	</colgroup>
 				      		<thead class="fixedHeader">
 				      			<tr>
-				      				<th>파일이름</th>
+				      				<th>파일순번</th>
 									<th>촬영일시</th>
 								</tr>
 				      		</thead>
@@ -79,13 +79,15 @@
 				
 				tbody_fList.empty();
 				let trTags = [];
+				let sn = 1;
 				$.each(resp, function(index, v){
 					// console.log(index, v);
 					$.each(v.filmAtchDetailVOList, function(i, value){
 						console.log(i, value);
-						let tr = $("<tr>").append($("<td>").html(value.attSavename), $("<td>").html(value.attStreCours));
+						let tr = $("<tr>").append($("<td>").html(sn.toString().padStart(2,'0')), $("<td>").html(value.attStreCours));
 						tr.data("object", value);
 						trTags.push(tr);
+						sn = sn + 1;
 					});					
 				});
 				tbody_fList.append(trTags);
@@ -99,7 +101,9 @@
 	};
 	f_getFilmList();
 	
-	
+	function fillZero(width, str){
+	    return str.length >= width ? str:new Array(width-str.length+1).join('0')+str;//남는 길이만큼 0으로 채움
+	}
 	
 	
 </script>

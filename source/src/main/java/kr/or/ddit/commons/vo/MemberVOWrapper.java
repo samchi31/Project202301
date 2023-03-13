@@ -17,6 +17,7 @@ public class MemberVOWrapper extends User{
 		return realMember;
 	}
 	
+	
 	@Override
 	public boolean isEnabled() {
 		return realMember.getEmpRtdt() == null ? true : false ;

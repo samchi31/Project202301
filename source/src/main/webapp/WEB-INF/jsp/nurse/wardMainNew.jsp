@@ -314,7 +314,7 @@
 					<div class="mb-2 row">
 						<label for="wardDocument-input" class="col-sm-2 col-form-label">용량</label>
 						<div class="col-sm-9">
-							<input type="text" class="form-control" id="io_capa">
+							<input type="number" class="form-control" id="io_capa">
 						</div>
 					</div>
 					
@@ -359,41 +359,45 @@
 				<form id="writeForm" name="writeForm" class="writeFormCss">
 					<div class="mb-2 row">
 						<label for="wardDocument-input" class="col-sm-2 col-form-label">환자명</label>
-						<div class="col-sm-9">
+						<div style="width: 349px;" class="col-sm-9">
 							<input type="text" class="form-control writeChartCd input_paName" name="vital_paName" id="vital_paName" readonly="readonly" disabled>
 						</div>
 					</div>
 					<div class="mb-2 row">
 						<label for="wardDocument-input" class="col-sm-2 col-form-label">체온</label>
-						<div class="col-sm-9">
-							<input type="text" class="form-control" id="vital_tmp">
+						<div style="width: 349px;" class="input-group col-sm-4">
+							<input type="number" class="form-control" id="vital_tmp">
 							<p class='errMsg' id='tmpError'></p>
+							<span class="input-group-text" id="basic-addon2">℃</span>
 						</div>
 					</div>
 					<div class="mb-2 row">
 						<label for="wardDocument-input" class="col-sm-2 col-form-label">맥박</label>
-						<div class="col-sm-9">
-							<input type="text" class="form-control" id="vital_pls">
+						<div style="width: 349px;" class="input-group col-sm-9">
+							<input type="number" class="form-control" id="vital_pls">
 							<p class='errMsg' id='plsError'></p>
+							<span class="input-group-text" id="basic-addon2">회(분)</span>
 						</div>
 					</div>
 					<div class="mb-2 row">
 						<label for="wardDocument-input" class="col-sm-2 col-form-label">혈압</label>
-						<div class="col-sm-9">
-							<input type="text" class="form-control" id="vital_bp">
+						<div style="width: 349px;" class="input-group col-sm-9">
+							<input type="number" class="form-control" id="vital_bp">
 							<p class='errMsg' id='bpError'></p>
+							<span class="input-group-text" id="basic-addon2">mmHg</span>
 						</div>
 					</div>
 					<div class="mb-2 row">
 						<label for="wardDocument-input" class="col-sm-2 col-form-label">호흡수</label>
-						<div class="col-sm-9">
-							<input type="text" class="form-control" id="vital_rp">
+						<div style="width: 349px;" class="input-group col-sm-9">
+							<input type="number" class="form-control" id="vital_rp">
 							<p class='errMsg' id='rpError'></p>
+							<span class="input-group-text" id="basic-addon2">회(분)</span>
 						</div>
 					</div>
 					<div class="mb-2 row">
 						<label for="wardDocument-input" class="col-sm-2 col-form-label">비고</label>
-						<div class="col-sm-9">
+						<div style="width: 349px;" class="col-sm-9">
 							<textarea class="form-control" id="vital_textarea"></textarea>
 						</div>
 					</div>

@@ -1,13 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<link href="${pageContext.request.contextPath }/resources/css/main.css"
-	rel="stylesheet" />
-<script type="text/javascript"
-	src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+<link href="${pageContext.request.contextPath }/resources/css/main.css" rel="stylesheet" />
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+<!-- swal confirm  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+<!-- 주소 API -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <title>원무과</title>
 <style type="text/css">
 #patient {
@@ -236,24 +238,45 @@ select>input {
 								</tr>
 								<tr>
 									<td style="width:20%; text-align:center;"><label>전화번호</label></td>
-									<td><input class="form-control form-control-sm"
-										type="text" id="paHp" name="paHp" value="" style="margin: 3px 0px;"/></td>
+									<td>
+										<input class="form-control form-control-sm" type="text" id="paHp" name="paHp" value="" style="margin: 3px 0px;"/>
+									</td>
 								</tr>
 								<!-- 					    		<tr> -->
 								<!-- 							    	<th><label>우편번호</label></th> -->
 								<!-- 							    	<td><input class="form-control form-control-sm" type="text" id="paZip" name="paZip" value=""/></td> -->
 								<!-- 					    		</tr> -->
-								<tr>
-									<td style="width:20%; text-align:center;"><label>주소</label></td>
-									<td><input class="form-control form-control-sm"
-										type="text" id="paAdd1" name="paAdd1" value="" style="margin: 3px 0px;"/></td>
-								</tr>
-								<tr>
-									<td style="width:20%; text-align:center;"><label>상세주소</label></td>
-									<td><input class="form-control form-control-sm"
-										type="text" id="paAdd2" name="paAdd2" value="" style="margin: 3px 0px;"/></td>
-								</tr>
 <!-- 								<tr> -->
+<!-- 									<td style="width:20%; text-align:center;"><label>주소</label></td> -->
+<!-- 									<td><input class="form-control form-control-sm" type="text" id="paAdd1" name="paAdd1" value="" style="margin: 3px 0px;"/></td> -->
+<!-- 								</tr> -->
+								
+<!-- 								<tr> -->
+<!-- 									<td style="width:20%; text-align:center;"><label>상세주소</label></td> -->
+<!-- 									<td><input class="form-control form-control-sm" -->
+<!-- 										type="text" id="paAdd2" name="paAdd2" value="" style="margin: 3px 0px;"/></td> -->
+<!-- 								</tr> -->
+<!-- 								<tr> -->
+
+									   <tr>
+									   	<td style="width:20%; text-align:center;"><label>주소</label></td>
+									   	<td>
+									   	<div class="input-group">
+									   		<input class="form-control form-control-sm" id="paAdd1" type="text" name="paAdd1" style="margin: 3px 0px;" value="" />
+									   		<button id="address_kakao" class="btn btn-outline-secondary" style="height:29px; position:relative; top:3px; padding-top:4px; font-size:14px;">주소찾기</button>
+									   	</div><span class="text-danger">${errors.paAdd1}</span>
+									   	</td>
+									   </tr>
+									   
+									   <tr>
+									   	<td style="width:20%; text-align:center;">상세주소</td>
+									   	<td>
+									   		<input class="form-control form-control-sm" type="text" id="paAdd2" name="paAdd2" value="" style="margin: 3px 0px;"/>
+									   		<span class="text-danger">${errors.paAdd2}</span>
+									   	</td>
+									   </tr>
+																			
+										
 <!-- 									<td><label>성별</label></td> -->
 <!-- 									<td><select id="paSex"> -->
 <!-- 											<option value="M">남</option> -->
@@ -350,9 +373,8 @@ select>input {
 								<input type="hidden" id="hiddenHsptNo" value="" />
 							</div>
 							<div style="position: absolute; left: 70%; top: 24%;">
-								<input class="btn-submit" type="button" id="exitHospt"
-									value="퇴원" style="margin-top: 5px;" /> <input
-									class="btn-submit" type="button" id="cancleHospt" value="입원취소" />
+								<input class="btn-submit" type="button" id="exitHospt" value="퇴원" style="margin-top: 5px;" /> 
+								<input class="btn-submit" type="button" id="cancleHospt" value="입원취소" />
 							</div>
 						</div>
 						<div id="manaHospt">
@@ -1367,11 +1389,11 @@ select>input {
 				</section>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" id="print"
-					onclick="printBarcode();">출력</button>
 				<button type="button" class="btn btn-danger" id="payComplete">수납</button>
-				<button type="button" class="btn btn-secondary"
-					data-bs-dismiss="modal">닫기</button>
+				<button type="button" class="btn btn-primary" id="print" onclick="printrecipt();">출력</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="fn_check();">체크</button>
+					
 			</div>
 		</div>
 	</div>
@@ -1381,7 +1403,38 @@ select>input {
 
 
 <script type="text/javascript">
-	GridStack.init()
+
+function fn_check(){
+	$(function() {
+		swal({
+			title: "등록하시겠습니까?",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#DD6B55",
+			confirmButtonText: "예",
+			cancelButtonText: "아니요",
+			closeOnConfirm: false,
+			closeOnCancel : true
+		}, function (isConfirm) {
+			if (!isConfirm) return;
+			jQuery.ajax({
+				type : "POST",
+				url : "",
+				data : "",
+				cache: false,
+				dataType : "json",
+				success : function(data) {
+					swal("성공", "작업을 정상적으로 완료하였습니다.", "success");
+				},
+				error : function(e) {
+					swal("실패", "작업수행에 실패하였습니다.", "error");
+				}, timeout:100000
+			});
+		});
+	});
+};
+
+GridStack.init()
 
 	$("#proofCreateBtn")
 			.on(
@@ -1442,162 +1495,199 @@ select>input {
 		$tr.addClass("dblclick-on");
 	});
 
-	$("#cancleHospt")
-			.on(
-					"click",
-					function() {
-						let hsptNo = $("#hiddenHsptNo").val();
-						let data = {
-							hsptNo : hsptNo
-						};
-						if (confirm("정말 입원 취소 하시겠습니까?")) {
-							$
-									.ajax({
-										url : "${pageContext.request.contextPath}/receiption/cancleHospt",
-										method : "post",
-										data : JSON.stringify(data),
-										contentType : "application/json;charset=utf-8",
-										dataType : "json",
-										beforeSend : function(xhr) {
-											xhr.setRequestHeader(header, token);
-										},
-										success : function(result) {
-											let trTags = [];
-											$
-													.each(
-															result,
-															function(i, v) {
-																let trTag = $(
-																		"<tr class='trClass'>")
-																		.append(
-																				$(
-																						"<td>")
-																						.html(
-																								v.paName),
-																				$(
-																						"<td>")
-																						.html(
-																								v.hsptNo),
-																				$(
-																						"<td>")
-																						.html(
-																								v.trmCd),
-																				$(
-																						"<td>")
-																						.html(
-																								v.hsptInDt),
-																				$(
-																						"<td>")
-																						.html(
-																								v.hsptOutDt),
-																				$(
-																						"<td>")
-																						.html(
-																								v.wrRno
-																										+ "실"
-																										+ v.bedNo
-																										+ "호"),
-																				$(
-																						"<td>")
-																						.html(
-																								v.diseaseCd))
-																		.data(
-																				"list",
-																				v);
-																trTags
-																		.push(trTag);
-															})
-											$("#tbdOutHsptList").html(trTags);
-										}
-									})
-						} else {
-							swal("입원을 취소하지 않습니다.", "", "error")
-						}
-					});
+	$("#cancleHospt").on("click",function() {
+		let hsptNo = $("#hiddenHsptNo").val();
+		let data = {
+			hsptNo : hsptNo
+		};
+		
+		$(function() {
+			swal({
+				title: "입원을 취소 하시겠습니까?",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "예",
+				cancelButtonText: "아니요",
+				closeOnConfirm: false,
+				closeOnCancel : true
+			}, function (isConfirm) {
+				if (!isConfirm) {
+					swal("입원 취소 실패", "작업을 정상적으로 완료 하지 못하였습니다.", "error")
+					return;
+				};
+	 			$.ajax({
+					url : "${pageContext.request.contextPath}/receiption/cancleHospt",
+					method : "post",
+					data : JSON.stringify(data),
+					contentType : "application/json;charset=utf-8",
+					dataType : "json",
+					beforeSend : function(xhr) {
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(result) {
+						let trTags = [];
+						$.each(result,function(i, v) {
+							let trTag = $("<tr class='trClass'>").append(
+											$("<td>").html(v.paName),
+											$("<td>").html(v.hsptNo),
+											$("<td>").html(v.trmCd),
+											$("<td>").html(v.hsptInDt),
+											$("<td>").html(v.hsptOutDt),
+											$("<td>").html(v.wrRno+ "실"+ v.bedNo+ "호"),
+											$("<td>").html(v.diseaseCd))
+									.data("list",v);
+							trTags.push(trTag);
+						})
+						$("#tbdOutHsptList").html(trTags);
+						swal("입원 취소 성공", "작업을 정상적으로 완료하였습니다.", "success");
+					}
+				})
+			});
+		});
+		
+		
+		
+		
+		
+		
+// 		if (confirm('',"정말 입원 취소 하시겠습니까?")) {
+// 			$.ajax({
+// 						url : "${pageContext.request.contextPath}/receiption/cancleHospt",
+// 						method : "post",
+// 						data : JSON.stringify(data),
+// 						contentType : "application/json;charset=utf-8",
+// 						dataType : "json",
+// 						beforeSend : function(xhr) {
+// 							xhr.setRequestHeader(header, token);
+// 						},
+// 						success : function(result) {
+// 							let trTags = [];
+// 							$.each(result,function(i, v) {
+// 								let trTag = $("<tr class='trClass'>").append(
+// 												$("<td>").html(v.paName),
+// 												$("<td>").html(v.hsptNo),
+// 												$("<td>").html(v.trmCd),
+// 												$("<td>").html(v.hsptInDt),
+// 												$("<td>").html(v.hsptOutDt),
+// 												$("<td>").html(v.wrRno+ "실"+ v.bedNo+ "호"),
+// 												$("<td>").html(v.diseaseCd))
+// 										.data("list",v);
+// 								trTags.push(trTag);
+// 							})
+// 							$("#tbdOutHsptList").html(trTags);
+// 						}
+// 					})
+// 		} else {
+// 			swal("입원을 취소하지 않습니다.", "", "error")
+// 		}
+	});
 
-	$("#exitHospt")
-			.on(
-					"click",
-					function() {
-						let hsptNo = $("#hiddenHsptNo").val();
-						let data = {
-							hsptNo : hsptNo
-						};
-						if (confirm("정말 퇴원 하시겠습니까?")) {
-							$
-									.ajax({
-										url : "${pageContext.request.contextPath}/receiption/exitHospt",
-										method : "post",
-										data : JSON.stringify(data),
-										contentType : "application/json;charset=utf-8",
-										dataType : "json",
-										beforeSend : function(xhr) {
-											xhr.setRequestHeader(header, token);
-										},
-										success : function(result) {
-											let trTags = [];
+	$("#exitHospt").on("click",function() {
+		let hsptNo = $("#hiddenHsptNo").val();
+		let data = {
+			hsptNo : hsptNo
+		};
+		
+		$(function() {
+			swal({
+				title: "퇴원하시겠습니까?",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "예",
+				cancelButtonText: "아니요",
+				closeOnConfirm: false,
+				closeOnCancel : true
+			}, function (isConfirm) {
+				if (!isConfirm) {
+					swal("퇴원 취소", "퇴원을 취소하였습니다.", "error");
+					return;
+				}
+				$.ajax({
+	 				url : "${pageContext.request.contextPath}/receiption/exitHospt",
+	 				method : "post",
+	 				data : JSON.stringify(data),
+	 				contentType : "application/json;charset=utf-8",
+	 				dataType : "json",
+	 				beforeSend : function(xhr) {
+	 					xhr.setRequestHeader(header, token);
+	 				},
+	 				success : function(result) {
+	 					let trTags = [];
 
-											$
-													.each(
-															result,
-															function(i, v) {
-																let trTag = $(
-																		"<tr class='trClass'>")
-																		.append(
-																				$(
-																						"<td>")
-																						.html(
-																								v.paName),
-																				$(
-																						"<td>")
-																						.html(
-																								v.hsptNo),
-																				$(
-																						"<td>")
-																						.html(
-																								v.trmCd),
-																				$(
-																						"<td>")
-																						.html(
-																								v.hsptInDt),
-																				$(
-																						"<td>")
-																						.html(
-																								v.hsptOutDt),
-																				$(
-																						"<td>")
-																						.html(
-																								v.wrRno
-																										+ "실"
-																										+ v.bedNo
-																										+ "호"),
-																				$(
-																						"<td>")
-																						.html(
-																								v.diseaseCd))
-																		.data(
-																				"list",
-																				v);
-																trTags
-																		.push(trTag);
-															})
-											$("#tbdOutHsptList").html(trTags);
-											$("#payDocs").val("");
-											$("#payTotalFee").val("");
-											$("#payDocFee").val("");
-											$("#payHostpFee").val("");
-											$("#payFoodFee").val("");
-											$("#payMedichine").val("");
-											$("#payInject").val("");
-											$("#payPtFee").val("");
-											$("#payRadio").val("");
-											$("#payOper").val("");
-										}
-									})
-						} else {
-							swal("퇴원을 취소하였습니다.", "", "error")
-						}
-					});
+	 					$.each(result,function(i, v) {
+	 						let trTag = $("<tr class='trClass'>").append(
+	 										$("<td>").html(v.paName),
+	 										$("<td>").html(v.hsptNo),
+	 										$("<td>").html(v.trmCd),
+	 										$("<td>").html(v.hsptInDt),
+	 										$("<td>").html(v.hsptOutDt),
+	 										$("<td>").html(v.wrRno+ "실"+ v.bedNo+ "호"),
+	 										$("<td>").html(v.diseaseCd))
+	 								.data("list",v);
+	 						trTags.push(trTag);
+	 					})
+	 					$("#tbdOutHsptList").html(trTags);
+	 					$("#payDocs").val("");
+	 					$("#payTotalFee").val("");
+	 					$("#payDocFee").val("");
+	 					$("#payHostpFee").val("");
+	 					$("#payFoodFee").val("");
+	 					$("#payMedichine").val("");
+	 					$("#payInject").val("");
+	 					$("#payPtFee").val("");
+	 					$("#payRadio").val("");
+	 					$("#payOper").val("");
+	 					swal("퇴원 성공", "작업을 정상적으로 완료하였습니다.", "success");
+	 				}
+	 			})
+			});
+		});
+	});	
+		
+// 		if (confirm('',"정말 퇴원 하시겠습니까?")) {
+// 			$.ajax({
+// 				url : "${pageContext.request.contextPath}/receiption/exitHospt",
+// 				method : "post",
+// 				data : JSON.stringify(data),
+// 				contentType : "application/json;charset=utf-8",
+// 				dataType : "json",
+// 				beforeSend : function(xhr) {
+// 					xhr.setRequestHeader(header, token);
+// 				},
+// 				success : function(result) {
+// 					let trTags = [];
+
+// 					$.each(result,function(i, v) {
+// 						let trTag = $("<tr class='trClass'>").append(
+// 										$("<td>").html(v.paName),
+// 										$("<td>").html(v.hsptNo),
+// 										$("<td>").html(v.trmCd),
+// 										$("<td>").html(v.hsptInDt),
+// 										$("<td>").html(v.hsptOutDt),
+// 										$("<td>").html(v.wrRno+ "실"+ v.bedNo+ "호"),
+// 										$("<td>").html(v.diseaseCd))
+// 								.data("list",v);
+// 						trTags.push(trTag);
+// 					})
+// 					$("#tbdOutHsptList").html(trTags);
+// 					$("#payDocs").val("");
+// 					$("#payTotalFee").val("");
+// 					$("#payDocFee").val("");
+// 					$("#payHostpFee").val("");
+// 					$("#payFoodFee").val("");
+// 					$("#payMedichine").val("");
+// 					$("#payInject").val("");
+// 					$("#payPtFee").val("");
+// 					$("#payRadio").val("");
+// 					$("#payOper").val("");
+// 				}
+// 			})
+// 		} else {
+// 			swal("퇴원을 취소하였습니다.", "", "error")
+// 		}
+// 	});
 
 	// 입원 가능한 환자 리스트 조회 //	
 	function fn_wardRegistList() {
@@ -2111,8 +2201,12 @@ $("#smsReceiverBtn").on("click", function(){
 	
 	// 전송버튼 이벤트 //
 	$("#smsSend").on("click", function() {
+		if(confirm("SMS를 전송하시겠습니까?")){
 		swal("전송에 성공 하셨습니다.", "", "success")
 		$("#smsTextarea").val("");
+		}else{
+			return;
+		}
 	})
 	// 전송버튼 이벤트 끝 //
 
@@ -2183,7 +2277,7 @@ $("#smsReceiverBtn").on("click", function(){
 											$("#paAdd1").val("");
 											$("#paAdd2").val("");
 											$("#paSex").val("");
-											swal("환자등록 성공")
+											swal("환자등록 성공" , '' , 'success')
 
 											fn_selectPatient();
 										}
@@ -2301,7 +2395,7 @@ $("#smsReceiverBtn").on("click", function(){
 										contentType : "application/json;charset=utf-8",
 										dataType : "json",
 										success : function(result) {
-											swal("환자 접수가 완료되었습니다.")
+											swal("환자 접수가 완료되었습니다." , '' , 'success')
 											$("#regipaNo").val("");
 											$("#regipaName").val("");
 											$("#regipaReg").val("");
@@ -2682,7 +2776,7 @@ $("#smsReceiverBtn").on("click", function(){
 	/* 바코드 출력 시작*/
 	var initBodyHtml;
 
-	function printBarcode() {
+	function printrecipt() {
 		return window.print();
 	}
 
@@ -2700,4 +2794,27 @@ $("#smsReceiverBtn").on("click", function(){
 	window.onbeforeprint = beforePrint;
 	window.onafterprint = afterPrint;
 	/* 바코드 출력 끝 */
+	
+	
+	let paAdd1 = $("[name=paAdd1]");
+	   //주소 API) 카카오 //
+	   
+   document.getElementById("address_kakao").addEventListener("click", function(){ //주소입력칸을 클릭하면
+      event.preventDefault();
+
+   //카카오 지도 발생
+       new daum.Postcode({
+           oncomplete: function(data) { //선택시 입력값 세팅
+//                document.getElementById("[name=paAdd1]").value = data.address; // 주소 넣기
+//                document.querySelector("input[name=paAdd2]").focus(); //상세입력 포커싱
+               paAdd1.val(data.address); // 주소 넣기
+               document.querySelector("input[name=paAdd2]").focus(); //상세입력 포커싱
+           }
+       }).open();
+   
+       return false;
+   });
+	
+
+
 </script>

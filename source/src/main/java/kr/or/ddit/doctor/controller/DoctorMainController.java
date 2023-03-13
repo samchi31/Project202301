@@ -122,9 +122,9 @@ public class DoctorMainController {
 		
 		String resp = null;
 		if(rowcnt > 0) {
-			resp= "대기 히스토리 성공";
+			resp= "대기 히스토리 변경 성공";
 		} else {
-			resp = "대기 히스토리 실패";
+			resp = "대기 히스토리 변경 실패";
 		}
 		return resp;
 	}	
