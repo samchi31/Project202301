@@ -9,7 +9,7 @@
 		</association>
 		<collection property="operationJoinList" ofType="OperationJoinVO" autoMapping="true"></collection>
 	</resultMap>
-<!-- 	수술 대상 환자 중 수술 예약이 실시되지 않은 환자 리스트를 조회 -->
+	<!-- 	수술 대상 환자 중 수술 예약이 실시되지 않은 환자 리스트를 조회 -->
 	<select id="selectOperationList" resultMap="operationListMap">
 	/* kr.or.ddit.nurse.dao.OperationDAO.selectOperationList */
 	
@@ -20,18 +20,13 @@
 		    , D.PA_NAME
 		    , B.ICD_NAME
 		    , F.CEX_STATUS
-		    , E.op_reserv_starttime
+		    , E.OP_RESERV_STARTTIME
 		FROM TRM_CHART A
-		INNER JOIN DIAGNOSIS_HISTORY B
-		ON A.TRM_CD = B.TRM_CD
-		LEFT OUTER JOIN OPERATION_INFOMATION E
-		ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
-		LEFT OUTER JOIN CLINICAL_EXAMINATION F
-		ON B.DISEASE_CD = F.DISEASE_CD AND B.TRM_CD = F.TRM_CD
-		INNER JOIN RECEPTION C
-		ON A.RCP_NO = C.RCP_NO
-		INNER JOIN PATIENT D
-		ON C.PA_NO = D.PA_NO
+		INNER JOIN DIAGNOSIS_HISTORY B ON A.TRM_CD = B.TRM_CD
+		LEFT OUTER JOIN OPERATION_INFOMATION E ON B.DISEASE_CD = E.DISEASE_CD AND B.TRM_CD = E.TRM_CD
+		LEFT OUTER JOIN CLINICAL_EXAMINATION F ON B.DISEASE_CD = F.DISEASE_CD AND B.TRM_CD = F.TRM_CD
+		INNER JOIN RECEPTION C ON A.RCP_NO = C.RCP_NO
+		INNER JOIN PATIENT D ON C.PA_NO = D.PA_NO
 		WHERE B.OPER_TF = 'Y'
 		AND E.OP_NO IS NULL OR E.OP_STATE = 'F'
 		ORDER BY A.TRM_CD, B.DISEASE_CD DESC

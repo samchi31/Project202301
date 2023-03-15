@@ -71,8 +71,7 @@
 		INSERT INTO 
 				WAITING_HISTORY(WAIT_NO, RCP_NO, WAIT_DT, WAIT_NUM, WAITST_CD, DIV_CD)
 		VALUES(
-				( SELECT NVL(MAX(WAIT_NO),0)+1 
-                  FROM WAITING_HISTORY)
+				SEQ_WAITING_HISTORY.Nextval
 				, #{rcpNo}
                 , SYSDATE
 				,(SELECT NVL(MAX(WAIT_NUM),0)+1 FROM WAITING_HISTORY)
@@ -99,8 +98,7 @@
     							waitst_cd,
     							div_cd
 					) VALUES (	
-            			(SELECT NVL(MAX(WAIT_NO),0)+1 
-             			 FROM WAITING_HISTORY)
+            			SEQ_WAITING_HISTORY.Nextval
                 		,#{rcpNo}
                 		,SYSDATE
 						,(SELECT NVL(MAX(WAIT_NUM),0)+1 FROM WAITING_HISTORY)

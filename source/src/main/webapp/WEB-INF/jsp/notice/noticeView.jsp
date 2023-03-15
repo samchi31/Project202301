@@ -72,7 +72,7 @@ table-layout: auto;
 						<c:forEach items="${selectNoticeList}" var="noticeList">
 							<tr>
 								<td>${noticeList.ntcCd}</td>
-								<td><button class="detailButtonClass" type="button" id="detailButton" onclick="updateBox()"
+								<td style="text-align:left; padding-left:2%;"><button class="detailButtonClass" type="button" id="detailButton" onclick="updateBox()"
 									data-ntc-cd = "${noticeList.ntcCd}"
     								data-ntc-title = "${noticeList.ntcTitle}"
     								data-ntc-cont = "${noticeList.ntcCont}"
@@ -732,7 +732,7 @@ function f_noticeList(){
 				$.each(resp, function(i, data){
 					let tr = $("<tr>").append(
 						$("<td>").html(data["ntcCd"])
-						,$("<td>").html(data["ntcTitle"])
+						,$("<td>").html(data["ntcTitle"]).css("text-align","left").css("padding-left","2%")
 						, $("<td>").html(data["ntcEndt"].substring(0,10))
 						, $("<td>").html(data["empNm"])
 					);

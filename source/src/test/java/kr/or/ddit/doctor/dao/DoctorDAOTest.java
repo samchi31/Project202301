@@ -118,5 +118,10 @@ public class DoctorDAOTest extends AbstractTestCase{
 	public void testSelectFilmOrder() {
 		log.info("{}", dao.selectRadiList());
 	}
+	
+	@Test
+	public void testSelectFilmList() {
+		log.info("{}", dao.selectFilmResult("TC0241"));
+	}
 
 }

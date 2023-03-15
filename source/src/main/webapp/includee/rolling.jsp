@@ -7,7 +7,7 @@
 		<div class="roller">
 			<ul>
 				<li class="kapi">
-						<strong class="name">2023.03.01은 시스템 점검이 있습니다. 필요한 자료는 꼭 백업하시기 바랍니다. => </strong>
+						<strong class="name">2023.03.17은 시스템 점검이 있습니다. 필요한 자료는 꼭 백업하시기 바랍니다. => </strong>
 				</li>
 			</ul>
 		</div>

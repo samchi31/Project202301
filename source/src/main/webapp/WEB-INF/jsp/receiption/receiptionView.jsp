@@ -10,6 +10,8 @@
 <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 <!-- 주소 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+
 <title>원무과</title>
 <style type="text/css">
 #patient {
@@ -122,6 +124,7 @@ select>input {
     left: 83.5%;
     top: 24%;
 }
+i {box-sizing: border-box ; padding : 5px; font-size : 1rem; float:right;}
 
 /* .mb-3 { */
 /*     margin-bottom: 5px; */
@@ -155,7 +158,7 @@ select>input {
 						<tr>
 							<th style="width: 70px;"><a>환자번호</a></th>
 							<th style="width: 85px;"><a>환자명</a></th>
-							<th style="width: 100px;"><a>생년월일</a></th>
+							<th style="width: 100px;"><a>생년월일</a></th> 
 							<th><a>전화번호</a></th>
 							<th style="width: 40px;"><a>성별</a></th>
 						</tr>
@@ -173,7 +176,7 @@ select>input {
 
 	<div class="grid-stack-item" gs-w="3" gs-h="2">
 		<div class="grid-stack-item-content" style="padding-bottom: 0;">
-			<h4 class="h4-title2">접수</h4>
+			<h4 class="h4-title1">접수 <i class="bi bi-box-arrow-down" id="miri"></i></h4>
 			<!-- <p class="pTag">리스트의 환자를 클릭하고, 진료실을 지정하여 등록버튼을 눌러줍니다.</p> -->
 			<hr>
 			<div class="tab patient-rcp">
@@ -615,7 +618,7 @@ select>input {
 
 	<div class="grid-stack-item" gs-w="4" gs-h="2">
 		<div class="grid-stack-item-content">
-			<h4 class="h4-title2">SMS</h4>
+			<h4 class="h4-title1">SMS</h4>
 			<hr>
 			<div class="tab patient-sms">
 				<ul class="tabnav">
@@ -1392,7 +1395,6 @@ select>input {
 				<button type="button" class="btn btn-danger" id="payComplete">수납</button>
 				<button type="button" class="btn btn-primary" id="print" onclick="printrecipt();">출력</button>
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="fn_check();">체크</button>
 					
 			</div>
 		</div>
@@ -1403,36 +1405,6 @@ select>input {
 
 
 <script type="text/javascript">
-
-function fn_check(){
-	$(function() {
-		swal({
-			title: "등록하시겠습니까?",
-			type: "warning",
-			showCancelButton: true,
-			confirmButtonColor: "#DD6B55",
-			confirmButtonText: "예",
-			cancelButtonText: "아니요",
-			closeOnConfirm: false,
-			closeOnCancel : true
-		}, function (isConfirm) {
-			if (!isConfirm) return;
-			jQuery.ajax({
-				type : "POST",
-				url : "",
-				data : "",
-				cache: false,
-				dataType : "json",
-				success : function(data) {
-					swal("성공", "작업을 정상적으로 완료하였습니다.", "success");
-				},
-				error : function(e) {
-					swal("실패", "작업수행에 실패하였습니다.", "error");
-				}, timeout:100000
-			});
-		});
-	});
-};
 
 GridStack.init()
 
@@ -1768,48 +1740,44 @@ fn_wardRegistList();
 	//입원 가능 환자 리스트 클릭 이벤트 끝 //
 
 	// 입원 등록  버튼 이벤트////
-	$(".wardRegi")
-			.on(
-					"click",
-					function() {
-						let wardRno = $("[name=wardRno]:checked").val();
-						let wardBedNo = $("[name=wardBedNo]:checked").val();
+	$(".wardRegi").on("click",function() {
+		let wardRno = $("[name=wardRno]:checked").val();
+		let wardBedNo = $("[name=wardBedNo]:checked").val();
 
-						let data = {
-							bedNo : wardBedNo,
-							wrRno : wardRno,
-							trmCd : trmCd,
-							diseaseCd : diseaseCd
-						}
+		let data = {
+			bedNo : wardBedNo,
+			wrRno : wardRno,
+			trmCd : trmCd,
+			diseaseCd : diseaseCd
+		}
 
-						if (trmCd != null) {
-							$
-									.ajax({
-										url : "${pageContext.request.contextPath}/receiption/wardRegist",
-										method : "post",
-										data : JSON.stringify(data),
-										beforeSend : function(xhr) {
-											xhr.setRequestHeader(header, token);
-										},
-										contentType : "application/json;charset=utf-8",
-										dataType : "json",
-										success : function(result) {
-											swal("입원 등록 하였습니다", "침상등록 성공하였습니다",
-													"success")
-											fn_wardRegistList();
-											trmCd = -1;
-											diseaseCd = -1;
-										},
-										error : function(jqXHR, status, error) {
-											console.log(jqXHR);
-											console.log(status);
-											console.log(error);
-										}
-									});
-						} else {
-							swal('정보를 입력해주세요', "환자 정보가 없습니다.", "error");
-						}
-					})
+		if (trmCd != null) {
+			$.ajax({
+				url : "${pageContext.request.contextPath}/receiption/wardRegist",
+				method : "post",
+				data : JSON.stringify(data),
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				contentType : "application/json;charset=utf-8",
+				dataType : "json",
+				success : function(result) {
+					swal("입원 등록 하였습니다", "침상등록 성공하였습니다",
+							"success")
+					fn_wardRegistList();
+					trmCd = -1;
+					diseaseCd = -1;
+				},
+				error : function(jqXHR, status, error) {
+					console.log(jqXHR);
+					console.log(status);
+					console.log(error);
+				}
+			});
+		} else {
+			swal('정보를 입력해주세요', "환자 정보가 없습니다.", "error");
+		}
+	})
 	// 입원 등록 버튼 이벤트 끝 //
 
 	/////////////// 입/퇴원 끝 ////////////////////////////////
@@ -2239,50 +2207,46 @@ $("#smsReceiverBtn").on("click", function(){
 	// 신규 환자 등록 //
 	$(function() {
 		$("#newPAbtn")
-				.on(
-						"click",
-						function() {
-							let paName = $("#paName").val();
-							let paReg = $("#paReg").val();
-							let paHp = $("#paHp").val();
-							let paZip = $("#paZip").val();
-							let paAdd1 = $("#paAdd1").val();
-							let paAdd2 = $("#paAdd2").val();
-							let paSex = $("#paSex").val();
+			.on("click",function() {
+					let paName = $("#paName").val();
+					let paReg = $("#paReg").val();
+					let paHp = $("#paHp").val();
+					let paZip = $("#paZip").val();
+					let paAdd1 = $("#paAdd1").val();
+					let paAdd2 = $("#paAdd2").val();
+					let paSex = $("#paSex").val();
 
-							let data = {
-								paName : paName,
-								paReg : paReg,
-								paHp : paHp,
-								paZip : paZip,
-								paAdd1 : paAdd1,
-								paAdd2 : paAdd2,
-								paSex : paSex,
-							}
-							$
-									.ajax({
-										url : "${pageContext.request.contextPath}/receiption/newPatient",
-										method : "post",
-										data : JSON.stringify(data),
-										beforeSend : function(xhr) {
-											xhr.setRequestHeader(header, token);
-										},
-										contentType : "application/json;charset=utf-8",
-										dataType : "json",
-										success : function(result) {
-											$("#paName").val("");
-											$("#paReg").val("");
-											$("#paHp").val("");
-											$("#paZip").val("");
-											$("#paAdd1").val("");
-											$("#paAdd2").val("");
-											$("#paSex").val("");
-											swal("환자등록 성공" , '' , 'success')
-
-											fn_selectPatient();
-										}
-									});
-						});
+					let data = {
+						paName : paName,
+						paReg : paReg,
+						paHp : paHp,
+						paZip : paZip,
+						paAdd1 : paAdd1,
+						paAdd2 : paAdd2,
+						paSex : paSex,
+					}
+					$.ajax({
+						url : "${pageContext.request.contextPath}/receiption/newPatient",
+						method : "post",
+						data : JSON.stringify(data),
+						beforeSend : function(xhr) {
+							xhr.setRequestHeader(header, token);
+						},
+						contentType : "application/json;charset=utf-8",
+						dataType : "json",
+						success : function(result) {
+							$("#paName").val("");
+							$("#paReg").val("");
+							$("#paHp").val("");
+							$("#paZip").val("");
+							$("#paAdd1").val("");
+							$("#paAdd2").val("");
+							$("#paSex").val("");
+							swal("환자등록 성공" , '' , 'success')
+							fn_selectPatient();
+					}
+			});
+		});
 	});
 
 	// 새로 등록한 환자 접수 테이블에 넣기	//
@@ -2372,62 +2336,57 @@ $("#smsReceiverBtn").on("click", function(){
 
 	// 접수 등록 //
 	$(function() {
-		$("#regiBtn")
-				.on(
-						"click",
-						function() {
-							let paNo = $("#regipaNo").val();
-							let officeCd = $("[name=officeCd]:selected").val();
-							console.log(paNo)
-							console.log(officeCd)
-							let data = {
-								paNo : paNo,
-								officeCd : officeCd
-							}
-							$
-									.ajax({
-										url : "${pageContext.request.contextPath}/receiption/registration",
-										method : "post",
-										data : JSON.stringify(data),
-										beforeSend : function(xhr) {
-											xhr.setRequestHeader(header, token);
-										},
-										contentType : "application/json;charset=utf-8",
-										dataType : "json",
-										success : function(result) {
-											swal("환자 접수가 완료되었습니다." , '' , 'success')
-											$("#regipaNo").val("");
-											$("#regipaName").val("");
-											$("#regipaReg").val("");
-											$("#regipaHp").val("");
-											$("#regipaSex").val("");
-											fn_insertHitsory();
+		$("#regiBtn").on("click",function() {
+			let paNo = $("#regipaNo").val();
+			let officeCd = $("[name=officeCd]:selected").val();
+			console.log(paNo)
+			console.log(officeCd)
+			let data = {
+				paNo : paNo,
+				officeCd : officeCd
+			}
+			$.ajax({
+				url : "${pageContext.request.contextPath}/receiption/registration",
+				method : "post",
+				data : JSON.stringify(data),
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader(header, token);
+				},
+				contentType : "application/json;charset=utf-8",
+				dataType : "json",
+				success : function(result) {
+					swal("환자 접수가 완료되었습니다." , '' , 'success')
+					$("#regipaNo").val("");
+					$("#regipaName").val("");
+					$("#regipaReg").val("");
+					$("#regipaHp").val("");
+					$("#regipaSex").val("");
+					fn_insertHitsory();
 
-										},
-										error : function(jqXHR, status, error) {
-											console.log(jqXHR);
-											console.log(error);
-										}
-									});
-						});
+				},
+				error : function(jqXHR, status, error) {
+					console.log(jqXHR);
+					console.log(error);
+				}
+			});
+		});
 	});
 
 	// 대기 히스토리 등록 함수 //
 	function fn_insertHitsory() {
-		$
-				.ajax({
-					url : "${pageContext.request.contextPath}/receiption/waitingHistory",
-					method : "post",
-					contentType : "application/json;charset=utf-8",
-					dataType : "json",
-					beforeSend : function(xhr) {
-						xhr.setRequestHeader(header, token);
-					},
-					success : function(result) {
-						fn_waitList()
+		$.ajax({
+			url : "${pageContext.request.contextPath}/receiption/waitingHistory",
+			method : "post",
+			contentType : "application/json;charset=utf-8",
+			dataType : "json",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader(header, token);
+			},
+			success : function(result) {
+				fn_waitList()
 
-					}
-				})
+			}
+		})
 	}
 
 	// 대기 히스토리 함수 끝 //
@@ -2814,6 +2773,13 @@ $("#smsReceiverBtn").on("click", function(){
    
        return false;
    });
+	   
+	$("#miri").on("click",function(){
+		$("#paName").val("위대현");
+		$("#paReg").val("941028");
+		$("#paHp").val("010-1298-3476");
+		$("#paAdd2").val("305호");
+	});
 	
 
 

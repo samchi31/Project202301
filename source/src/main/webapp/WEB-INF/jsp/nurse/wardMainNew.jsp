@@ -448,7 +448,7 @@
   <div class="grid-stack-item " gs-w="4" gs-h="5" gs-x="8" gs-y="0">
 	<div class="grid-stack-item-content ">
 	<h4 class="h4-title1">병동관리</h4>
-	<p class="pTag">입원환자들의 위치를 확인할 수 있다.<br>환자명 클릭시 환자 세부정보 및 order기능을 사용할 수 있다.</p>
+	<p class="pTag">입원환자들의 위치를 확인할 수 있습니다.<br>환자명 클릭시 환자 세부정보 및 order기능을 사용할 수 있습니다.</p>
 	<hr>
 	
 	<h6>101호 (2인실)</h6>

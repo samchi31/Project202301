@@ -1068,8 +1068,6 @@ let operationList = function(){
 					var v_diseaseCd = v.diseaseCd;
 					
 					aTag = $('<a>').attr({"class" : "a_btn_oper"
-									 	 , "data-bs-toggle" : "tooltip"
-										 , "data-bs-placement" : "top"
 										 , "title" : "클릭시 검사 생성"
 										 , "href" : "javascript:void(0);"
 										 , "onclick" : "cexCreate(\""+v_trmCd+"\",\""+v_diseaseCd+"\");"
@@ -1318,6 +1316,7 @@ $('#operHistoryTbody').on('click', 'tr', function(event){
     	},
 		dataType : "json",
 		success : function(result) {
+			console.log(result);
 
 			let v_startTime = '';
 			let v_endTime = '';
@@ -1337,7 +1336,8 @@ $('#operHistoryTbody').on('click', 'tr', function(event){
 			$('#oper-detail-paName').data("opNo", v_opNo);
 			$('#oper-detail-paName').val(result.paName);
 			$('#oper-detail-paReg').val(result.paReg);
-			$('#oper-detail-icdName').val(result.diagHistory.icdName);
+// 			$('#oper-detail-icdName').val(result.diagHistory.icdName);
+			$('#oper-detail-operNm').val(result.opKrNm);
 			$('#oper-detail-empNm').val(result.operationJoinList[0].empNm);
 			$('#oper-detail-startTime').val(v_startTime);
 			$('#oper-detail-endTime').val(v_endTime);

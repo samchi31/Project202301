@@ -96,7 +96,6 @@ public class RadiologyMainController {
 		List<WaitHistoryVO> listResult = new ArrayList<WaitHistoryVO>();
 		
 		
-		
 		for(WaitHistoryVO vo : list) {
 			String[] filmCdArr = vo.getFilmCd().split(",");
 			

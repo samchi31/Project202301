@@ -43,8 +43,8 @@ public class MyPageController {
 			@ModelAttribute EmployeeVO member
 			) {
 		log.info("들어갔나유?{}", member);
-		service.modifyMember(member);
-		
+		ServiceResult ret = service.modifyMember(member);
+		log.info("ret : {}",ret);
 		return "redirect:/employee/mypage"; 
 	}
 	
